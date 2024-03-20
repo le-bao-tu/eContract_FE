@@ -1,0 +1,8 @@
+<!-- <div class="container item-center">
+  <p *ngIf="isLoading">Đang chuyển hướng...</p>
+  <p *ngIf="tokenExpired === false">Xác thực thành công</p>
+  <p *ngIf="tokenExpired === true">Xác thực thất bại</p>
+</div> -->
+<div class="item-center">
+  <button *ngIf="tokenExpired" (click)="gotoLogin()" nz-button nzType="primary" class="btn-success">Go to Login</button>
+</div>

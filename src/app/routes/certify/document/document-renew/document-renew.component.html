@@ -1,0 +1,117 @@
+<nz-modal
+  [nzStyle]="{ top: '20px' }"
+  [nzVisible]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  nzWidth="500px"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle> {{ title }} </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="form">
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>{{ 'function.document.renew-item.expired-date.label' | translate }}</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24" [nzErrorTip]="signAtDateMessage">
+          <nz-date-picker
+            formControlName="signExpireAtDate"
+            nzFormat="dd/MM/yyyy"
+            nzAllowClear
+            [nzDisabledDate]="disabledSignExpireAtDate"
+            nzShowToday="false"
+          ></nz-date-picker>
+          <ng-template #signAtDateMessage let-control>
+            <ng-container *ngIf="control.hasError('required')">{{
+              'function.document.renew-item.expired-date.message' | translate
+            }}</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'function.document.renew-item.notify-config-id.label' | translate }}</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24">
+          <nz-select
+            formControlName="notifyConfigId"
+            nzPlaceHolder="{{ 'function.document.renew-item.notify-config-id.placeholder' | translate }}"
+            (ngModelChange)="notifyConfigChange($event)"
+            [nzAllowClear]="true"
+          >
+            <nz-option *ngFor="let option of listNotifyConfig" [nzValue]="option.id" [nzLabel]="option.code"> </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'function.document.renew-item.user-notify.label' | translate }}</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24">
+          <nz-select
+            [nzMaxTagCount]="3"
+            nzMode="multiple"
+            formControlName="userIds"
+            nzPlaceHolder="{{ 'function.document.renew-item.user-notify.label.placeholder' | translate }}"            
+            [nzAllowClear]="true"
+          >
+            <nz-option *ngFor="let option of listUserNotify" [nzValue]="option.userId" [nzLabel]="option.userName"> </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="24" [nzXs]="24" nzRequired>{{ 'function.document.renew-item.reason.label' | translate }}</nz-form-label>
+        <nz-form-control nzHasFeedback [nzErrorTip]="errorMessage">
+          <textarea
+            formControlName="lastReasonReject"
+            nz-input
+            placeholder="{{ 'function.document.renew-item.reason.placeholder' | translate }}"
+            [nzAutosize]="{ minRows: 3, maxRows: 5 }"
+            required
+          ></textarea>
+          <ng-template #errorMessage let-control>
+            <ng-container *ngIf="control.hasError('required')">{{
+              'function.document.renew-item.reason.message' | translate
+            }}</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      style="margin-left: 5px"
+      class="btn-primary"
+      *ngIf="btnSave.visible && btnSave.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+      [disabled]="!form.valid"
+    >
+      <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnSave.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      style="margin-left: 5px"
+      class="btn-primary"
+      *ngIf="btnSaveAndNotify.visible && btnSaveAndNotify.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSaveAndNotify.click($event)"
+      [disabled]="!form.valid || !btnSaveAndNotify.enable"
+    >
+      <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnSaveAndNotify.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      style="margin-left: 5px"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnCancel.title }}
+    </button>
+  </ng-template>
+</nz-modal>

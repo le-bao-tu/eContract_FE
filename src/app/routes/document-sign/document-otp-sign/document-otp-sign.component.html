@@ -1,0 +1,92 @@
+<!-- 
+<div *nzModalFooter>
+  <button nz-button nzType="primary" (click)="destroyModal()" [nzLoading]="isConfirmLoading">Xác nhận ký hợp đồng</button>
+</div> -->
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  nzWidth="450px"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle
+    ><div style="text-align: center">{{ title }}</div>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form class="login-form" [formGroup]="form" nzLayout="vertical">
+      <div nz-row class="login-form-margin">
+        <span>{{ dataShow.message }} của bạn.</span>
+      </div>
+      <nz-form-item class="mt-lg">
+        <nz-form-control [nzErrorTip]="dataShow.error" *ngIf="dataShow.type === 'REJECT'; else rejectReason">
+          <nz-textarea-count [nzMaxCharacterCount]="100">
+            <textarea rows="4" formControlName="comment" nz-input></textarea>
+          </nz-textarea-count>
+        </nz-form-control>
+      </nz-form-item>
+
+      <div nz-row class="login-form-margin" *ngIf="dataShow.type === 'OTP'">
+        <span
+          >Mã OTP sẽ hết hạn sau 3 phút <a href="javascript:void(0)" (click)="sendOTP()">Gửi lại mã </a>({{ formatSecondToHHMM(counter) }})
+        </span>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template #rejectReason>
+    <!-- <p>{{dataHSM|json}}</p> -->
+    <div *ngIf="dataHSM" nz-row>
+      <div nz-col nzFlex="1">
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          [nzDisabled]="dataHSM.length === 1"
+          (ngModelChange)="onChangeSign($event)"
+          nzPlaceHolder="Chọn chứng thư số HSM có sẵn"
+          [(ngModel)]="idHSM"
+        >
+          <nz-option *ngFor="let item of dataHSM" [nzLabel]="item.code" [nzValue]="item.id"></nz-option>
+        </nz-select>
+      </div>
+    </div>
+    <br />
+
+    <nz-form-control class="mt-md" [nzErrorTip]="dataShow.message" *ngIf="showInput">
+      <nz-input-group>
+        <input
+          type="password"
+          style="text-align: center"
+          nz-input
+          [(ngModel)]="otp"
+          [ngModelOptions]="{ standalone: true }"
+          placeholder="- - - Nhập mã {{ dataShow.type }} - - -"
+        />
+      </nz-input-group>
+    </nz-form-control>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="btnSave.visible && btnSave.grandAccess && dataShow.type != 'REJECT'"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+    >
+      <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnSave.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnSave.visible && btnSave.grandAccess && dataShow.type === 'REJECT'"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnSave.title }}
+    </button>
+  </ng-template>
+</nz-modal>

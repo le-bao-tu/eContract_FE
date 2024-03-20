@@ -1,0 +1,164 @@
+<!-- header -->
+<nz-layout class="main-container">
+  <div class="header-container" nz-row>
+    <div nz-col nzSpan="8"><img (click)="redirectToHome()" class="logo" src="assets\tmp\img\bussiness\logo_SAVIS_eContract.png" /></div>
+    <div nz-col nzSpan="16" class="pull-right">
+      <div style="display: inline-flex; padding-right: 25px">
+        <button nz-button class="btn-add-cc-cn hidden-mobile" (click)="redirectToAdd()">
+          <img class="icon-round-plus" src="assets/tmp/img/icon_round_plus.png" />
+          <span class="text-add">&nbsp;&nbsp;TẠO MỚI HĐ</span>
+        </button>
+        <div class="acc-container" [ngClass]="{ 'padding-top': 1 }" style="height: 60px; padding-left: 17px">
+          <layout-pro-user (logOut)="logOut()" [homePageCheck]="true" style="height: 100%"></layout-pro-user>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nz-content class="content-container">
+    <!-- intro -->
+    <div class="intro-container bg-welcome">
+      <img class="img-intro" class="hidden-mobile" src="../../../assets/tmp/img/welcome.png" />
+      <p class="text-intro">
+        Chào mừng bạn đến với <span class="sv">VietCredit eContract</span
+        ><span class="cc"> - Giải pháp ký hợp đồng điện tử hàng đầu tại Việt Nam</span>
+      </p>
+      <button nz-button nzType="primary" nzSize="large" nzShape="round" class="home-custom-button" (click)="redirect()">
+        <span class="home-text"> DANH SÁCH HỢP ĐỒNG </span>
+      </button>
+    </div>
+    <!-- step -->
+    <div class="step-container" nz-row nzJustify="space-between">
+      <div (click)="redirectToDocumentDraft()" class="child-step-container" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <div nz-row class="child-step bg-status-document" nzAlign="middle">
+          <div nz-col nzSpan="4">
+            <img class="step-img" src="../../../assets/tmp/img/icon_dang_soan_thao.png" />
+          </div>
+          <div nz-col nzSpan="16">
+            <span class="step-text" nz-col nzOffset="2">Đang soạn thảo</span>
+          </div>
+          <div nz-col nzSpan="4">
+            <span class="step-number">{{ document.draft <= 99 ? document.draft : '99+' }}</span>
+          </div>
+        </div>
+      </div>
+      <div
+        (click)="redirectToDocumentWaitMeSign()"
+        class="child-step-container gutter-row"
+        nz-col
+        nzXs="24"
+        nzSm="24"
+        nzMd="12"
+        nzLg="6"
+        nzXl="6"
+      >
+        <div nz-row class="child-step bg-status-document" nzAlign="middle">
+          <div nz-col nzSpan="4">
+            <img class="step-img" src="../../../assets/tmp/img/icon_cho_toi_ky.png" />
+          </div>
+          <div nz-col nzSpan="14">
+            <span class="step-text" nz-col nzOffset="2">Chờ tôi ký</span>
+          </div>
+          <div nz-col nzSpan="6">
+            <span class="step-number">{{ document.waitMeSign <= 99 ? document.waitMeSign : '99+' }}</span>
+          </div>
+        </div>
+      </div>
+      <div
+        (click)="redirectToDocumentProcessing()"
+        class="child-step-container gutter-row"
+        nz-col
+        nzXs="24"
+        nzSm="24"
+        nzMd="12"
+        nzLg="6"
+        nzXl="6"
+      >
+        <div nz-row class="child-step bg-status-document" nzAlign="middle">
+          <div nz-col nzSpan="4">
+            <img class="step-img" src="../../../assets/tmp/img/icon_dang_xu_ly.png" />
+          </div>
+          <div nz-col nzSpan="14">
+            <span class="step-text" nz-col nzOffset="2">Đang xử lý</span>
+          </div>
+          <div nz-col nzSpan="6">
+            <span class="step-number">{{ document.processing <= 99 ? document.processing : '99+' }}</span>
+          </div>
+        </div>
+      </div>
+      <div
+        (click)="redirectToDocumentComplete()"
+        class="child-step-container gutter-row"
+        nz-col
+        nzXs="24"
+        nzSm="24"
+        nzMd="12"
+        nzLg="6"
+        nzXl="6"
+      >
+        <div nz-row class="child-step bg-status-document" nzAlign="middle">
+          <div nz-col nzSpan="4">
+            <img class="step-img" src="../../../assets/tmp/img/icon_da_hoan_thanh.png" />
+          </div>
+          <div nz-col nzSpan="16">
+            <span class="step-text" nz-col nzOffset="2">Đã hoàn thành</span>
+          </div>
+          <div nz-col nzSpan="4">
+            <span class="step-number">{{ document.completed <= 99 ? document.completed : '99+' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- description -->
+    <div class="description-container description-container-common" nz-row>
+      Ký phê duyệt Hợp đồng Nhanh chóng - Đơn giản - An toàn&nbsp;<span class="des-strong description-container-common">
+        CHỈ TRONG 4 BƯỚC !</span
+      >
+    </div>
+    <!-- process -->
+    <div class="process-container" nz-row nzJustify="space-between">
+      <div class="child-process-container" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <div class="child-process bg">
+          <img class="process-number-img" src="../../../assets/tmp/img/icon_so_1.png" /><br />
+          <span class="process-text">KHỞI TẠO</span><br />
+          <img class="process-img" src="../../../assets/tmp/img/icon_khoi_tao.png" />
+          <ul>
+            <li><span class="process-description">Chọn mẫu hợp đồng và tạo các thông tin cho hợp đồng.</span></li>
+            <li><span class="process-description">Chọn quy trình ký linh động.</span></li>
+            <li><span class="process-description">Xác định vị trí thông tin và vị trí ký cho hợp đồng.</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="child-process-container gutter-row" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <div class="child-process bg">
+          <img class="process-number-img" src="../../../assets/tmp/img/icon_so_2.png" /><br />
+          <span class="process-text">TRÌNH DUYỆT</span><br />
+          <img class="process-img" src="../../../assets/tmp/img/icon_trinh_duyet.png" />
+          <ul>
+            <li><span class="process-description">Trình ký phê duyệt hợp đồng theo quy trình.</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="child-process-container gutter-row" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <div class="child-process bg">
+          <img class="process-number-img" src="../../../assets/tmp/img/icon_so_3.png" /><br />
+          <span class="process-text">KÝ PHÊ DUYỆT</span><br />
+          <img class="process-img" src="../../../assets/tmp/img/icon_ky_phe_duyet.png" />
+          <ul>
+            <li><span class="process-description">Ký phê duyệt để chứng nhận kết quả hợp đồng.</span></li>
+            <li><span class="process-description">Tự động gắn dấu thời gian và cho phép xác thực lâu dài.</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="child-process-container gutter-row" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <div class="child-process bg">
+          <img class="process-number-img" src="../../../assets/tmp/img/icon_so_4.png" /><br />
+          <span class="process-text">GỬI KẾT QUẢ</span><br />
+          <img class="process-img" src="../../../assets/tmp/img/icon_gui_ket_qua.png" />
+          <ul>
+            <li><span class="process-description">Tự động gửi email kết quả và hợp đồng đã ký tới học viên.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nz-content>
+</nz-layout>

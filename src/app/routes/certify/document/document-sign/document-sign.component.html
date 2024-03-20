@@ -1,0 +1,69 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  nzWidth="350px"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle
+    ><div style="text-align: center">{{ title }}</div>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <nz-row>
+      <nz-radio-group [(ngModel)]="type" (ngModelChange)="onChangeRadioType($event)" class="custom-label">
+        <label nz-radio nzValue="1">Dạng vẽ</label>
+        <label nz-radio nzValue="2">Dạng chữ</label>
+        <label nz-radio nzValue="3">Dạng ảnh</label>
+      </nz-radio-group>
+    </nz-row>
+    <br />
+    <nz-row>
+      <div>
+        <canvas id="canvas-draw" height="160px" width="300px" class="canvas" style="border: 1px solid blue"></canvas>
+      </div>
+    </nz-row>
+    <br />
+    <nz-row *ngIf="type == '2'">
+      <input nz-input placeholder="Nhập văn bản" [(ngModel)]="signText" (ngModelChange)="onChangeSignText($event)" />
+    </nz-row>
+    <nz-row *ngIf="type == '3'">
+      <input type="file" id="file" (change)="handleFileInput($event.target.files)" />
+    </nz-row>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="default"
+      class="btn-default"
+      *ngIf="btnReset.visible && btnReset.grandAccess && type == '1'"
+      (click)="btnReset.click($event)"
+      [disabled]="isLoading"
+    >
+      <i nz-icon nzType="delete" nzTheme="outline"></i>{{ btnReset.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="btnSave.visible && btnSave.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+    >
+      <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnSave.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      (click)="btnCancel.click($event)"
+      [disabled]="isLoading"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.title }}
+    </button>
+  </ng-template>
+</nz-modal>

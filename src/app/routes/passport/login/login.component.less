@@ -1,0 +1,232 @@
+@import '~@delon/theme/index';
+:host {
+  ::ng-deep {
+    .ant-tabs .ant-tabs-bar {
+      margin-bottom: 24px;
+      text-align: center;
+      border-bottom: 0;
+    }
+    #text-login-one {
+      font-weight: normal;
+    }
+    .text-login {
+      object-fit: contain;
+      color: #221f20 !important;
+      font-weight: bold;
+      font-size: 13px;
+      font-family: 'OpenSans', sans-serif;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: 1.38;
+      letter-spacing: normal;
+      text-align: left;
+    }
+    .background {
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      background-image: url('/assets/tmp/img/bg.bmp');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      background-attachment: fixed;
+    }
+
+    .form-login {
+      display: block;
+      width: 500px;
+      height: auto;
+      min-height: 75vh;
+      margin: 0 auto;
+      margin-top: 0;
+      margin-left: 55% !important;
+      padding: 20px 40px 10px;
+      background-color: white;
+      border-radius: 13px;
+      -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.39);
+      -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.39);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.39);
+      .register-account {
+        margin-top: 70px;
+      }
+      .title-login {
+        padding: 0 15px 15px;
+        color: #000;
+        font-size: 20px;
+        // border-bottom: 1px solid #eee;
+      }
+      .bt-login {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 40px;
+        margin-bottom: 40px;
+        background-color: #0789e8;
+        border-color: #0789e8;
+      }
+    }
+
+    .ant-checkbox-checked .ant-checkbox-inner {
+      background-color: #0789e8;
+      border-color: #0789e8;
+    }
+
+    .logo {
+      height: 50px;
+      margin-top: 50px;
+      margin-bottom: 50px;
+    }
+
+    .vertical-center {
+      position: absolute;
+      top: 50%;
+      margin: 0;
+      -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+    }
+
+    .register-account {
+      margin-top: 30px;
+      font-weight: 700;
+    }
+
+    .register-account > a {
+      color: #00e;
+    }
+
+    .register-account > a:hover {
+      text-decoration: underline;
+    }
+
+    .ant-tabs-tab {
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    .ant-input-affix-wrapper .ant-input:not(:first-child) {
+      padding-left: 14px;
+    }
+
+    .icon {
+      margin-left: 16px;
+      color: rgba(0, 0, 0, 0.2);
+      font-size: 24px;
+      vertical-align: middle;
+      cursor: pointer;
+      transition: color 0.3s;
+
+      &:hover {
+        color: @primary-color;
+      }
+    }
+
+    .other {
+      margin-top: 24px;
+      line-height: 22px;
+      text-align: left;
+
+      nz-tooltip {
+        vertical-align: middle;
+      }
+
+      .register {
+        float: right;
+      }
+    }
+
+    nz-form-item {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+
+    .ant-form-item {
+      box-sizing: border-box;
+      margin: 0;
+      // margin-bottom: 24px;
+      // padding: 0;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 14px;
+      font-variant: tabular-nums;
+      line-height: 1.5715;
+      vertical-align: top;
+      list-style: none;
+      font-feature-settings: 'tnum';
+    }
+    .ant-row {
+      display: block;
+      flex-flow: row wrap;
+    }
+
+    .mb-lg {
+      margin-bottom: 5px !important;
+    }
+    @media (min-width: 992px) and (max-width: 1366px) {
+      .form-login {
+        #title-text-one {
+          object-fit: contain;
+          color: #221f20;
+          font-weight: normal;
+          font-size: 25px;
+          font-family: 'OpenSans', sans-serif;
+          font-style: normal;
+          font-stretch: normal;
+          line-height: 1;
+          letter-spacing: normal;
+          text-align: left;
+        }
+        #title-text-two {
+          object-fit: contain;
+          color: #1088e7;
+          font-weight: bold;
+          font-size: 21px;
+          font-family: OpenSans, sans-serif;
+          font-style: normal;
+          font-stretch: normal;
+          line-height: 0.86;
+          letter-spacing: normal;
+          text-align: left;
+        }
+        .bt-login {
+          object-fit: contain;
+          color: #fff;
+          font-weight: bold;
+          font-size: 13px;
+          font-family: 'OpenSans', sans-serif;
+          font-style: normal;
+          font-stretch: normal;
+          line-height: 1.38;
+          letter-spacing: normal;
+          text-align: center;
+          background-color: #0789e8;
+          border: none;
+          border-radius: 3px;
+        }
+        .check-box-text {
+          object-fit: contain;
+          color: #221f20;
+          font-weight: normal;
+          font-size: 13px;
+          font-family: 'OpenSans', sans-serif;
+          font-style: normal;
+          font-stretch: normal;
+          line-height: 1.38;
+          letter-spacing: normal;
+          text-align: left;
+          border: 1px;
+        }
+        .account-input {
+          border-radius: 5px;
+        }
+      }
+    }
+  }
+}
+[data-theme='dark'] {
+  :host ::ng-deep {
+    .icon {
+      color: rgba(255, 255, 255, 0.2);
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+}

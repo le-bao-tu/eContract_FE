@@ -1,0 +1,96 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  nzWidth="450px"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle>
+    <div style="text-align: center">{{ title }}</div>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <nz-row>
+      <nz-radio-group [(ngModel)]="type" (ngModelChange)="onChangeRadioType($event)" class="custom-label">
+        <label nz-radio nzValue="1">Sử dụng chữ ký tay</label>
+        <!-- <label nz-radio nzValue="2">Dạng chữ</label> -->
+        <label nz-radio nzValue="3">Sử dụng chữ ký mẫu</label>
+      </nz-radio-group>
+    </nz-row>
+    <br />
+    <div *ngIf="type === '1' && listSignOfUser.length > 1" nz-row>
+      <div nz-col nzFlex="1">
+        <nz-select nzShowSearch nzAllowClear (ngModelChange)="onChangeSign($event)" nzPlaceHolder="Chọn chữ ký có sẵn" [(ngModel)]="idSign">
+          <nz-option *ngFor="let item of listSignOfUser" [nzLabel]="item.code" [nzValue]="item.id"></nz-option>
+        </nz-select>
+      </div>
+    </div>
+    <br />
+    <nz-row>
+      <div nz-col nzSpan="24">
+        <canvas id="canvas-draw" height="200px" width="400px" class="canvas" style="border: 1px solid blue"></canvas>
+      </div>
+    </nz-row>
+    <br />
+    <!-- <nz-row *ngIf="type === '2'">
+      <input nz-input placeholder="Nhập văn bản" [(ngModel)]="signText" (ngModelChange)="onChangeSignText($event)" />
+    </nz-row> -->
+    <nz-row *ngIf="type === '3'">
+      <input type="file" id="file" (change)="handleFileInput($event.target.files)" />
+    </nz-row>
+    <!-- Tải file đính kèm -->
+    <nz-form-item *ngIf="btnUpload.grandAccess && btnUpload.visible">
+      <nz-form-control>
+        <div class="clearfix">
+          <nz-upload
+            [nzAction]="uploadUrl"
+            [nzHeaders]="headerUploadFile"
+            [nzRemove]="true"
+            [nzIconRender]=""
+            [nzDisabled]="isInfo"
+            nzAccept="application/pdf"
+            (nzChange)="handleFileChange($event)"
+          >
+            <button nz-button><i nz-icon nzType="upload"></i>Tải lên tài liệu đính kèm</button>
+          </nz-upload>
+        </div>
+        <div *ngIf="fileUploadError" class="field-invalid">{{ fileUploadError }}</div>
+      </nz-form-control>
+    </nz-form-item>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="default"
+      class="btn-default"
+      *ngIf="btnReset.visible && btnReset.grandAccess && type === '1'"
+      (click)="btnReset.click($event)"
+      [disabled]="isLoading"
+    >
+      <i nz-icon nzType="delete" nzTheme="outline"></i>{{ btnReset.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="btnSave.visible && btnSave.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+    >
+      <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnSave.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      (click)="btnCancel.click($event)"
+      [disabled]="isLoading"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.title }}
+    </button>
+  </ng-template>
+</nz-modal>

@@ -1,0 +1,357 @@
+<page-header-wrapper [title]="tittle" onBack="{() => window.history.back()}" class="page-wrapper">
+  <nz-card class="card-header">
+    <div nz-row class="header">
+      <div nz-col nzSpan="12"><h2>{{ 'function.document-template.document-template-config.header' | translate }}</h2></div>
+      <div nz-col nzSpan="12" style="text-align: right"></div>
+    </div>
+  </nz-card>
+  <nz-card [nzBordered]="false">
+    <div nz-row class="ware__imgs-item">
+      <div nz-col nzSpan="4" style="height: 100%; padding: 10px; text-align: center">
+        <div nz-row class="text-center">
+          <div nz-col nzSm="24">
+            <span class="label-thong-tin-left">{{ 'function.document-template.document-template-config.left-content.label' | translate }}</span>
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col class="scrollbar scrollbar-primary" nzSm="24" style="overflow-y: auto; height: 160vh;">
+            <div *ngFor="let item of listMetaData" style="padding: 0 10px;">
+              <button
+                style="width: 100%; margin: 5px"
+                nz-button
+                nzType="default"
+                nz-tooltip
+                [nzTooltipTitle]="item.metaDataCode"
+                (click)="addItem(item)"
+              >
+                {{ item.metaDataName }}</button
+              ><br />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div nz-col nzSpan="16">
+        <div nz-row style="padding-bottom: 15px">
+          <div nz-col nzSm="24" class="text-center">
+            <button style="margin-top: 10px; margin-right: 10px" nz-button nzType="default" (click)="onPageChange($event, -1)">
+              <i class="fas fa-angle-left"></i>
+            </button>
+            <input
+              #inputElement
+              readonly
+              style="width: 50px; padding-left: 20px"
+              nz-input
+              nz-tooltip
+              nzTooltipTrigger="focus"
+              nzTooltipPlacement="topLeft"
+              nzOverlayClassName="numeric-input"
+              [ngModel]="currentPage"
+              placeholder="Nhập số trang"
+            />
+            <button style="margin-top: 10px; margin-left: 10px" nz-button nzType="default" (click)="onPageChange($event, 1)">
+              <i class="fas fa-angle-right"></i>
+            </button>
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSm="24" class="text-center">
+            <div #pdfContainer id="pdfContainer" class="ware__imgs-item" style="overflow: hidden; border: 1px solid #ccc">
+              <pdf-viewer
+                [src]="fileUrl"
+                [render-text]="true"
+                [rotation]="0"
+                [zoom]="1"
+                [(page)]="currentPage"
+                [show-all]="false"
+                [show-borders]="true"
+                [original-size]="false"
+                (click)="onClick($event)"
+                [fit-to-page]="true"
+                [autoresize]="true"
+                (after-load-complete)="afterPdfLoadComplete($event)"
+                (page-rendered)="pageRendered($event)"
+                (pages-initialized)="pageInitialized($event)"
+                (text-layer-rendered)="textLayerRendered($event)"
+                (error)="onPdfError($event)"
+              >
+              </pdf-viewer>
+              <app-config-item
+                style="overflow: auto"
+                [bound]="pdfContainer"
+                [option]="option"
+                *ngFor="let itemSetting of listItemSettingCurrentPage; let position = index"
+                [setting]="itemSetting"
+                [listMetaDataSetting]="listItemSettingCurrentPage"
+                [position]="position"
+                (onSelectedItem)="onSelectedItem($event)"
+                (onRemove)="onItemRemove($event)"
+                (onItemSettingUpdate)="onItemSettingUpdate($event)"
+                (onItemClick)="onItemClick($event)"
+              >
+              </app-config-item>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div nz-col nzSpan="4" style="height: 100%; padding: 10px">
+        <div>
+          <div nz-row class="text-center">
+            <div nz-col nzSm="24">
+              <span class="label-thong-tin-left">{{ 'function.document-template.document-template-config.right-content.format.label' | translate }}</span>
+            </div>
+          </div>
+          <nz-row style="margin: 5px 0 5px 0">
+            <nz-select (ngModelChange)="changeFont($event)" nzShowSearch nzPlaceHolder="Chọn font" [(ngModel)]="selectedFont">
+              <nz-option [style.font-family]="option" *ngFor="let option of listFont" [nzLabel]="option" [nzValue]="option"></nz-option>
+            </nz-select>
+          </nz-row>
+          <nz-row>
+            <nz-col nzSm="8" nzXS="24">
+              <nz-select
+                (ngModelChange)="changeSize($event)"
+                style="width: 60px"
+                nzShowSearch
+                nzPlaceHolder="Chọn cỡ chữ"
+                [(ngModel)]="selectedFontSize"
+              >
+                <nz-option *ngFor="let option of listFontSize" [nzLabel]="option" [nzValue]="option"></nz-option>
+              </nz-select>
+            </nz-col>
+            <nz-col nzSm="16" nzXS="24">
+              <button
+                style="margin-top: 6px; margin-right: 3px; margin-left: 3px"
+                nz-button
+                nzSize="small"
+                [nzType]="selectedFontWeight === 'bold' ? 'primary' : 'default'"
+                (click)="changeFontWeight('bold')"
+              >
+                <span style="font-weight: bold">B</span>
+              </button>
+              <button
+                style="margin-top: 6px; margin-right: 3px; margin-left: 3px"
+                nz-button
+                nzSize="small"
+                [nzType]="selectedFontStyle === 'italic' ? 'primary' : 'default'"
+                (click)="changeFontStyle('italic')"
+              >
+                <span style="font-style: italic">I</span>
+              </button>
+              <button
+                style="margin-top: 6px; margin-right: 3px; margin-left: 3px"
+                nz-button
+                nzSize="small"
+                [nzType]="selectedTextDecoration === 'underline' ? 'primary' : 'default'"
+                (click)="changeTextDecoration('underline')"
+              >
+                <span style="text-decoration: underline">U</span>
+              </button>
+            </nz-col>
+          </nz-row>
+          <div nz-row>
+            <div nz-col nzSm="24">
+              <button
+                style="margin: 5px 5px 5px 0"
+                nz-button
+                nzType="default"
+                [nzType]="selectedTextAlign === 'left' ? 'primary' : 'default'"
+                (click)="changeTextAlign('left')"
+              >
+                <i class="fas fa-align-left"></i>
+              </button>
+              <button
+                style="margin: 5px"
+                nz-button
+                nzType="default"
+                [nzType]="selectedTextAlign === 'center' ? 'primary' : 'default'"
+                (click)="changeTextAlign('center')"
+              >
+                <i class="fas fa-align-center"></i>
+              </button>
+              <button
+                style="margin: 5px"
+                nz-button
+                nzType="default"
+                [nzType]="selectedTextAlign === 'right' ? 'primary' : 'default'"
+                (click)="changeTextAlign('right')"
+              >
+                <i class="fas fa-align-right"></i>
+              </button>
+              <input nz-input type="color" [(ngModel)]="selectedColor" (ngModelChange)="changeColor($event)" />
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 20px">
+          <div nz-row class="text-center">
+            <div nz-col nzSm="24">
+              <span class="label-thong-tin-left">{{ 'function.document-template.document-template-config.right-content.sign-position.label' | translate }}</span>
+            </div>
+          </div>
+          <!-- <div nz-row class="text-center" style="height: 100px">
+            <div nz-col nzSm="24" style="margin-top: 10px">
+              <div class="class-ky" (click)="addVungKy(1, 'Ký chứng thực')">
+                <img
+                  src="assets/tmp/img/cau-hinh-bieu-mau/icon-ch-ng-th-c@3x.jpg"
+                  class="img-button"
+                  alt="Ký chứng thực"
+                  title="Ký chứng thực"
+                />
+                <br />Ký chứng thực
+              </div>
+            </div>
+          </div>
+          <div nz-row class="text-center" style="height: 100px">
+            <div nz-col nzSm="24" style="margin-top: 10px">
+              <div class="class-ky" (click)="addVungKy(2, 'Ký phê duyệt')">
+                <img
+                  src="assets/tmp/img/cau-hinh-bieu-mau/icon-k-ph-duy-t@3x.jpg"
+                  class="img-button"
+                  alt="Ký phê duyệt"
+                  title="Ký phê duyệt"
+                />
+                <br />Ký phê duyệt
+              </div>
+            </div>
+          </div>
+          <div nz-row class="text-center" style="height: 100px">
+            <div nz-col nzSm="24" style="margin-top: 10px">
+              <div class="class-ky" (click)="addVungKy(3, 'Ký nháy')">
+                <img
+                  src="assets/tmp/img/cau-hinh-bieu-mau/icon-k-nh-y@3x.jpg"
+                  class="img-button"
+                  alt="Ký nháy"
+                  title="Ký nháy"
+                />
+                <br />Ký nháy
+              </div>
+            </div>
+          </div> -->
+          <div nz-row class="text-center" style="height: 100px">
+            <div nz-col nzSm="24" style="margin-top: 10px">
+              <div class="class-ky" (click)="addVungKy(4, 'Ký số')">
+                <img src="assets/tmp/img/cau-hinh-bieu-mau/icon-k-nh-y@3x.jpg" class="img-button" alt="Ký số" title="Ký số" />
+                <br />{{ 'function.document-template.document-template-config.digital-sign' | translate }}
+              </div>
+            </div>
+          </div>
+          <!-- <div nz-row class="text-center" style="height: 100px">
+            <div nz-col nzSm="24" style="margin-top: 10px">
+              <div class="class-ky" (click)="addVungKy(5, 'Ký điện tử')">
+                <img
+                  src="assets/tmp/img/cau-hinh-bieu-mau/icon-k-nh-y@3x.jpg"
+                  class="img-button"
+                  alt="Ký điện tử"
+                  title="Ký điện tử"
+                />
+                <br />Ký điện tử
+              </div>
+            </div>
+          </div> -->
+          <div nz-row>
+            <div nz-col nzSm="24" style="margin-top: 10px">
+              <label style="color: red" nz-checkbox [(ngModel)]="checkedAllPage">{{ 'function.document-template.document-template-config.checkedallpage' | translate }}</label>
+            </div>
+          </div>
+          <nz-divider style="background-color: red; margin-top: 16px !important; margin-bottom: 16px !important;"></nz-divider>
+          <div *ngIf="isShowFormDynamicSign">
+            <div nz-row>
+              <div nz-col nzSm="24">
+                <label style="color: red" nz-checkbox 
+                  [(ngModel)]="isDynamicPosition"
+                  (ngModelChange)="checkedDynamicSignChange($event)">{{ 'function.document-template.document-template-config.checked-dynamic-sign' | translate }}</label>
+              </div>
+            </div>
+            <div nz-row>
+              <div nz-col nzSm="24" style="margin-top: 10px">
+                <label>{{ 'function.document-template.document-template-config.text-anchor.label' | translate }}</label>
+                <input
+                  style="width: 100%;"
+                  type="text"
+                  nz-input
+                  placeholder="{{ 'function.document-template.document-template-config.text-anchor.placeholder' | translate }}"
+                  [(ngModel)]="textAnchor"
+                  (ngModelChange)="textAnchorChange($event)"
+                /> 
+              </div>
+            </div>
+            <div nz-row>
+              <div nz-col nzSm="24" style="margin-top: 10px">
+                <label>{{ 'function.document-template.document-template-config.from-page.label' | translate }}</label>
+                <input
+                  min="1"
+                  style="width: 100%;"
+                  type="number"
+                  nz-input
+                  placeholder="{{ 'function.document-template.document-template-config.from-page.placeholder' | translate }}"
+                  [(ngModel)]="fromPage"
+                  (ngModelChange)="fromPageChange($event)"
+                /> 
+              </div>
+            </div>
+            <div nz-row>
+              <div nz-col nzSm="24" style="margin-top: 10px">
+                <label>{{ 'function.document-template.document-template-config.text-finded-position.label' | translate }}</label>
+                <input
+                  min="1"
+                  style="width: 100%;"
+                  type="number"
+                  nz-input
+                  placeholder="{{ 'function.document-template.document-template-config.text-finded-position.placeholder' | translate }}"
+                  [(ngModel)]="textFindedPosition"
+                  (ngModelChange)="textFindedPositionChange($event)"
+                /> 
+              </div>
+            </div>
+            <div nz-row>
+              <div nz-col nzSm="24" style="margin-top: 10px">
+                <label nz-tooltip nzTooltipTitle="{{ 'function.document-template.document-template-config.dynamic-llx-comment.label' | translate }}">{{ 'function.document-template.document-template-config.dynamic-llx.label' | translate }}</label>                
+                <input
+                  style="width: 100%;"
+                  type="number"
+                  nz-input
+                  placeholder="{{ 'function.document-template.document-template-config.dynamic-llx.placeholder' | translate }}"
+                  [(ngModel)]="dynamicFromAnchorLLX"
+                  (ngModelChange)="dynamicFromAnchorLLXChange($event)"
+                /> 
+              </div>
+            </div>
+            <div nz-row>
+              <div nz-col nzSm="24" style="margin-top: 10px">
+                <label nz-tooltip nzTooltipTitle="{{ 'function.document-template.document-template-config.dynamic-lly-comment.label' | translate }}">{{ 'function.document-template.document-template-config.dynamic-lly.label' | translate }}</label>
+                <input
+                  style="width: 100%;"
+                  type="number"
+                  nz-input
+                  placeholder="{{ 'function.document-template.document-template-config.dynamic-lly.placeholder' | translate }}"
+                  [(ngModel)]="dynamicFromAnchorLLY"
+                  (ngModelChange)="dynamicFromAnchorLLYChange($event)"
+                /> 
+              </div>
+            </div>                   
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="float: right; margin-top: 10px">
+      <button
+        nz-button
+        nzType="primary"
+        class="btn-primary"
+        *ngIf="btnSave.visible && btnSave.grandAccess"
+        [nzLoading]="isLoading"
+        (click)="btnSave.click($event)"
+      >
+        <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSave.titlei18n }}
+      </button>
+      <button
+        style="margin-left: 5px"
+        nz-button
+        nzType="primary"
+        class="btn-warning"
+        *ngIf="btnCancel.visible && btnCancel.grandAccess"
+        (click)="btnCancel.click($event)"
+      >
+        <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.titlei18n }}
+      </button>
+    </div>
+  </nz-card>
+</page-header-wrapper>

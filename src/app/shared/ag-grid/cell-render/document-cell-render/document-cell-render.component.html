@@ -1,0 +1,17 @@
+<nz-tag
+  class="tag-click"
+  [nzColor]="'#00BB00'"
+  *ngIf="totalDocument === 1"
+  (click)="btnDocumentInfoClick($event)"
+  >{{ documents[0].documentCode }}
+</nz-tag>
+
+<button nz-button nz-dropdown [nzDropdownMenu]="documentMenu" *ngIf="totalDocument > 1">
+  Chọn mã hợp đồng
+  <i nz-icon nzType="down"></i>
+</button>
+<nz-dropdown-menu #documentMenu="nzDropdownMenu">
+  <ul nz-menu>
+    <li nz-menu-item *ngFor="let option of documents" (click)="btnDocumentDropdownClick(option.documentId)">{{ option.documentCode }}</li>
+  </ul>
+</nz-dropdown-menu>

@@ -1,0 +1,86 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  nzWidth="1000px"
+  (nzOnCancel)="handleCancel()">
+  <ng-template #modalTitle> {{ tittle }} </ng-template>
+
+  <ng-template #modalContent>
+    <nz-row>
+      <nz-col nzSm="12" nzXS="24" nzMd="12">
+        <h1>Danh sách thiết bị</h1>
+      </nz-col>
+
+      <nz-col nzSm="12" nzXS="24" nzMd="12" class="pull-right">
+          <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+            <input
+            type="text"
+            [(ngModel)]="filter.textSearch"
+            nz-input
+            placeholder="{{ 'layout.grid.search.text-search.placeholder' | translate }}"
+            (keyup.enter)="initGridData()"
+            />
+          </nz-input-group>
+          <ng-template #inputClearTpl
+          ><i
+            nz-icon
+            class="ant-input-clear-icon"
+            nzTheme="fill"
+            nzType="close-circle"
+            *ngIf="filter.textSearch"
+            (click)="clearTextSearch()"
+          ></i
+        ></ng-template>
+          <ng-template #suffixIconButton>
+            <button
+              nz-button
+              nzType="default"
+              nzSearch
+              (click)="filter.ShowAdSearch = !filter.ShowAdSearch"
+              title="{{ 'layout.button.btn-show-ad-search.label' | translate }}"
+            >
+              <i nz-icon nzType="caret-down" nzTheme="outline" *ngIf="!filter.ShowAdSearch"></i>
+              <i nz-icon nzType="caret-up" nzTheme="outline" *ngIf="filter.ShowAdSearch"></i>
+            </button>
+          </ng-template>
+        </nz-col>
+
+    </nz-row>
+
+
+      <ag-grid-angular
+        #agGrid
+        style="width: 100%; height: 250px"
+        id="unit-grid"
+        class="ag-theme-alpine"
+        [modules]="modules"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [frameworkComponents]="frameworkComponents"
+        [suppressRowClickSelection]="true"
+        [rowSelection]="rowSelection"
+        [rowData]="grid.rowData"
+        [masterDetail]="true"
+        [overlayLoadingTemplate]="overlayLoadingTemplate"
+        [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+        >
+      </ag-grid-angular>
+
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnCancel.click($event)">
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.titlei18n
+      }}
+    </button>
+  </ng-template>
+</nz-modal>

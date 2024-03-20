@@ -1,0 +1,119 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  nzWidth="700px"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle> {{ tittle }} </ng-template>
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="form" (ngSubmit)="save()">
+      <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="code">{{
+          'function.role.modal-item.code.label' | translate
+        }}</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateCode">
+          <input
+            nz-input
+            minlength="1"
+            maxlength="70"
+            required
+            formControlName="code"
+            id="code"
+            placeholder="{{ 'function.role.modal-item.code.placeholder' | translate }}"
+            style="text-transform: uppercase;"
+          />
+          <ng-template #validateCode let-control>
+            <ng-container *ngIf="control.hasError('maxlength')">{{ 'function.role.modal-item.code.message.maxlength' | translate }}</ng-container>
+            <ng-container *ngIf="control.hasError('minlength')">{{ 'function.role.modal-item.code.message.minlength' | translate }}</ng-container>
+            <ng-container *ngIf="control.hasError('required')">{{ 'function.role.modal-item.code.message.required' | translate }}</ng-container>
+            <ng-container *ngIf="control.hasError('pattern')">{{ 'function.role.modal-item.code.message.pattern' | translate }}</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="name">{{
+          'function.role.modal-item.name.label' | translate
+        }}</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateName">
+          <input
+            nz-input
+            minlength="1"
+            maxlength="256"
+            required
+            formControlName="name"
+            id="name"
+            placeholder="{{ 'function.role.modal-item.name.placeholder' | translate }}"
+          />
+          <ng-template #validateName let-control>
+            <ng-container *ngIf="control.hasError('maxlength')">{{ 'function.role.modal-item.name.message.maxlength' | translate }}</ng-container>
+            <ng-container *ngIf="control.hasError('minlength')">{{ 'function.role.modal-item.name.message.minlength' | translate }}</ng-container>
+            <ng-container *ngIf="control.hasError('required')">{{ 'function.role.modal-item.name.message.required' | translate }}</ng-container>
+            <ng-container *ngIf="control.hasError('pattern')">{{ 'function.role.modal-item.name.message.pattern' | translate }}</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>      
+      <nz-form-item nz-row>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzFor="status">{{ 'function.role.modal-item.status.label' | translate }}</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <nz-switch formControlName="status" nzSize="small" style="margin-right: 5px"></nz-switch>
+          <label>
+            <nz-tag [nzColor]="'#00BB00'" [hidden]="!form.value.status">{{
+              'function.role.modal-item.status-true.label' | translate
+            }}</nz-tag>
+            <nz-tag [nzColor]="'#EF5350'" [hidden]="form.value.status">{{
+              'function.role.modal-item.status-false.label' | translate
+            }}</nz-tag>
+          </label>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item style="margin-bottom: 0">
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzFor="description">
+          {{ 'function.role.modal-item.description.label' | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24">
+          <textarea
+            rows="3"
+            nz-input
+            id="description"
+            formControlName="description"
+            placeholder="{{ 'function.role.modal-item.description.placeholder' | translate }}"
+          ></textarea>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-secondary"
+      *ngIf="isInfo && btnEdit.visible && btnEdit.grandAccess"
+      (click)="btnEdit.click($event)"
+    >
+      <i nz-icon nzType="edit" nzTheme="fill"></i>{{ btnEdit.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && btnSave.visible && btnSave.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+      [disabled]="form.invalid"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i> {{ btnSave.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i> {{ btnCancel.titlei18n }}
+    </button>
+  </ng-template>
+</nz-modal>

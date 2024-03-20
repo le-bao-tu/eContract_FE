@@ -1,0 +1,332 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  [nzWidth]="1000"
+  nzMaskClosable="false"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle> {{ tittle }} </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="form" (ngSubmit)="save()">
+      <div nz-row>
+        <div nz-col [nzSpan]="12">
+          <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired nzFor="code">{{
+              'function.notify-config.modal-item.code.label' | translate
+            }}</nz-form-label>
+            <nz-form-control [nzSm]="15" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateCode">
+              <input
+                nz-input
+                minlength="1"
+                maxlength="70"
+                required
+                formControlName="code"
+                id="code"
+                name="code"
+                placeholder="{{ 'function.notify-config.modal-item.code.placeholder' | translate }}"
+                style="text-transform: uppercase"
+              />
+              <ng-template #validateCode let-control>
+                <ng-container *ngIf="control.hasError('maxlength')">Tối đa 70 ký tự!</ng-container>
+                <ng-container *ngIf="control.hasError('minlength')"> Tối thiểu 1 ký tự!</ng-container>
+                <ng-container *ngIf="control.hasError('required')"> Trường thông tin bắt buộc!</ng-container>
+                <ng-container *ngIf="control.hasError('pattern')"> Không đúng định dạng!</ng-container>
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="12">
+          <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>{{
+              'function.notify-config.modal-item.notify-type.label' | translate
+            }}</nz-form-label>
+            <nz-form-control
+              [nzSm]="15"
+              [nzXs]="24"
+              nzErrorTip="{{ 'function.notify-config.modal-item.notify-type.error.message' | translate }}"
+            >
+              <nz-select
+                style="width: 100%"
+                nzShowSearch
+                name="stateId"
+                formControlName="notifyType"
+                nzPlaceHolder="{{ 'function.notify-config.modal-item.notify-type.placeholder' | translate }}"
+                (ngModelChange)="notifyTypeChange($event)"
+              >
+                <nz-option *ngFor="let item of listNotifyType" [nzLabel]="item.label" [nzValue]="item.value"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="12" *ngIf="visibleTimeAndDaySendBefore">
+          <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24">{{
+              'function.notify-config.modal-item.timesendnotifyview.label' | translate
+            }}</nz-form-label>
+            <nz-form-control [nzSm]="15" [nzXs]="24">
+              <nz-time-picker
+                style="width: 100%"
+                formControlName="timeSendNotifyView"
+                id="timeSendNotifyView"
+                name="timeSendNotifyView"
+                [nzAllowEmpty]="true"
+                nzFormat="HH:mm"
+                nzPlaceHolder="{{ 'function.notify-config.modal-item.timesendnotifyview.placeholder' | translate }}"
+              ></nz-time-picker>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="12" *ngIf="visibleTimeAndDaySendBefore">
+          <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24">{{
+              'function.notify-config.modal-item.daysendnotibefore.label' | translate
+            }}</nz-form-label>
+            <nz-form-control [nzSm]="15" [nzXs]="24">
+              <nz-input-number
+                style="width: 100%"
+                [nzPrecision]="0"
+                [nzMin]="0"
+                formControlName="daySendNotiBefore"
+                id="daySendNotiBefore"
+                name="daySendNotiBefore"
+              ></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+      <div nz-row>
+        <div nz-col [nzSpan]="12" *ngIf="visibleTimeAndDaySendBefore">
+          <label nz-checkbox formControlName="isRepeat" id="isRepeat" name="isRepeat">
+            <span>{{ 'function.notify-config.modal-item.isrepeat.label' | translate }}</span>
+          </label>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <nz-form-item style="margin-bottom: unset">
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="status">{{
+              'function.notify-config.modal-item.status.label' | translate
+            }}</nz-form-label>
+            <nz-form-control [nzSpan]="15">
+              <nz-switch formControlName="status" nzSize="small" style="margin-right: 5px"></nz-switch>
+              <label>
+                <nz-tag [nzColor]="'#00BB00'" [hidden]="!form.value.status">{{
+                  'function.notify-config.modal-item.status-true.label' | translate
+                }}</nz-tag>
+                <nz-tag [nzColor]="'#EF5350'" [hidden]="form.value.status">{{
+                  'function.notify-config.modal-item.status-false.label' | translate
+                }}</nz-tag>
+              </label>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+      <div nz-row style="margin-top: 10px; padding: 10px; border: 1px solid #d9d9d9">
+        <div nz-col [nzSpan]="4">
+          <label nz-checkbox formControlName="isSendSMS" id="isSendSMS" name="isSendSMS" (ngModelChange)="setDisableAreaSMS($event)">
+            <span>{{ 'function.notify-config.modal-item.issendsms.label' | translate }}</span>
+          </label>
+        </div>
+        <div nz-col [nzOffset]="1" [nzSpan]="19">
+          <nz-form-item style="margin-bottom: 5px">
+            <nz-form-label [nzSm]="1" [nzXs]="24">{{ 'function.notify-config.modal-item.tag.label' | translate }}</nz-form-label>
+            <nz-form-control [nzSm]="23" [nzXs]="24">
+              <nz-tag
+                nzMode="checkable"
+                (nzCheckedChange)="setContentSMS(i)"
+                *ngFor="let tag of listTag; let i = index"
+                [nzColor]="tag.color"
+                >{{ tag.name }}</nz-tag
+              >
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="24">
+          <nz-form-item>
+            <nz-form-control [nzErrorTip]="validateSmsTemplate">
+              <textarea
+                #smsTemplate
+                rows="3"
+                nz-input
+                formControlName="smsTemplate"
+                id="smsTemplate"
+                name="smsTemplate"
+                placeholder="{{ 'function.notify-config.modal-item.smstemplate.placeholder' | translate }}"
+              ></textarea>
+              <ng-template #validateSmsTemplate let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                  {{ 'function.notify-config.modal-item.smstemplate.message.required' | translate }}</ng-container
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+      <div nz-row style="margin-top: 10px; padding: 10px; border: 1px solid #d9d9d9">
+        <div nz-col [nzSpan]="4">
+          <label
+            nz-checkbox
+            formControlName="isSendEmail"
+            id="isSendEmail"
+            name="isSendEmail"
+            (ngModelChange)="setDisableEmailCheckbox($event)"
+          >
+            <span>{{ 'function.notify-config.modal-item.issendemail.label' | translate }}</span>
+          </label>
+        </div>
+        <div nz-col [nzOffset]="1" [nzSpan]="19">
+          <nz-form-item style="margin-bottom: 5px">
+            <nz-form-label [nzSm]="1" [nzXs]="24">{{ 'function.notify-config.modal-item.tag.label' | translate }}</nz-form-label>
+            <nz-form-control [nzSm]="23" [nzXs]="24">
+              <nz-tag
+                nzMode="checkable"
+                (nzCheckedChange)="setContentEmail(i)"
+                *ngFor="let tag of listTag; let i = index"
+                [nzColor]="tag.color"
+                >{{ tag.name }}</nz-tag
+              >
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="24">
+          <nz-form-item style="margin-bottom: 0px">
+            <nz-form-control [nzErrorTip]="validateEmailTitle">
+              <input
+                #emailTitleTemplate
+                nz-input
+                formControlName="emailTitleTemplate"
+                id="emailTitleTemplate"
+                name="emailTitleTemplate"
+                placeholder="{{ 'function.notify-config.modal-item.emailtitletemplate.placeholder' | translate }}"
+                (focus)="focusElement($event)"
+              />
+              <ng-template #validateEmailTitle let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                  {{ 'function.notify-config.modal-item.emailtitletemplate.message.required' | translate }}</ng-container
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-control [nzErrorTip]="validateEmailBody">
+              <textarea
+                #emailBodyTemplate
+                rows="3"
+                nz-input
+                formControlName="emailBodyTemplate"
+                id="emailBodyTemplate"
+                name="emailBodyTemplate"
+                placeholder="{{ 'function.notify-config.modal-item.emailbodytemplate.placeholder' | translate }}"
+                (focus)="focusElement($event)"
+              ></textarea>
+              <ng-template #validateEmailBody let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                  {{ 'function.notify-config.modal-item.emailbodytemplate.message.required' | translate }}</ng-container
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+      <div nz-row style="margin-top: 10px; padding: 10px; border: 1px solid #d9d9d9">
+        <div nz-col [nzSpan]="4">
+          <label
+            nz-checkbox
+            formControlName="isSendNotification"
+            id="isSendNotification"
+            name="isSendNotification"
+            (ngModelChange)="setDisableNotificationCheckbox($event)"
+          >
+            <span>{{ 'function.notify-config.modal-item.issendnotification.label' | translate }}</span>
+          </label>
+        </div>
+        <div nz-col [nzOffset]="1" [nzSpan]="19">
+          <nz-form-item style="margin-bottom: 5px">
+            <nz-form-label [nzSm]="1" [nzXs]="24">{{ 'function.notify-config.modal-item.tag.label' | translate }}</nz-form-label>
+            <nz-form-control [nzSm]="23" [nzXs]="24">
+              <nz-tag
+                nzMode="checkable"
+                (nzCheckedChange)="setContentNotify(i)"
+                *ngFor="let tag of listTag; let i = index"
+                [nzColor]="tag.color"
+                >{{ tag.name }}</nz-tag
+              >
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="24">
+          <nz-form-item style="margin-bottom: 0px">
+            <nz-form-control [nzErrorTip]="validateNotificationTitle">
+              <input
+                #notificationTitleTemplate
+                nz-input
+                formControlName="notificationTitleTemplate"
+                id="notificationTitleTemplate"
+                name="notificationTitleTemplate"
+                placeholder="{{ 'function.notify-config.modal-item.emailtitletemplate.placeholder' | translate }}"
+                (focus)="focusElement($event)"
+              />
+              <ng-template #validateNotificationTitle let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                  {{ 'function.notify-config.modal-item.notificationTitleTemplate.message.required' | translate }}</ng-container
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-control [nzErrorTip]="validateNotificationBody">
+              <textarea
+                #notificationBodyTemplate
+                rows="3"
+                nz-input
+                formControlName="notificationBodyTemplate"
+                id="notificationBodyTemplate"
+                name="notificationBodyTemplate"
+                placeholder="{{ 'function.notify-config.modal-item.emailbodytemplate.placeholder' | translate }}"
+                (focus)="focusElement($event)"
+              ></textarea>
+              <ng-template #validateNotificationBody let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                  {{ 'function.notify-config.modal-item.notificationBodyTemplate.message.required' | translate }}</ng-container
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-secondary"
+      *ngIf="isInfo && btnEdit.visible && btnEdit.grandAccess"
+      (click)="btnEdit.click($event)"
+    >
+      <i nz-icon nzType="edit" nzTheme="fill"></i>{{ btnEdit.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && btnSave.visible && btnSave.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+      [disabled]="form.invalid"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSave.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.titlei18n }}
+    </button>
+  </ng-template>
+</nz-modal>

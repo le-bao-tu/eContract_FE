@@ -1,0 +1,390 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  nzWidth="1000px"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle> {{ tittle }} </ng-template>
+
+  <ng-template #modalContent>
+    <fieldset style="margin: 10px 0">
+      <legend>{{ 'function.user.modal-item.user-profile' | translate }}</legend>
+      <form nz-form [formGroup]="formInfoPerson">
+        <nz-row>
+          <div nz-col [nzSm]="24" nzLg="12" nzMd="12">
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="organization" nzRequired>{{
+                'function.user.modal-item.organization.label' | translate
+              }}</nz-form-label>
+              <nz-form-control
+                [nzSm]="17"
+                [nzXs]="24"
+                nzErrorTip="{{ 'function.user.modal-item.search.organization.error-message.required' | translate }}"
+              >
+                <nz-tree-select
+                  [nzDropdownStyle]="{ 'max-height': '300px' }"
+                  [nzExpandedKeys]="expandKeys"
+                  [nzDisabled]="!checkSysAdmin"
+                  formControlName="organization"
+                  [nzNodes]="listOfOrg"
+                  [nzData]
+                  nzShowSearch
+                  [nzAllowClear]="false"
+                  nzShowLine
+                  nzPlaceHolder="{{ 'function.user.modal-item.search.organization.placeholder' | translate }}"
+                >
+                </nz-tree-select>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-select [nzAllowClear]="false" (ngModelChange)="changeIdentity($event)" formControlName="identityType" nz-col nzSpan="5">
+                <nz-option *ngFor="let item of listIdentityNumberType" [nzValue]="item.value" [nzLabel]="item.label"> </nz-option>
+              </nz-select>
+              <nz-form-control [nzSm]="17" nzOffset="1" [nzXs]="24">
+                <input
+                  [disabled]="isEdit || isInfo"
+                  (ngModelChange)="changeGttt($event)"
+                  nz-input
+                  formControlName="identityNumber"
+                  id="identityNumber"
+                  placeholder="Nhập vào số {{ identityName }}"
+                />
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="issueDate">{{
+                'function.user.modal-item.issuedate.label' | translate
+              }}</nz-form-label>
+              <nz-form-control [nzSm]="6" [nzXs]="24">
+                <nz-date-picker
+                  [nzFormat]="dateFormat"
+                  nzPlaceHolder="{{ 'function.user.modal-item.search.issuedate.placeholder' | translate }}"
+                  style="width: 100%"
+                  formControlName="issueDate"
+                ></nz-date-picker>
+              </nz-form-control>
+
+              <nz-form-label nzOffset="1" [nzSm]="3" [nzXs]="24" nzFor="position">{{
+                'function.user.modal-item.position.label' | translate
+              }}</nz-form-label>
+              <nz-form-control [nzSm]="7" [nzXs]="24">
+                <input
+                  nz-input
+                  formControlName="position"
+                  id="position"
+                  placeholder="{{ 'function.user.modal-item.position.placeholder' | translate }}"
+                />
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="issueBy">{{
+                'function.user.modal-item.issueby.label' | translate
+              }}</nz-form-label>
+              <nz-form-control [nzSm]="17" [nzXs]="24">
+                <input
+                  nz-input
+                  formControlName="issueBy"
+                  id="issueBy"
+                  placeholder="{{ 'function.user.modal-item.issueby.placeholder' | translate }}"
+                />
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="countryName">{{
+                'function.user.modal-item.countryname.label' | translate
+              }}</nz-form-label>
+              <nz-form-control [nzSm]="17" [nzXs]="24">
+                <input
+                  nz-input
+                  formControlName="countryName"
+                  id="countryName"
+                  placeholder="{{ 'function.user.modal-item.countryname.placeholder' | translate }}"
+                />
+                <!-- <nz-select nzMode="default" nzPlaceHolder="Chọn quốc gia" [nzOptions]="listCountry" formControlName="countryName"> </nz-select> -->
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="address">{{
+                'function.user.modal-item.address.label' | translate
+              }}</nz-form-label>
+              <nz-form-control [nzSm]="17" [nzXs]="24">
+                <input
+                  nz-input
+                  formControlName="address"
+                  id="address"
+                  placeholder="{{ 'function.user.modal-item.address.placeholder' | translate }}"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSm]="24" nzLg="12" nzMd="12">
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">{{
+                'function.user.modal-item.name.label' | translate
+              }}</nz-form-label>
+              <nz-form-control
+                [nzSm]="18"
+                [nzXs]="24"
+                nzErrorTip="{{ 'function.user.modal-item.name.error-message.required' | translate }}"
+              >
+                <input
+                  nz-input
+                  formControlName="name"
+                  id="name"
+                  placeholder="{{ 'function.user.modal-item.name.placeholder' | translate }}"
+                />
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+              <nz-form-label [nzSm]="6" nzFor="birthday" [nzXs]="24">{{
+                'function.user.modal-item.birthday.label' | translate
+              }}</nz-form-label>
+              <nz-form-control [nzSm]="8" [nzXs]="24">
+                <nz-date-picker
+                  [nzFormat]="dateFormat"
+                  nzPlaceHolder="{{ 'function.user.modal-item.search.birthday.placeholder' | translate }}"
+                  formControlName="birthday"
+                >
+                </nz-date-picker>
+              </nz-form-control>
+              <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="status">{{ 'function.user.modal-item.sex.label' | translate }}</nz-form-label>
+              <nz-form-control [nzSpan]="8">
+                <nz-select formControlName="sex">
+                  <nz-option *ngFor="let item of listSex" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="phoneNumber">{{
+                'function.user.modal-item.phonenumber.label' | translate
+              }}</nz-form-label>
+              <nz-form-control [nzSm]="18" [nzXs]="24" [nzErrorTip]="phoneErrorTip">
+                <input
+                  nz-input
+                  formControlName="phoneNumber"
+                  id="phoneNumber"
+                  placeholder="{{ 'function.user.modal-item.phonenumber.placeholder' | translate }}"
+                />
+              </nz-form-control>
+              <ng-template #phoneErrorTip let-control>
+                <ng-container *ngIf="control.hasError('required')">{{
+                  'function.user.modal-item.phonenumber.error-message.required' | translate
+                }}</ng-container>
+                <ng-container *ngIf="control.hasError('pattern')">{{
+                  'function.user.modal-item.phonenumber.error-message.wrong-format' | translate
+                }}</ng-container>
+              </ng-template>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="email">{{ 'function.user.modal-item.email.label' | translate }}</nz-form-label>
+              <nz-form-control [nzSm]="18" [nzXs]="24" [nzErrorTip]="emailErrorTip">
+                <input
+                  nz-input
+                  formControlName="email"
+                  id="email"
+                  placeholder="{{ 'function.user.modal-item.email.placeholder' | translate }}"
+                />
+              </nz-form-control>
+              <ng-template #emailErrorTip let-control>
+                <ng-container *ngIf="control.hasError('required')">{{
+                  'function.user.modal-item.email.error-message.required' | translate
+                }}</ng-container>
+                <ng-container *ngIf="control.hasError('pattern')">{{
+                  'function.user.modal-item.email.error-message.wrong-format' | translate
+                }}</ng-container>
+              </ng-template>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="provinceName">{{
+                'function.user.modal-item.provincename.label' | translate
+              }}</nz-form-label>
+              <nz-form-control [nzSm]="18" [nzXs]="24">
+                <input
+                  nz-input
+                  formControlName="provinceName"
+                  id="provinceName"
+                  placeholder="{{ 'function.user.modal-item.provincename.placeholder' | translate }}"
+                />
+                <!-- <nz-select nzMode="default" nzPlaceHolder="Chọn Tỉnh/Thành phố" [nzOptions]="listProvince" formControlName="provinceName">
+                </nz-select> -->
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="districtName">{{
+                'function.user.modal-item.districtname.label' | translate
+              }}</nz-form-label>
+              <nz-form-control [nzSm]="18" [nzXs]="24">
+                <input
+                  nz-input
+                  formControlName="districtName"
+                  id="districtName"
+                  placeholder="{{ 'function.user.modal-item.districtname.placeholder' | translate }}"
+                />
+                <!-- <nz-select nzMode="default" nzPlaceHolder="Chọn Quận/Huyện" [nzOptions]="listDistrict" formControlName="districtName">
+                </nz-select> -->
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSm]="24" nzLg="12" nzMd="12">
+            <nz-form-item>
+              <nz-form-label nzFor="eFormConfig" [nzSm]="6" [nzXs]="24">{{
+                'function.user.modal-item.eformconfig.label' | translate
+              }}</nz-form-label>
+              <nz-form-control [nzSm]="17" [nzXs]="24">
+                <nz-select
+                  formControlName="eFormConfig"
+                  nzPlaceHolder="{{ 'function.user.modal-item.search.eformconfig.placeholder' | translate }}"
+                >
+                  <nz-option *ngFor="let option of listEFormConfig" [nzLabel]="option.label" [nzValue]="option.value"> </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSm]="24" nzLg="12" nzMd="12">
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="connectId">{{
+                'function.user.modal-item.connectid.label' | translate
+              }}</nz-form-label>
+              <nz-form-control [nzSm]="18" [nzXs]="24">
+                <input
+                  nz-input
+                  formControlName="connectId"
+                  id="connectId"
+                  placeholder="{{ 'function.user.modal-item.connectid.placeholder' | translate }}"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSm]="24" nzLg="24" nzMd="24">
+            <nz-form-item>
+              <nz-form-label nzFor="subjectDN" [nzSm]="3" [nzXs]="24">{{
+                'function.user.modal-item.subjectdn.label' | translate
+              }}</nz-form-label>
+              <nz-form-control [nzSm]="21" [nzXs]="24">
+                <textarea
+                  nz-input
+                  formControlName="subjectDN"
+                  id="subjectDN"
+                  placeholder="{{ 'function.user.modal-item.subjectdn.placeholder' | translate }}"
+                ></textarea>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </nz-row>
+      </form>
+    </fieldset>
+    <fieldset style="margin: 10px 0">
+      <legend>{{ 'function.user.modal-item.account-profile' | translate }}</legend>
+      <form nz-form [formGroup]="formInfoAccount">
+        <nz-row>
+          <div nz-col [nzSm]="24" nzLg="12" nzMd="12">
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="userName">{{
+                'function.user.modal-item.username.label' | translate
+              }}</nz-form-label>
+              <nz-form-control
+                [nzSm]="17"
+                [nzXs]="24"
+                nzErrorTip="{{ 'function.user.modal-item.username.error-message.required' | translate }}"
+              >
+                <input
+                  nz-input
+                  formControlName="userName"
+                  id="userName"
+                  placeholder="{{ 'function.user.modal-item.username.placeholder' | translate }}"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col nzMd="12" nzLg="12">
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="status">{{ 'function.user.modal-item.status.label' | translate }}</nz-form-label>
+              <nz-form-control [nzSpan]="8">
+                <nz-switch formControlName="status" nzSize="small"></nz-switch>
+                <label>
+                  <nz-tag [nzColor]="'#00BB00'" [hidden]="!formInfoAccount.value.status">{{
+                    'function.user.modal-item.status-true.label' | translate
+                  }}</nz-tag>
+                  <nz-tag [nzColor]="'#EF5350'" [hidden]="formInfoAccount.value.status">{{
+                    'function.user.modal-item.status-false.label' | translate
+                  }}</nz-tag>
+                </label>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </nz-row>
+      </form>
+    </fieldset>
+
+    <fieldset style="margin: 10px 0" [hidden]="isAdd">
+      <legend>Danh sách chứng thư số</legend>
+      <ag-grid-angular
+        #agGrid
+        style="width: 100%; height: 250px"
+        id="unit-grid"
+        class="ag-theme-alpine"
+        [modules]="modules"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [frameworkComponents]="frameworkComponents"
+        [suppressRowClickSelection]="true"
+        [rowSelection]="rowSelection"
+        [rowData]="grid.rowData"
+        (selectionChanged)="onSelectionChanged($event)"
+        [overlayLoadingTemplate]="overlayLoadingTemplate"
+        [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+        [excelStyles]="excelStyles"
+        (gridReady)="onGridReady($event)"
+      >
+      </ag-grid-angular>
+      <hr />
+    </fieldset>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-secondary"
+      *ngIf="isInfo && btnEdit.visible && btnEdit.grandAccess && !isFromDocument"
+      (click)="btnEdit.click($event)"
+    >
+      <i nz-icon nzType="edit" nzTheme="fill"></i>{{ btnEdit.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && btnSave.visible && btnSave.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSave.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && !isEdit && btnSaveAndCreate.visible && btnSaveAndCreate.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSaveAndCreate.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSaveAndCreate.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.titlei18n }}
+    </button>
+  </ng-template>
+</nz-modal>
+<app-cert-detail (eventEmmit)="onModalEventEmmit($event)"></app-cert-detail>

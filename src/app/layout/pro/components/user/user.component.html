@@ -1,0 +1,308 @@
+<style>
+  .username {
+    margin-right: 15px;
+    color: #000;
+    font-weight: normal;
+    font-size: 12px;
+    font-family: 'OpenSans', sans-serif;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+  }
+  .text-add {
+    color: black;
+    font-weight: bold;
+    font-size: 12px;
+    font-family: 'OpenSans', sans-serif;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 60px;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+  }
+  .btn {
+    margin-right: 10px;
+    background-color: white;
+    border: 1px solid transparent !important;
+    cursor: pointer;
+  }
+</style>
+<span *ngIf="!token" style="line-height: 60px; cursor: pointer" (click)="login()" class="text-add">Đăng nhập</span>
+<div *ngIf="token" nz-dropdown [nzDropdownMenu]="userMenu" nzPlacement="bottomRight" class="alain-pro__header-item header-user">
+  <span [ngClass]="{ username: homePageCheck }">{{ settings.user.name }} &nbsp; </span
+  ><nz-avatar [nzSrc]="settings.user.avatar" nzSize="medium" class="mr-sm"></nz-avatar>
+  <i *ngIf="homePageCheck" nz-icon nzType="caret-down" nzTheme="outline"></i>
+</div>
+<nz-dropdown-menu #userMenu="nzDropdownMenu">
+  <div *ngIf="token" nz-menu class="width-sm" style="width: 200px">
+    <!-- <div (click)="showModal()" nz-menu-item>
+      <i nz-icon nzType="user" class="mr-sm"></i>
+      {{ 'menu.account.change-password' | translate }}
+    </div> -->
+    <!-- <li nz-menu-divider></li> -->
+    <div (click)="showModalConfigPIN()" nz-menu-item>
+      <i nz-icon nzType="user" class="mr-sm"></i>
+      {{ 'menu.account.config-pin' | translate }}
+    </div>
+    <div nz-menu-item (click)="goTo('/user-profile/update-user-info')">
+      <i nz-icon nzType="edit" nzTheme="outline"></i>
+      {{ 'menu.account.update' | translate }}
+    </div>
+    <li nz-menu-divider></li>
+    <div nz-menu-item (click)="logout()">
+      <i nz-icon nzType="logout" class="mr-sm"></i>
+      {{ 'menu.account.logout' | translate }}
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<nz-modal
+  nzWidth="600px"
+  [nzFooter]="modalFooter"
+  [(nzVisible)]="isVisible"
+  nzTitle="{{ 'menu.account.forgot-password' | translate }}"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="form" (ngSubmit)="save()">
+      <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="oldPassword">{{ 'menu.account.old-password' | translate }}</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateOldPassword">
+          <nz-input-group [nzSuffix]="oldPasswordSubfix">
+            <input
+              formControlName="oldPassword"
+              id="oldPassword"
+              [type]="passwordVisible ? 'text' : 'password'"
+              nz-input
+              placeholder="{{ 'menu.account.input-old-password' | translate }}"
+            />
+          </nz-input-group>
+          <ng-template #oldPasswordSubfix>
+            <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible"></i>
+          </ng-template>
+          <ng-template #validateOldPassword let-control>
+            <ng-container *ngIf="control.hasError('minlength')">
+              {{ 'menu.account.old-password.message.min-length' | translate }}</ng-container
+            >
+            <ng-container *ngIf="control.hasError('required')">
+              {{ 'menu.account.old-password.message.required' | translate }}</ng-container
+            >
+            <ng-container *ngIf="control.hasError('invalidPw')">
+              {{ 'menu.account.old-password.message.invalid' | translate }}</ng-container
+            >
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="newPassword">{{ 'menu.account.new-password' | translate }}</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateNewPassword">
+          <nz-input-group [nzSuffix]="newPasswordSubfix">
+            <input
+              formControlName="newPassword"
+              id="newPassword"
+              [type]="newPasswordVisible ? 'text' : 'password'"
+              nz-input
+              placeholder="{{ 'menu.account.input-new-password' | translate }}"
+            />
+          </nz-input-group>
+          <ng-template #newPasswordSubfix>
+            <i nz-icon [nzType]="newPasswordVisible ? 'eye-invisible' : 'eye'" (click)="newPasswordVisible = !newPasswordVisible"></i>
+          </ng-template>
+          <ng-template #validateNewPassword let-control>
+            <ng-container *ngIf="control.hasError('minlength')">
+              {{ 'menu.account.new-password.message.min-length' | translate }}</ng-container
+            >
+            <ng-container *ngIf="control.hasError('required')">
+              {{ 'menu.account.new-password.message.required' | translate }}</ng-container
+            >
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="confirmPassword">{{
+          'menu.account.confirm-password' | translate
+        }}</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateConfirmPassword">
+          <nz-input-group [nzSuffix]="confirmPasswordSubfix">
+            <input
+              (ngModelChange)="checkConfirmPassword()"
+              formControlName="confirmPassword"
+              id="oldPassword"
+              [type]="confirmPasswordVisible ? 'text' : 'password'"
+              nz-input
+              placeholder="{{ 'menu.account.input-confirm-password' | translate }}"
+            />
+          </nz-input-group>
+          <ng-template #confirmPasswordSubfix>
+            <i
+              nz-icon
+              [nzType]="confirmPasswordVisible ? 'eye-invisible' : 'eye'"
+              (click)="confirmPasswordVisible = !confirmPasswordVisible"
+            ></i>
+          </ng-template>
+          <ng-template #validateConfirmPassword let-control>
+            <ng-container *ngIf="control.hasError('minlength')">
+              {{ 'menu.account.confirm-password.message.min-length' | translate }}</ng-container
+            >
+            <ng-container *ngIf="control.hasError('required')">
+              {{ 'menu.account.confirm-password.message.required' | translate }}</ng-container
+            >
+            <ng-container *ngIf="control.hasError('invalidConfirmPw')">
+              {{ 'menu.account.confirm-password.message.invalid' | translate }}</ng-container
+            >
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<nz-modal
+  nzWidth="600px"
+  [nzFooter]="modalFooterConfigPIN"
+  [(nzVisible)]="isVisibleConfigPIN"
+  nzTitle="Cấu hình PIN"
+  (nzOnCancel)="handleCancelModelConfigPIN()"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="formConfigPIN" (ngSubmit)="saveConfigPIN()">
+      <!-- <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="userPassword">Mật khẩu người dùng</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateUserPassword">
+          <nz-input-group [nzSuffix]="userPasswordSubfix">
+            <input
+              formControlName="userPassword"
+              id="userPassword"
+              [type]="userPasswordVisible ? 'text' : 'password'"
+              nz-input
+              placeholder="Nhập mật khẩu người dùng"
+            />
+          </nz-input-group>
+          <ng-template #userPasswordSubfix>
+            <i nz-icon [nzType]="userPasswordVisible ? 'eye-invisible' : 'eye'" (click)="userPasswordVisible = !userPasswordVisible"></i>
+          </ng-template>
+          <ng-template #validateUserPassword let-control>
+            <ng-container *ngIf="control.hasError('minlength')"> Tối thiểu 6 ký tự.</ng-container>
+            <ng-container *ngIf="control.hasError('required')"> Trường thông tin bắt buộc.</ng-container>
+            <ng-container *ngIf="control.hasError('invalidPw')"> Mật khẩu không chính xác.</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item> -->
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzFor="userPIN">{{ 'menu.account.pin' | translate }}</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateUserPIN">
+          <nz-input-group>
+            <input
+              formControlName="userPIN"
+              id="userPIN"
+              [type]="userPINVisible ? 'text' : 'password'"
+              nz-input
+              placeholder="{{ 'menu.account.input-pin' | translate }}"
+            />
+          </nz-input-group>
+          <ng-template #userPINSubfix>
+            <i nz-icon [nzType]="userPINVisible ? 'eye-invisible' : 'eye'" (click)="userPINVisible = !userPINVisible"></i>
+          </ng-template>
+          <ng-template #validateUserPIN let-control>
+            <ng-container *ngIf="control.hasError('minlength')"> {{ 'menu.account.pin.message.min-length' | translate }}</ng-container>
+            <ng-container *ngIf="control.hasError('required')"> {{ 'menu.account.pin.message.required' | translate }}</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzFor="confirmUserPIN">{{ 'menu.account.confirm-pin' | translate }}</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateConfirmUserPIN">
+          <nz-input-group>
+            <input
+              (ngModelChange)="checkConfirmUserPIN()"
+              formControlName="confirmUserPIN"
+              id="oldPassword"
+              [type]="confirmUserPINVisible ? 'text' : 'password'"
+              nz-input
+              placeholder="{{ 'menu.account.input-confirm-pin' | translate }}"
+            />
+          </nz-input-group>
+          <ng-template #confirmUserPINSubfix>
+            <i
+              nz-icon
+              [nzType]="confirmUserPINVisible ? 'eye-invisible' : 'eye'"
+              (click)="confirmUserPINVisible = !confirmUserPINVisible"
+            ></i>
+          </ng-template>
+          <ng-template #validateConfirmUserPIN let-control>
+            <ng-container *ngIf="control.hasError('minlength')">
+              {{ 'menu.account.confirm-pin.message.min-length' | translate }}</ng-container
+            >
+            <ng-container *ngIf="control.hasError('required')"> {{ 'menu.account.confirm-pin.message.required' | translate }}</ng-container>
+            <ng-container *ngIf="control.hasError('invalidConfirmPw')">
+              {{ 'menu.account.confirm-pin.message.invalid' | translate }}</ng-container
+            >
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-row>
+        <nz-col [nzSm]="7" [nzXs]="24"></nz-col>
+        <nz-col [nzSm]="16" [nzXs]="24">
+          <label nz-checkbox [(ngModel)]="isApproveAutoSign" [ngModelOptions]="{ standalone: true }">{{
+            'menu.account.allow-auto-sign' | translate
+          }}</label>
+          <label style="margin-left: 0px" nz-checkbox [(ngModel)]="isNotRequirePINToSign" [ngModelOptions]="{ standalone: true }">{{
+            'menu.account.not-input-pin-sign' | translate
+          }}</label>
+          <label style="margin-left: 0px" nz-checkbox [(ngModel)]="isReceiveSystemNoti" [ngModelOptions]="{ standalone: true }">{{
+            'menu.account.receive-system-noti' | translate
+          }}</label>
+          <label style="margin-left: 0px" nz-checkbox [(ngModel)]="isReceiveSignFailNoti" [ngModelOptions]="{ standalone: true }">{{
+            'menu.account.receive-sign-fail-noti' | translate
+          }}</label>
+        </nz-col>
+      </nz-row>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<ng-template #modalFooter>
+  <button nz-button nzType="primary" (click)="save()" class="btn-primary">
+    <i nz-icon nzType="save" nzTheme="fill"></i>{{ 'menu.account.change-pass' | translate }}
+  </button>
+  <!-- <button
+    nz-button
+    nzType="primary"
+    class="btn-primary"
+    *ngIf="!isInfo && !isEdit && btnSaveAndCreate.visible && btnSaveAndCreate.grandAccess"
+    [nzLoading]="isLoading"
+    (click)="btnSaveAndCreate.click($event)"
+  >
+    <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSaveAndCreate.title }}
+  </button> -->
+  <button nz-button (click)="handleCancel($event)" nzType="primary" class="btn-warning">
+    <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ 'layout.button.btn-cancel.label' | translate }}
+  </button>
+</ng-template>
+
+<ng-template #modalFooterConfigPIN>
+  <button nz-button nzType="primary" (click)="saveConfigPIN()" class="btn-primary">
+    <i nz-icon nzType="save" nzTheme="fill"></i>{{ 'layout.button.btn-save.label' | translate }}
+  </button>
+  <!-- <button
+    nz-button
+    nzType="primary"
+    class="btn-primary"
+    *ngIf="!isInfo && !isEdit && btnSaveAndCreate.visible && btnSaveAndCreate.grandAccess"
+    [nzLoading]="isLoading"
+    (click)="btnSaveAndCreate.click($event)"
+  >
+    <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSaveAndCreate.title }}
+  </button> -->
+  <button nz-button (click)="handleCancelModelConfigPIN($event)" nzType="primary" class="btn-warning">
+    <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ 'layout.button.btn-cancel.label' | translate }}
+  </button>
+</ng-template>

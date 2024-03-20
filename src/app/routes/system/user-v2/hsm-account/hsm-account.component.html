@@ -1,0 +1,193 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzWidth="1000px"
+  nzMaskClosable="false"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle>
+    {{ tittle }} <b>{{ username }}</b>
+  </ng-template>
+  <ng-template #modalContent>
+    <fieldset>
+      <form nz-form [formGroup]="form" style="margin: 10px 0">
+        <nz-row>
+          <div nz-col [nzSm]="24" nzLg="12" nzMd="12">
+            <nz-form-item>
+              <nz-form-label [nzSm]="24" [nzXs]="24" nzRequired nzFor="code">{{
+                'function.hsm-account.modal-item.code.label' | translate
+              }}</nz-form-label>
+              <nz-form-control [nzSm]="20" [nzXs]="24" nzErrorTip="{{'function.hsm-account.modal-item.code.error-message.required' | translate}}">
+                <input 
+                nz-input 
+                formControlName="code" 
+                id="code" 
+                placeholder="{{ 'function.hsm-account.modal-item.code.placeholder' | translate }}" />
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label [nzSm]="24" [nzXs]="24" nzFor="name">{{
+                'function.hsm-account.modal-item.userpin.label' | translate
+              }}</nz-form-label>
+              <nz-form-control [nzSm]="20" [nzXs]="24">
+                <input 
+                nz-input 
+                formControlName="userPIN" 
+                id="userPIN" 
+                placeholder="{{ 'function.hsm-account.modal-item.userpin.placeholder' | translate }}" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzSm]="24" nzLg="12" nzMd="12">
+            <nz-form-item>
+              <nz-form-label [nzSm]="24" [nzXs]="24" nzRequired nzFor="name">{{
+                'function.hsm-account.modal-item.alias.label' | translate
+              }}</nz-form-label>
+              <nz-form-control [nzSm]="20" [nzXs]="24" nzErrorTip="{{'function.hsm-account.modal-item.alias.error-message.required' | translate}}">
+                <input 
+                nz-input 
+                formControlName="alias" 
+                id="alias" 
+                placeholder="{{ 'function.hsm-account.modal-item.alias.placeholder' | translate }}" />
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label [nzSm]="24" [nzXs]="24" nzFor="name">{{
+                'function.hsm-account.modal-item.accounttype.label' | translate
+              }}</nz-form-label>
+              <nz-form-control [nzSm]="20" [nzXs]="24">
+                <nz-select formControlName="accountType" [ngModel]='hsmAccount' (ngModelChange)="accountTypeChange($event)">
+                  <nz-option *ngFor="let item of listOfAccountType" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div  nz-col [nzSm]="24" nzLg="12" nzMd="12" *ngIf="accountType === 1">
+            <nz-form-item>
+              <nz-form-label [nzSm]="24" [nzXs]="24">{{ 'function.hsm-account.modal-item.start-end-date-hsm' | translate }}</nz-form-label>
+              <nz-form-control [nzSm]="20" [nzXs]="24">
+                <nz-range-picker       
+                  style="width: 100%;"
+                  [nzShowTime]="{ nzFormat: 'HH:mm' }"
+                  nzFormat="yyyy-MM-dd HH:mm"
+                  formControlName="timeOfCTS_HSM"                                
+                ></nz-range-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzSm]="24" nzLg="12" nzMd="12">           
+            <nz-form-item>
+              <label [ngModelOptions]="{ standalone: true }" nz-checkbox formControlName="isDefault"
+                ><span class="sign-default-text">
+                  {{'function.hsm-account.modal-item.sign-default-text.label' | translate}}
+                </span></label
+              >
+            </nz-form-item>
+          </div>
+        </nz-row>
+      </form>
+    </fieldset>
+
+    <nz-row style="justify-content: end; padding-top: 10px">
+      <button
+        nz-button
+        nzType="primary"
+        class="btn-primary"
+        *ngIf="!isInfo && btnSave.visible && btnSave.grandAccess"
+        [nzLoading]="isLoading"
+        (click)="btnSave.click($event)"
+      >
+        <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSave.titlei18n }}
+      </button>
+      <button
+        nz-button
+        nzType="primary"
+        class="btn-warning"
+        *ngIf="btnCancel.visible && btnCancel.grandAccess"
+        (click)="btnCancel.click($event)"
+      >
+        <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.titlei18n }}
+      </button>
+    </nz-row>
+    <br />
+    <nz-row>
+      <nz-col nzSm="16" nzXS="24" nzMd="16" class="padding-bottom-10">
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnReload.click($event)"
+          class="btn-reload"
+          *ngIf="btnReload.visible && btnReload.grandAccess"
+        >
+          <i nz-icon nzType="reload" nzTheme="outline"></i>{{ btnReload.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="primary"
+          class="btn-danger"
+          (click)="btnDelete.click($event)"
+          *ngIf="btnDelete.visible && btnDelete.grandAccess"
+        >
+          <i nz-icon nzType="delete" nzTheme="fill"></i>{{ btnDelete.titlei18n }}
+        </button>
+      </nz-col>
+      <nz-col nzSm="8" nzXS="24" nzMd="8" class="pull-right padding-bottom-10">
+        <nz-input-group nzSearch>
+          <input
+            type="text"
+            style="text-align: left"
+            [(ngModel)]="filter.textSearch"
+            nz-input
+            placeholder="{{'layout.grid.search.text-search.placeholder' | translate}}"
+            (keyup.enter)="initGridData()"
+          />
+        </nz-input-group>
+      </nz-col>
+    </nz-row>
+
+    <nz-row>
+      <ag-grid-angular
+        #agGrid
+        style="width: 100%; height: 50vh"
+        id="unit-grid"
+        class="ag-theme-alpine"
+        [modules]="modules"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [suppressRowClickSelection]="true"
+        [rowSelection]="rowSelection"
+        [rowData]="grid.rowData"
+        (selectionChanged)="onSelectionChanged($event)"
+        (cellDoubleClicked)="onCellDoubleClicked($event)"
+        [overlayLoadingTemplate]="overlayLoadingTemplate"
+        [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+        [frameworkComponents]="frameworkComponents"
+        [excelStyles]="excelStyles"
+        (gridReady)="onGridReady($event)"
+      >
+      </ag-grid-angular>
+      <hr />
+    </nz-row>
+    <app-ag-grid-pagination
+      [grid]="grid"
+      [filter]="filter"
+      [pageSizeOptions]="pageSizeOptions"
+      (pageNumberChange)="onPageNumberChange()"
+      (pageSizeChange)="onPageSizeChange()"
+    ></app-ag-grid-pagination>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="primary" class="btn-danger" *ngIf="btnClose.visible && btnClose.grandAccess" (click)="btnClose.click($event)">
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnClose.titlei18n }}
+    </button>
+  </ng-template>
+</nz-modal>
+<delete-modal #deleteModal [isVisible]="isShowDelete" (eventEmmit)="onDeleteEventEmmit($event)"></delete-modal>

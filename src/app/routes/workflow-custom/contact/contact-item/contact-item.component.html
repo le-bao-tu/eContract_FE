@@ -1,0 +1,132 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle> {{ tittle }} </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="form" (ngSubmit)="save()">
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired nzFor="name">HỌ VÀ TÊN</nz-form-label>
+        <nz-form-control [nzSm]="15" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateName">
+          <input nz-input minlength="1" maxlength="70" required formControlName="name" id="name" placeholder="Nhập họ và tên" />
+          <ng-template #validateName let-control>
+            <ng-container *ngIf="control.hasError('maxlength')">Tối đa 70 ký tự.</ng-container>
+            <ng-container *ngIf="control.hasError('minlength')"> Tối thiểu 1 ký tự.</ng-container>
+            <ng-container *ngIf="control.hasError('required')"> Trường thông tin bắt buộc.</ng-container>
+            <ng-container *ngIf="control.hasError('pattern')"> Chỉ cho phép nhập ký tự chữ.</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired nzFor="email">EMAIL</nz-form-label>
+        <nz-form-control [nzSm]="15" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateEmail">
+          <input nz-input type="email" formControlName="email" id="email" placeholder="Nhập vào email" minlength="1" maxlength="320" />
+          <ng-template #validateEmail let-control>
+            <ng-container *ngIf="control.hasError('maxlength')">Tối đa 320 ký tự.</ng-container>
+            <ng-container *ngIf="control.hasError('minlength')"> Tối thiểu 1 ký tự.</ng-container>
+            <ng-container *ngIf="control.hasError('required')"> Trường thông tin bắt buộc.</ng-container>
+            <ng-container *ngIf="control.hasError('pattern')"> Email không hợp lệ.</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired nzFor="phoneNumber">SỐ ĐIỆN THOẠI</nz-form-label>
+        <nz-form-control [nzSm]="15" [nzXs]="24" nzHasFeedback [nzErrorTip]="validatePhone">
+          <input
+            nz-input
+            formControlName="phoneNumber"
+            id="phoneNumber"
+            placeholder="Nhập vào số điện thoại"
+            minlength="10"
+            maxlength="12"
+          />
+          <ng-template #validatePhone let-control>
+            <ng-container *ngIf="control.hasError('maxlength')">Tối đa 12 ký tự.</ng-container>
+            <ng-container *ngIf="control.hasError('minlength')"> Tối thiểu 10 ký tự.</ng-container>
+            <ng-container *ngIf="control.hasError('required')"> Số điện thoại không hợp lệ.</ng-container>
+            <ng-container *ngIf="control.hasError('pattern')"> Số điện thoại không hợp lệ.</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item *ngIf="option.type === 'internal'">
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired nzFor="organizationId">BỘ PHẬN</nz-form-label>
+        <nz-form-control [nzSm]="15" [nzXs]="24">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Chọn bộ phận..." formControlName="organizationId">
+            <nz-option *ngFor="let option of listOfOrgs" [nzValue]="option.id" [nzLabel]="option.name"> </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item *ngIf="option.type === 'internal'">
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired nzFor="positionId">CHỨC VỤ</nz-form-label>
+        <nz-form-control [nzSm]="15" [nzXs]="24">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Chọn chức vụ..." formControlName="positionId">
+            <nz-option *ngFor="let option of listOfPositions" [nzValue]="option.id" [nzLabel]="option.name"> </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item style="margin-bottom: 0" *ngIf="option.type !== 'internal'">
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="address"> NƠI LÀM VIỆC </nz-form-label>
+        <nz-form-control [nzSm]="15" [nzXs]="24">
+          <textarea rows="3" nz-input id="organizationName" formControlName="address" placeholder="Nhập vào nơi làm việc"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item nz-row>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="status">TRẠNG THÁI</nz-form-label>
+        <nz-form-control [nzSpan]="15">
+          <nz-switch formControlName="status" nzSize="small" style="margin-right: 5px"></nz-switch>
+          <label>
+            <nz-tag [nzColor]="'#00BB00'" [hidden]="!form.value.status">Đang áp dụng</nz-tag>
+            <nz-tag [nzColor]="'#EF5350'" [hidden]="form.value.status">Ngừng áp dụng</nz-tag>
+          </label>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <!-- <button
+      nz-button
+      nzType="primary"
+      class="btn-secondary"
+      *ngIf="isInfo && btnEdit.visible && btnEdit.grandAccess"
+      (click)="btnEdit.click($event)"
+    >
+      <i nz-icon nzType="edit" nzTheme="fill"></i>{{ btnEdit.title }}
+    </button> -->
+    <!-- <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && btnSave.visible && btnSave.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSave.title }}
+    </button> -->
+    <!-- <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && !isEdit && btnSaveAndCreate.visible && btnSaveAndCreate.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSaveAndCreate.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSaveAndCreate.title }}
+    </button> -->
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.title }}
+    </button>
+  </ng-template>
+</nz-modal>

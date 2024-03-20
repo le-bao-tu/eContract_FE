@@ -1,0 +1,179 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle> {{ tittle }} </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="form">
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="code">{{
+          'function.info-in-certify.modal-item.code.label' | translate
+        }}</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateCode">
+          <input
+            nz-input
+            minlength="1"
+            maxlength="70"
+            required
+            formControlName="code"
+            id="code"
+            placeholder="{{ 'function.info-in-certify.modal-item.code.placeholder' | translate }}"
+            style="text-transform: uppercase"
+          />
+          <ng-template #validateCode let-control>
+            <ng-container *ngIf="control.hasError('maxlength')">{{ 'function.info-in-certify.modal-item.code.message.maxlength' | translate }}</ng-container>
+            <ng-container *ngIf="control.hasError('minlength')"> {{ 'function.info-in-certify.modal-item.code.message.minlength' | translate }}</ng-container>
+            <ng-container *ngIf="control.hasError('required')"> {{ 'function.info-in-certify.modal-item.code.message.required' | translate }}</ng-container>
+            <ng-container *ngIf="control.hasError('pattern')"> {{ 'function.info-in-certify.modal-item.code.message.pattern' | translate }}</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">{{
+          'function.info-in-certify.modal-item.name.label' | translate
+        }}</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateName">
+          <input
+            nz-input
+            minlength="1"
+            maxlength="256"
+            required
+            formControlName="name"
+            id="name"
+            placeholder="{{ 'function.info-in-certify.modal-item.name.placeholder' | translate }}"
+          />
+          <ng-template #validateName let-control>
+            <ng-container *ngIf="control.hasError('maxlength')">{{ 'function.info-in-certify.modal-item.name.message.maxlength' | translate }}</ng-container>
+            <ng-container *ngIf="control.hasError('minlength')"> {{ 'function.info-in-certify.modal-item.name.message.minlength' | translate }}</ng-container>
+            <ng-container *ngIf="control.hasError('required')"> {{ 'function.info-in-certify.modal-item.name.message.required' | translate }}</ng-container>
+            <ng-container *ngIf="control.hasError('pattern')"> {{ 'function.info-in-certify.modal-item.name.message.pattern' | translate }}</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item nz-row>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="status">{{ 'function.info-in-certify.modal-item.status.label' | translate }}</nz-form-label>
+        <nz-form-control [nzSpan]="17">
+          <nz-switch formControlName="status" id="status" nzSize="small" style="margin-right: 5px"></nz-switch>
+          <label>
+            <nz-tag [nzColor]="'#00BB00'" [hidden]="!form.value.status">{{ 'function.info-in-certify.modal-item.status.true.label' | translate }}</nz-tag>
+            <nz-tag [nzColor]="'#EF5350'" [hidden]="form.value.status">{{ 'function.info-in-certify.modal-item.status.false.label' | translate }}</nz-tag>
+          </label>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- <nz-form-item class="margin-0">
+        <nz-form-label nzSm="6" nzXS="24" nzMd="6" nzFor="dataType">Kiểu dữ liệu</nz-form-label>
+        <nz-form-control nzSm="17" nzXS="24" nzMd="17">
+          <nz-select
+            style="text-align: center"
+            formControlName="dataType"
+            id="dataType"
+            nzShowSearch
+            nzAllowClear
+            (ngModelChange)="onDataTypeChange()"
+            nzPlaceHolder="Kiểu dữ liệu"
+          >
+            <nz-option *ngFor="let option of listDataType" [nzLabel]="option.name" [nzValue]="option.value"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item> -->
+
+      <nz-form-item style="margin-top: 5px" *ngIf="isMultipleOption">
+        <nz-form-control [nzOffset]="16" [nzSm]="6" [nzMd]="6">
+          <button [disabled]="isInfo" nzSm="24" nzXS="24" nzMd="24" nz-button nzType="primary" (click)="btnAddOption.click()">
+            {{ btnAddOption.title }}
+          </button>
+        </nz-form-control>
+      </nz-form-item>
+
+      <div *ngIf="isMultipleOption">
+        <div style="margin-top: 5px" *ngFor="let item of listOption; let i = index">
+          <nz-form-control [nzOffset]="7" [nzSm]="16" [nzMd]="16" id="option">
+            <nz-input-group nzSm="24" nzXS="24" nzMd="24" nzSearch [nzAddOnAfter]="suffixIconButton">
+              <input
+                [disabled]="isInfo"
+                nz-input
+                [(ngModel)]="item.label"
+                placeholder="Lựa chọn {{ i + 1 }}"
+                [ngModelOptions]="{ standalone: true }"
+              />
+            </nz-input-group>
+            <ng-template #suffixIconButton>
+              <button nz-button nzType="primary" (click)="removeOption(item)" nzDanger>
+                <i nz-icon nzType="close"></i>
+              </button>
+            </ng-template>
+          </nz-form-control>
+        </div>
+      </div>
+
+      <!-- <nz-form-item class="margin-0">
+        <nz-form-label [nzSm]="6" [nzMd]="6" nzFor="isRequire">Bắt buộc</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzMd]="16">
+          <label nz-checkbox formControlName="isRequire" id="isRequire"></label>
+        </nz-form-control>
+      </nz-form-item> -->
+
+      <nz-form-item style="margin-bottom: 0">
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="description">{{ 'function.info-in-certify.modal-item.description.label' | translate }}</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24">
+          <textarea 
+          rows="3" 
+          nz-input 
+          id="description" 
+          formControlName="description" 
+          placeholder="{{ 'function.info-in-certify.modal-item.description.placeholder' | translate }}"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-secondary"
+      *ngIf="isInfo && btnEdit.visible && btnEdit.grandAccess"
+      (click)="btnEdit.click($event)"
+    >
+      <i nz-icon nzType="edit" nzTheme="fill"></i>{{ btnEdit.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && btnSave.visible && btnSave.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+      [disabled]="form.invalid"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSave.titlei18n }}
+    </button>
+    <!-- <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && !isEdit && btnSaveAndCreate.visible && btnSaveAndCreate.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSaveAndCreate.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSaveAndCreate.title }}
+    </button> -->
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.titlei18n }}
+    </button>
+  </ng-template>
+</nz-modal>

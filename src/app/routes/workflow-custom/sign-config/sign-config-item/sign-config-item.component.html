@@ -1,0 +1,217 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzWidth="1000px"
+  nzMaskClosable="false"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle
+    ><b>{{ tittle }}</b></ng-template
+  >
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="form">
+      <div nz-col nzSpan="24">
+        <div nz-row nzGutter="8">
+          <div nz-col nzSpan="12">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{
+              'function.workflow-custom.sign-config.modal-item.code.label' | translate
+            }}</nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" [nzErrorTip]="validateCode">
+              <input
+                nz-input
+                formControlName="code"
+                id="code"
+                placeholder="{{ 'function.workflow-custom.notify-config.modal-item.code.placeholder' | translate }}"
+                style="text-transform: uppercase"
+              />
+              <ng-template #validateCode let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                  {{ 'function.workflow-custom.notify-config.modal-item.code.message.required' | translate }}</ng-container
+                >
+                <ng-container *ngIf="control.hasError('pattern')">
+                  {{ 'function.workflow-custom.notify-config.modal-item.code.message.pattern' | translate }}</ng-container
+                >
+              </ng-template>
+            </nz-form-control>
+          </div>
+          <div nz-col nzSpan="12">
+            <div [innerHtml]="signPreview"></div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <h4>{{ 'function.workflow-custom.sign-config.modal-item.display-character.label' | translate }}</h4>
+      <div nz-col nzSpan="24">
+        <div nz-row nzGutter="8">
+          <div nz-col nzSpan="12">
+            <label
+              nz-checkbox
+              (ngModelChange)="changeSignAppearance($event, 'logo')"
+              [(ngModel)]="signAppearanceLogo"
+              [ngModelOptions]="{ standalone: true }"
+              [nzDisabled]="isInfo"
+            >
+              {{ 'function.workflow-custom.sign-config.modal-item.signappearancelogo.label' | translate }}
+            </label>
+            <nz-upload
+              [nzShowUploadList]="false"
+              (nzChange)="handleChange($event, 'logo')"
+              [nzMultiple]="false"
+              [nzLimit]="1"
+              [nzAction]="fileUploadUrl"
+              nzFileType="image/png,image/jpeg"
+              nzAccept="image/png,image/jpeg"
+            >
+              <button [disabled]="!signAppearanceLogo || isInfo" type="button" nz-button>
+                <i nz-icon nzType="upload"> </i>{{ 'layout.button.btn-upload.label' | translate }}
+              </button>
+            </nz-upload>
+            <canvas id="canvas-draw-logo" height="200px" width="400px" class="canvas"></canvas>
+          </div>
+          <div nz-col nzSpan="12">
+            <label
+              nzSpan="24"
+              [(ngModel)]="signAppearanceImage"
+              [ngModelOptions]="{ standalone: true }"
+              [nzDisabled]="isInfo"
+              (ngModelChange)="changeSignAppearance($event, 'image')"
+              nz-checkbox
+              nzValue="image"
+            >
+              {{ 'function.workflow-custom.sign-config.modal-item.signappearanceimage.label' | translate }}
+            </label>
+            <nz-upload
+              [nzShowUploadList]="false"
+              (nzChange)="handleChange($event, 'image')"
+              [nzMultiple]="false"
+              [nzLimit]="1"
+              [nzAction]="fileUploadUrl"
+              nzFileType="image/png,image/jpeg"
+              nzAccept="image/png,image/jpeg"
+            >
+              <button [disabled]="!signAppearanceImage || isInfo" type="button" nz-button>
+                <i nz-icon nzType="upload"> </i>{{ 'layout.button.btn-upload.label' | translate }}
+              </button>
+            </nz-upload>
+            <canvas id="canvas-draw-image" height="200px" width="400px" class="canvas"></canvas>
+          </div>
+        </div>
+      </div>
+      <div nz-row>
+        <nz-form-control [nzSm]="24" [nzXs]="24">
+          <br />
+          <nz-form-label nzFor="" nzSpan="24">{{ 'function.sign-config.modal-item.sign-config-profile' | translate }}</nz-form-label>
+          <nz-checkbox-wrapper style="width: 100%">
+            <div nz-row>
+              <div nz-col nzSpan="6" *ngFor="let item of listSignInfo">
+                <label
+                  nz-checkbox
+                  [(ngModel)]="item.value"
+                  [ngModelOptions]="{ standalone: true }"
+                  [nzDisabled]="isInfo"
+                  (ngModelChange)="signInfoChange($event, item.code)"
+                  >{{ item.label }}</label
+                >
+              </div>
+            </div>
+          </nz-checkbox-wrapper>
+        </nz-form-control>
+      </div>
+
+      <div nz-row style="margin-top: 10px">
+        <div nz-col [nzSpan]="8">
+          <nz-form-item>
+            <nz-form-label>
+              {{ 'function.organization.organization-report.modal-item.background-image' | translate }}
+            </nz-form-label>
+            <nz-form-control>
+              <nz-upload
+                [nzShowUploadList]="false"
+                (nzChange)="handleFileChange($event)"
+                [nzMultiple]="false"
+                [nzLimit]="1"
+                [nzAction]="fileUploadUrl"
+                class="avatar-uploader"
+                nzListType="picture-card"
+                [nzAccept]="'image/png, image/jpeg'"
+              >
+                <ng-container *ngIf="!backgroundImageUrl">
+                  <i class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></i>
+                  <div class="ant-upload-text">
+                    {{ 'function.organization.organization-config.modal-item.upload.label' | translate }}
+                  </div>
+                </ng-container>
+                <img *ngIf="backgroundImageUrl" [src]="backgroundImageUrl" style="width: 100%" />
+              </nz-upload>
+              <button
+                (click)="deleteBackgroundImage($event)"
+                *ngIf="isVisibleDeleteBackgroundImg"
+                style="position: absolute; top: -15px; left: 87px; z-index: 999999999999999"
+                nz-button
+                nzType="default"
+                nzShape="circle"
+              >
+                <i nz-icon nzType="close"></i>
+              </button>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="16">
+          <nz-form-item>
+            <nz-form-label [nzFor]="moreInfo">
+              {{ 'function.organization.organization-report.modal-item.more-info.label' | translate }}
+            </nz-form-label>
+            <nz-form-control>
+              <input
+                type="text"
+                nz-input
+                formControlName="moreInfo"
+                placeholder="{{ 'function.organization.organization-report.modal-item.more-info.placeholder' | translate }}"
+              />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <div nz-col nzSpan="10">
+        <label style="margin-top: 20px" nz-checkbox formControlName="isSignDefault" id="isSignDefault" [nzDisabled]="isInfo"
+          ><span class="sign-default-text"> {{ 'function.sign-config.modal-item.sign-default-text.label' | translate }}</span></label
+        >
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-secondary"
+      *ngIf="isInfo && btnEdit.visible && btnEdit.grandAccess"
+      (click)="btnEdit.click($event)"
+    >
+      <i nz-icon nzType="edit" nzTheme="fill"></i>{{ btnEdit.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && btnSave.visible && btnSave.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+      [disabled]="form.invalid"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSave.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnClose.visible && btnClose.grandAccess"
+      (click)="btnClose.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnClose.titlei18n }}
+    </button>
+  </ng-template>
+</nz-modal>

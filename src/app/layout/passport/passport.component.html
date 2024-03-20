@@ -1,0 +1,19 @@
+<div class="container">
+  <pro-langs class="langs" btnClass></pro-langs>
+  <div class="wrap">
+    <div class="top">
+      <div class="head">
+        <img class="logo" src="../../../assets/tmp/img/bussiness/logo.png" />
+        <span class="title">{{ app.name }}</span>
+      </div>
+      <div class="desc">{{ app.description }}</div>
+    </div>
+    <router-outlet></router-outlet>
+    <global-footer [links]="links">
+      Copyright
+      <i nz-icon nzType="copyright"></i>
+      {{ app.year }}
+      <a href="https://savis.vn/" target="_blank">Savis.vn</a>
+    </global-footer>
+  </div>
+</div>

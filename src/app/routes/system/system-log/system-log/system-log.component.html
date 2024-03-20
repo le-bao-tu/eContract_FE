@@ -1,0 +1,176 @@
+<page-header-wrapper [title]="tittle" onBack="{() => window.history.back()}">
+  <nz-card class="card-header">
+    <div nz-row class="header">
+      <div nz-col nzSpan="12">
+        <nz-breadcrumb>
+          <nz-breadcrumb-item>
+            <a [routerLink]="['/']">
+              <i nz-icon nzType="home"></i>
+            </a>
+          </nz-breadcrumb-item>
+          <nz-breadcrumb-item>
+            <a>
+              <span>{{ 'menu.system' | translate }}</span>
+            </a>
+          </nz-breadcrumb-item>
+          <nz-breadcrumb-item>
+            <a>
+              {{ 'function.system-log.header' | translate }}
+            </a>
+          </nz-breadcrumb-item>
+        </nz-breadcrumb>
+      </div>
+      <div nz-col nzSpan="12" style="text-align: right"></div>
+    </div>
+  </nz-card>
+  <nz-card [nzBordered]="false">
+    <nz-row>
+      <nz-col nzSm="8" nzXS="12" nzMd="8" class="padding-bottom-10">
+        <nz-form-item class="margin-0">
+          <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="status">{{
+            'function.system-log.grid.organizationid.label' | translate
+          }}</nz-form-label>
+          <nz-form-control [nzSm]="15" [nzXs]="24">
+            <nz-tree-select
+              [nzNodes]="listOrg"
+              nzShowSearch
+              nzShowLine
+              style="width: 100%"
+              [disabled]="!checkSysAdmin"
+              [(ngModel)]="filter.organizationId"
+              nzPlaceHolder="{{ 'function.system-log.grid.organizationid.placeholder' | translate }}"
+            >
+            </nz-tree-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzSm="8" nzXS="12" nzMd="8" class="padding-bottom-10">
+        <nz-form-item class="margin-0">
+          <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="status">{{ 'function.system-log.grid.userid.label' | translate }}</nz-form-label>
+          <nz-form-control [nzSm]="15" [nzXs]="24">
+            <nz-select
+              nzShowSearch
+              nzAllowClear
+              nzPlaceHolder="{{ 'function.system-log.grid.userid.placeholder' | translate }}"
+              [(ngModel)]="filter.userId"
+            >
+              <nz-option *ngFor="let option of listUser" [nzLabel]="option.displayName" [nzValue]="option.id"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzSm="8" nzXS="12" nzMd="8" class="padding-bottom-10">
+        <nz-form-item class="margin-0">
+          <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="status">{{ 'function.system-log.grid.device.label' | translate }}</nz-form-label>
+          <nz-form-control [nzSm]="15" [nzXs]="24">
+            <nz-select
+              nzShowSearch
+              nzAllowClear
+              nzPlaceHolder="{{ 'function.system-log.grid.device.placeholder' | translate }}"
+              [(ngModel)]="filter.device"
+            >
+              <nz-option *ngFor="let option of listDevice" [nzLabel]="option.label" [nzValue]="option.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+
+      <nz-col nzSm="8" nzXS="12" nzMd="8" class="padding-bottom-10">
+        <nz-form-item class="margin-0">
+          <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="status">{{
+            'function.system-log.grid.created-date.label' | translate
+          }}</nz-form-label>
+          <nz-form-control [nzSm]="15" [nzXs]="24">
+            <nz-date-picker
+              [nzAllowClear]="false"
+              [(ngModel)]="selectedDate"
+              [nzFormat]="dateFormat"
+              (ngModelChange)="onChangeDate($event)"
+              style="width: 100%"
+              nzPlaceHolder="{{ 'function.system-log.grid.createddate' | translate }}"
+            ></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+
+      <nz-col nzSm="8" nzXS="12" nzMd="8" class="padding-bottom-10">
+        <nz-form-item class="margin-0">
+          <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="status">{{
+            'function.system-log.grid.action-code.label' | translate
+          }}</nz-form-label>
+          <nz-form-control [nzSm]="15" [nzXs]="24">
+            <nz-select
+              nzShowSearch
+              nzAllowClear
+              nzPlaceHolder="{{ 'function.system-log.grid.action-code.placeholder' | translate }}"
+              [(ngModel)]="filter.actionCode"
+            >
+              <nz-option *ngFor="let option of listActionCode" [nzLabel]="option.actionName" [nzValue]="option.actionCode"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+
+      <nz-col nzSm="8" nzXS="12" nzMd="8" class="padding-bottom-10">
+        <button
+          nz-button
+          nzType="primary"
+          (click)="btnSearch.click($event)"
+          class="btn-success"
+          *ngIf="btnSearch.visible && btnSearch.grandAccess"
+        >
+          <i nz-icon nzType="search" nzTheme="outline"></i>{{ btnSearch.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnReload.click($event)"
+          class="btn-reload"
+          *ngIf="btnReload.visible && btnReload.grandAccess"
+        >
+          <i nz-icon nzType="reload" nzTheme="outline"></i>{{ btnReload.titlei18n }}
+        </button>
+        <!-- <button
+          nz-button
+          nzType="primary"
+          (click)="btnResetSearch.click($event)"
+          class="btn-warning"
+          *ngIf="btnResetSearch.visible && btnResetSearch.grandAccess"
+        >
+          <i nz-icon nzType="reload" nzTheme="outline"></i>{{ btnResetSearch.title }}
+        </button> -->
+      </nz-col>
+    </nz-row>
+    <nz-row>
+      <ag-grid-angular
+        #agGrid
+        style="width: 100%; height: 70vh"
+        id="unit-grid"
+        class="ag-theme-alpine"
+        [modules]="modules"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [suppressRowClickSelection]="true"
+        [rowSelection]="rowSelection"
+        [rowData]="grid.rowData"
+        (selectionChanged)="onSelectionChanged($event)"
+        [overlayLoadingTemplate]="overlayLoadingTemplate"
+        [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+        [frameworkComponents]="frameworkComponents"
+        [excelStyles]="excelStyles"
+        (gridReady)="onGridReady($event)"
+        [masterDetail]="masterDetail"
+        [detailCellRendererParams]="detailCellRendererParams"
+      >
+      </ag-grid-angular>
+      <hr />
+    </nz-row>
+    <app-ag-grid-pagination
+      [grid]="grid"
+      [filter]="filter"
+      [pageSizeOptions]="pageSizeOptions"
+      (pageNumberChange)="onPageNumberChange()"
+      (pageSizeChange)="onPageSizeChange()"
+    ></app-ag-grid-pagination>
+  </nz-card>
+</page-header-wrapper>

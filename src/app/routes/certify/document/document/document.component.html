@@ -1,0 +1,832 @@
+<page-header-wrapper [title]="tittle" onBack="{() => window.history.back()}">
+  <nz-card class="card-header">
+    <div nz-row class="header">
+      <div nz-col nzSpan="12">
+        <nz-breadcrumb>
+          <nz-breadcrumb-item>
+            <a [routerLink]="['/']">
+              <i nz-icon nzType="home"></i>
+            </a>
+          </nz-breadcrumb-item>
+          <nz-breadcrumb-item>
+            <a>
+              <span>{{ 'menu.certify' | translate }}</span>
+            </a>
+          </nz-breadcrumb-item>
+          <nz-breadcrumb-item>
+            <a>
+              {{ 'layout.breadcum.document' | translate }}
+            </a>
+          </nz-breadcrumb-item>
+        </nz-breadcrumb>
+      </div>
+      <div nz-col nzSpan="12" style="text-align: right">
+        <!-- <button
+          nz-button
+          nzType="default"
+          (click)="btnHeaderSendEmail.click($event)"
+          class="btn-action"
+          *ngIf="btnHeaderSendEmail.visible && btnHeaderSendEmail.grandAccess"
+        >
+          <i nz-icon nzType="send" nzTheme="outline"></i>{{ btnHeaderSendEmail.titlei18n }}
+        </button> -->
+        <button
+          nz-button
+          nzType="default"
+          style="margin-left: 5px"
+          class="btn-action"
+          *ngIf="btnSignHeader.visible && btnSignHeader.grandAccess"
+          [nzLoading]="isLoading"
+          (click)="btnSignHeader.click($event)"
+        >
+          <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnSignHeader.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnHeaderSendToWF.click($event)"
+          class="btn-action"
+          *ngIf="btnHeaderSendToWF.visible && btnHeaderSendToWF.grandAccess"
+        >
+          <i nz-icon nzType="send" nzTheme="outline"></i>{{ btnHeaderSendToWF.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnHeaderReject.click($event)"
+          class="btn-action"
+          *ngIf="btnHeaderReject.visible && btnHeaderReject.grandAccess"
+        >
+          <i nz-icon nzType="rollback" nzTheme="outline"></i>{{ btnHeaderReject.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnApprovalHeader.click($event)"
+          class="btn-action"
+          *ngIf="btnApprovalHeader.visible && btnApprovalHeader.grandAccess"
+        >
+          <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnApprovalHeader.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnSignUsbHeader.click($event)"
+          class="btn-action"
+          *ngIf="btnSignUsbHeader.visible && btnSignUsbHeader.grandAccess"
+        >
+          <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnSignUsbHeader.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnSignHSMHeader.click($event)"
+          class="btn-action"
+          *ngIf="btnSignHSMHeader.visible && btnSignHSMHeader.grandAccess"
+        >
+          <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnSignHSMHeader.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnSignADSSHeader.click($event)"
+          class="btn-action"
+          *ngIf="btnSignADSSHeader.visible && btnSignADSSHeader.grandAccess"
+        >
+          <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnSignADSSHeader.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnRenewHeader.click($event)"
+          class="btn-action"
+          *ngIf="btnRenewHeader.visible && btnRenewHeader.grandAccess"
+        >
+          <i nz-icon nzType="reload" nzTheme="outline"></i>{{ btnRenewHeader.titlei18n }}
+        </button>
+        <!-- <button
+          nz-button
+          nzType="default"
+          (click)="btnCancelHeader.click($event)"
+          class="btn-action"
+          *ngIf="btnCancelHeader.visible && btnCancelHeader.grandAccess"
+        >
+          <i nz-icon nzType="reload" nzTheme="outline"></i>{{ btnCancelHeader.titlei18n }}
+        </button> -->
+      </div>
+    </div>
+  </nz-card>
+  <nz-card [nzBordered]="false">
+    <nz-row>
+      <nz-col nzSm="16" nzXS="20" nzMd="18" class="padding-bottom-10">
+        <button
+          nz-button
+          *ngIf="btnExportExcel.visible && btnExportExcel.grandAccess"
+          (click)="btnExportExcel.click($event)"
+          class="btn-excel"
+          [disabled]="btnExportExcel.isLoading"
+          [nzLoading]="btnExportExcel.isLoading"
+        >
+          <i nz-icon nzType="download" nzTheme="outline"></i>{{ btnExportExcel.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnStatusAll.click($event)"
+          class="btn-all"
+          *ngIf="btnStatusAll.visible && btnStatusAll.grandAccess"
+        >
+          <i nz-icon nzType="unordered-list" nzTheme="outline"></i>{{ btnStatusAll.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnStatusDraft.click($event)"
+          class="btn-reload"
+          [ngClass]="filter.status === 0 && filter.assignMe === false && !filter.isSignExpireAtDate ? 'active-button' : ''"
+          *ngIf="btnStatusDraft.visible && btnStatusDraft.grandAccess"
+        >
+          <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnStatusDraft.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnStatusProcessing.click($event)"
+          class="btn-reload"
+          [ngClass]="filter.status === 1 && filter.assignMe === false && !filter.isSignExpireAtDate ? 'active-button' : ''"
+          *ngIf="btnStatusProcessing.visible && btnStatusProcessing.grandAccess"
+        >
+          <i nz-icon nzType="reload" nzTheme="outline"></i>{{ btnStatusProcessing.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnStatusIncommingSignExpirationAtDate.click($event)"
+          class="btn-reload"
+          [ngClass]="filter.isIncommingSignExpirationDate ? 'active-button' : ''"
+          *ngIf="btnStatusIncommingSignExpirationAtDate.visible && btnStatusIncommingSignExpirationAtDate.grandAccess"
+        >
+          <i nz-icon nzType="alert" nzTheme="outline"></i>{{ btnStatusIncommingSignExpirationAtDate.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnStatusWaitMeSign.click($event)"
+          class="btn-reload"
+          [ngClass]="filter.status === 1 && filter.assignMe === true && !filter.isSignExpireAtDate ? 'active-button' : ''"
+          *ngIf="btnStatusWaitMeSign.visible && btnStatusWaitMeSign.grandAccess"
+        >
+          <i nz-icon nzType="edit" nzTheme="outline"></i>{{ btnStatusWaitMeSign.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnStatusComplete.click($event)"
+          class="btn-reload"
+          [ngClass]="filter.status === 3 && !filter.isSignExpireAtDate ? 'active-button' : ''"
+          *ngIf="btnStatusComplete.visible && btnStatusComplete.grandAccess"
+        >
+          <i nz-icon nzType="check" nzTheme="outline"></i>{{ btnStatusComplete.titlei18n }}
+        </button>
+      </nz-col>
+      <nz-col nzSm="8" nzXS="4" nzMd="6" class="pull-right padding-bottom-10">
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+          <input
+            type="text"
+            [(ngModel)]="filter.textSearch"
+            nz-input
+            placeholder="{{ 'layout.grid.search.text-search.placeholder' | translate }}"
+            (keyup.enter)="initGridData()"
+          />
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button
+            nz-button
+            nzType="default"
+            nzSearch
+            (click)="filter.ShowAdSearch = !filter.ShowAdSearch; onResetSearch(true); this.switchHeaderTable(null)"
+            title="{{ 'layout.button.btn-show-ad-search.label' | translate }}"
+          >
+            <i nz-icon nzType="caret-down" nzTheme="outline" *ngIf="!filter.ShowAdSearch"></i>
+            <i nz-icon nzType="caret-up" nzTheme="outline" *ngIf="filter.ShowAdSearch"></i>
+          </button>
+        </ng-template>
+      </nz-col>
+    </nz-row>
+    <nz-row>
+      <nz-col nzSm="24" nzXs="24" nzMd="24" class="padding-bottom-10">
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnStatusSignExpiredAtDate.click($event)"
+          class="btn-reload"
+          [ngClass]="filter.isSignExpireAtDate ? 'active-button' : ''"
+          *ngIf="btnStatusSignExpiredAtDate.visible && btnStatusSignExpiredAtDate.grandAccess"
+        >
+          <i nz-icon nzType="field-time" nzTheme="outline"></i>{{ btnStatusSignExpiredAtDate.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnStatusIsClosed.click($event)"
+          class="btn-reload"
+          [ngClass]="filter.isClosed ? 'active-button' : ''"
+          *ngIf="btnStatusIsClosed.visible && btnStatusIsClosed.grandAccess"
+        >
+          <i nz-icon nzType="stop" nzTheme="outline"></i>{{ btnStatusIsClosed.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnStatusCancel.click($event)"
+          class="btn-reload"
+          [ngClass]="filter.status === 2 && !filter.isSignExpireAtDate ? 'active-button' : ''"
+          *ngIf="btnStatusCancel.visible && btnStatusCancel.grandAccess"
+        >
+          <i nz-icon nzType="close" nzTheme="outline"></i>{{ btnStatusCancel.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnStatusIsDeleted.click($event)"
+          class="btn-reload"
+          [ngClass]="filter.isDeleted ? 'active-button' : ''"
+          *ngIf="btnStatusIsDeleted.visible && btnStatusIsDeleted.grandAccess"
+        >
+          <i nz-icon nzType="delete" nzTheme="outline"></i>{{ btnStatusIsDeleted.titlei18n }}
+        </button>
+      </nz-col>
+    </nz-row>
+    <nz-row [hidden]="!filter.ShowAdSearch">
+      <!-- Loại hợp đồng -->
+      <nz-col nzSm="12" nzXS="24" nzMd="12" nzLg="12" nzXl="8" class="padding-bottom-10 padding-left-10">
+        <nz-form-item class="margin-0">
+          <nz-form-label [nzSm]="8" nzMd="8" [nzXs]="24">{{ 'function.document.grid.documenttypeid.label' | translate }}</nz-form-label>
+          <nz-form-control [nzSm]="16" nzMd="16" [nzXs]="24">
+            <nz-select
+              nzShowSearch
+              [(ngModel)]="filter.documentTypeId"
+              name="documentTypeId"
+              nzPlaceHolder="{{ 'function.document.grid.search.documenttypeid.placeholder' | translate }}"
+              nzAllowClear
+              (ngModelChange)="onDocumentTypeChange($event)"
+            >
+              <nz-option *ngFor="let item of listCertifyType" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <!-- Trạng thái hợp đồng -->
+      <nz-col nzSm="12" nzXS="24" nzMd="12" nzLg="12" nzXl="8" class="padding-bottom-10 padding-left-10">
+        <nz-form-item class="margin-0">
+          <nz-form-label [nzSm]="8" nzMd="8" [nzXs]="24">{{ 'function.document.grid.stateid.label' | translate }}</nz-form-label>
+          <nz-form-control [nzSm]="16" nzMd="16" [nzXs]="24">
+            <nz-select
+              nzShowSearch
+              [(ngModel)]="filter.stateId_display"
+              name="stateId"
+              nzPlaceHolder="{{ 'function.document.grid.search.stateid.placeholder' | translate }}"
+              nzAllowClear
+              (ngModelChange)="onWorkflowStateChange($event)"
+            >
+              <nz-option *ngFor="let item of listWorkflowState" [nzLabel]="item.displayName" [nzValue]="item.id"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <!-- Thông tin khách hàng -->
+      <nz-col nzSm="12" nzXS="24" nzMd="12" nzLg="12" nzXl="8" class="padding-bottom-10 padding-left-10">
+        <nz-form-item class="margin-0">
+          <nz-form-label [nzSm]="8" nzMd="8" [nzXs]="24">{{ 'function.document.grid.username.label' | translate }}</nz-form-label>
+          <nz-form-control [nzSm]="16" nzMd="16" [nzXs]="24">
+            <input
+              nz-input
+              placeholder="{{ 'function.document.grid.search.username.placeholder' | translate }}"
+              [(ngModel)]="filter.userName"
+              (keypress)="filterUserNameKeyDown($event)"
+            />
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <!-- Thời gian hết hạn -->
+      <nz-col nzSm="12" nzXS="24" nzMd="12" nzLg="12" nzXl="8" class="padding-bottom-10 padding-left-10">
+        <nz-form-item class="margin-0">
+          <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="status">{{
+            'function.document.grid.search.status.placeholder' | translate
+          }}</nz-form-label>
+
+          <nz-form-control [nzSm]="16" [nzXs]="24">
+            <nz-range-picker [(ngModel)]="date" (ngModelChange)="onChange($event)" style="width: 100%"></nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <!-- Thời gian hoàn thành ký -->
+      <nz-col nzSm="12" nzXS="24" nzMd="12" nzLg="12" nzXl="8" class="padding-bottom-10 padding-left-10">
+        <nz-form-item class="margin-0">
+          <nz-form-label [nzSm]="8" nzMd="8" [nzXs]="24">{{ 'function.document.grid.datesign.label' | translate }}</nz-form-label>
+          <nz-form-control [nzSm]="16" nzMd="16" [nzXs]="24">
+            <nz-range-picker [(ngModel)]="dateSign" (ngModelChange)="onChangeDateSign($event)" style="width: 100%"></nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <!-- Mã hợp đồng -->
+      <nz-col nzSm="24" nzXS="24" nzMd="12" nzLg="12" nzXl="12" class="padding-bottom-10 padding-left-10">
+        <nz-form-item class="margin-0">
+          <nz-form-label [nzSm]="8" nzMd="8" nzLg="8" [nzXs]="24" nzXl="6">{{
+            'function.document.grid.search.search-ref-code.label' | translate
+          }}</nz-form-label>
+          <nz-form-control [nzSm]="16" nzMd="16" nzLg="16" [nzXs]="24" nzXl="18">
+            <input
+              nz-input
+              placeholder="{{ 'function.document.grid.search.search-ref-code.placeholder' | translate }}"
+              [(ngModel)]="filter.referenceCode"
+              (keypress)="filterRefCodeKeyDown($event)"
+            />
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <!-- Button -->
+      <nz-col nzSm="12" nzXS="24" nzMd="12" nzLg="12" nzXl="8" class="padding-bottom-10 padding-left-10">
+        <button
+          nz-button
+          nzType="primary"
+          (click)="btnSearch.click($event)"
+          class="btn-success"
+          *ngIf="btnSearch.visible && btnSearch.grandAccess"
+        >
+          <i nz-icon nzType="search" nzTheme="outline"></i>{{ btnSearch.titlei18n }}
+        </button>
+        <button
+          nz-button
+          nzType="primary"
+          (click)="btnResetSearch.click($event)"
+          class="btn-warning"
+          *ngIf="btnResetSearch.visible && btnResetSearch.grandAccess"
+        >
+          <i nz-icon nzType="reload" nzTheme="outline"></i>{{ btnResetSearch.titlei18n }}
+        </button>
+      </nz-col>
+    </nz-row>
+
+    <nz-row>
+      <nz-table
+        #rowSelectionTable
+        #nzTable
+        [nzPageSize]="filter.pageSize"
+        nzShowPagination="false"
+        [nzScroll]="{ y: '63vh' }"
+        (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+        [nzData]="listOfData"
+        [nzNoResult]="contentNoResult"
+      >
+        <thead>
+          <tr>
+            <th nzWidth="30px" [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
+            <th nzWidth="50px"></th>
+            <th *ngFor="let item of listHeaders" [nzWidth]="item.width">{{ item.name }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let data of nzTable.data; let i = index">
+            <tr>
+              <td
+                [nzChecked]="setOfCheckedId.has(data.id)"
+                [nzDisabled]="data.disabled"
+                (nzCheckedChange)="onItemChecked(data.id, $event)"
+              ></td>
+              <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data, $event)"></td>
+              <td>{{ data.index }}</td>
+              <td>{{ data.document3rdId }}</td>
+              <td>{{ data.code }}</td>
+              <td>
+                <p>{{ data.name }}</p>
+                <p>({{ data.userFullName }} - {{ data.organizationName }})</p>
+              </td>
+              <td>{{ data.documentTypeName }}</td>
+              <!-- <td>
+                <span *ngIf="data.documentStatus !== 2">{{ data.stateName }}</span>
+                <span *ngIf="data.documentStatus === 2">{{ data.stateNameForReject }}</span>
+              </td> -->
+              <td>
+                <span *ngIf="data.isDeleted === false">
+                  <span *ngIf="data.documentStatus === 1 && data.isSignExpireAtDate && !data.isCloseDocument">
+                    <i nz-icon nzType="field-time" nzTheme="outline"></i>
+                  </span>
+                  <span *ngIf="data.documentStatus === 0 && !data.isSignExpireAtDate && !data.isCloseDocument">
+                    <img src="../../../../../assets/tmp/img/Danh sách CCCN/icon đang soạn thảo xanh.svg" alt="Đang soạn thảo" />
+                  </span>
+                  <span *ngIf="data.documentStatus === 1 && !data.isSignExpireAtDate && !data.isCloseDocument">
+                    <img src="../../../../../assets/tmp/img/Danh sách CCCN/icon đang xử lý.svg" alt="Đang xử lý" />
+                  </span>
+                  <span *ngIf="data.documentStatus === 2 && !data.isSignExpireAtDate && !data.isCloseDocument">
+                    <img src="../../../../../assets/tmp/img/Danh sách CCCN/icon đã hủy.svg" alt="Đã từ chối" />
+                  </span>
+                  <span *ngIf="data.documentStatus === 3 && !data.isSignExpireAtDate && !data.isCloseDocument">
+                    <img src="../../../../../assets/tmp/img/Danh sách CCCN/icon đã hoàn thành.svg" alt="Đã hoàn thành" />
+                  </span>
+                  <span *ngIf="data.documentStatus === 1 && data.isCloseDocument">
+                    <img
+                      src="../../../../../assets/tmp/img/Danh sách CCCN/icon-close-doc.png"
+                      alt="Đã đóng"
+                      style="width: 20px; height: 20px"
+                    />
+                  </span>
+                  &nbsp;
+                  <span *ngIf="data.documentStatus === 0">{{ data.documentStatusName }}</span>
+                  <span *ngIf="data.documentStatus === 1">{{ data.stateName }}</span>
+                  <span *ngIf="data.documentStatus === 2">{{ data.stateNameForReject }}</span>
+                  <span *ngIf="data.documentStatus === 3">{{ data.documentStatusName }}</span>
+                </span>
+                <span *ngIf="data.isDeleted === true">
+                  <span>
+                    <img src="../../../../../assets/tmp/img/Dashboard/eCertify_Type/icon_trash.svg" alt="Đã xóa" />
+                  </span>
+                  &nbsp;Đã xóa
+                </span>
+              </td>
+              <td *ngIf="filter.status == 2 || filter.isDeleted || filter.isClosed">{{ data.lastReasonReject }}</td>
+              <td>
+                <div *ngIf="data.signExpireAtDate">
+                  <b>{{ 'function.document.grid.sign-expire-at-date' | translate }}</b>
+                  <br />
+                  <span>{{ data.signExpireAtDate | date: 'dd/MM/yyyy HH:mm:ss' }}</span>
+                </div>
+                <div *ngIf="data.signCloseAtDate">
+                  <b>{{ 'function.document.grid.sign-close-at-date' | translate }}</b>
+                  <br />
+                  <span>{{ data.signCloseAtDate | date: 'dd/MM/yyyy HH:mm:ss' }}</span>
+                </div>
+              </td>
+              <td>
+                <a
+                  *ngIf="
+                    data.isDeleted === false &&
+                    data.documentStatus === 0 &&
+                    btnItemSendToWF.visible &&
+                    btnItemSendToWF.grandAccess &&
+                    !data.isCloseDocument
+                  "
+                  nz-popconfirm
+                  title="{{ 'layout.button.btn-send-to-wf.label' | translate }}"
+                  nzPopconfirmTitle="{{ 'function.document.modal-popconfirm-title.header' | translate }}"
+                  (nzOnConfirm)="btnItemSendToWF.click(data)"
+                  ><i nz-icon nzType="send" nzTheme="outline"></i>&nbsp;</a
+                >
+                <!-- <a *ngIf="data.documentStatus === 3" (click)="btnItemSendEmail.click(data)" title="Gửi kết quả">
+                  <i nz-icon nzType="file-done" nzTheme="outline"></i>&nbsp;
+                </a> -->
+
+                <a
+                  *ngIf="
+                    data.isDeleted === false &&
+                    data.documentStatus === 1 &&
+                    !data.isSignExpireAtDate &&
+                    btnItemSendNotify.visible &&
+                    btnItemSendNotify.grandAccess &&
+                    !data.isCloseDocument
+                  "
+                  (click)="btnItemSendNotify.click(data)"
+                  title="{{ 'layout.button.btn-item-send-notify.label' | translate }}"
+                >
+                  <i nz-icon nzType="send" nzTheme="outline"></i>&nbsp;
+                </a>
+                <!-- <a
+                  *ngIf="
+                    data.isDeleted === false &&
+                    (data.documentStatus === 0 || data.documentStatus === 1) &&
+                    !(data.documentStatus === 1 && data.isSignExpireAtDate)
+                  "
+                  (click)="btnItemCancel.click(data)"
+                  title="Từ chối/Hủy hợp đồng"
+                >
+                  <i nz-icon nzType="close-circle" nzTheme="outline"></i>&nbsp;
+                </a> -->
+                <a
+                  *ngIf="
+                    data.isDeleted === false &&
+                    (data.documentStatus === 2 || data.isSignExpireAtDate) &&
+                    btnItemRenew.visible &&
+                    btnItemRenew.grandAccess &&
+                    !data.isCloseDocument &&
+                    data.isAllowRenew
+                  "
+                  (click)="btnItemRenew.click(data)"
+                  [title]="btnItemRenew.title"
+                >
+                  <i nz-icon nzType="reload" nzTheme="outline"></i>&nbsp;
+                </a>
+                <a
+                  *ngIf="data.isDeleted === false && data.documentStatus === 0 && !data.isCloseDocument"
+                  (click)="btnItemDelete.click(data)"
+                  title="{{ 'layout.button.btn-delete.label' | translate }}"
+                >
+                  <i nz-icon nzType="delete" nzTheme="outline"></i>&nbsp;
+                </a>
+              </td>
+              <td>
+                <button
+                  style="width: 150px"
+                  nz-button
+                  nzType="default"
+                  (click)="btnItemActionViewDetail.click(data)"
+                  class="btn-default"
+                  *ngIf="
+                    btnItemActionViewDetail.visible &&
+                    btnItemActionViewDetail.grandAccess &&
+                    !(
+                      data.documentStatus === 1 &&
+                      data.isSign &&
+                      (data.nextStepSignType === 4 ||
+                        data.nextStepSignType === 5 ||
+                        data.nextStepSignType === 7 ||
+                        data.nextStepSignType === 8 ||
+                        data.nextStepSignType === 9) &&
+                      !data.isCloseDocument
+                    ) &&
+                    !(
+                      data.documentStatus === 1 &&
+                      data.isSign &&
+                      data.nextStepSignType === 6 &&
+                      !data.isSignExpireAtDate &&
+                      !data.isCloseDocument
+                    )
+                  "
+                >
+                  {{ btnItemActionViewDetail.titlei18n }}
+                </button>
+                <button
+                  nz-button
+                  nzType="default"
+                  style="width: 100%; margin-left: 5px"
+                  class="btn-action"
+                  *ngIf="
+                    !data.isCloseDocument &&
+                    data.isDeleted === false &&
+                    btnApprove.visible &&
+                    btnApprove.grandAccess &&
+                    data.documentStatus === 1 &&
+                    data.nextStepSignType === 6 &&
+                    data.isSign &&
+                    !data.isSignExpireAtDate
+                  "
+                  [nzLoading]="isLoading"
+                  (click)="btnApprove.click(data)"
+                >
+                  <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnApprove.title }}
+                </button>
+                <button
+                  nz-button
+                  nzType="default"
+                  style="width: 100%; margin-left: 5px"
+                  class="btn-action"
+                  *ngIf="
+                    !data.isCloseDocument &&
+                    data.isDeleted === false &&
+                    btnSign.visible &&
+                    btnSign.grandAccess &&
+                    data.documentStatus === 1 &&
+                    data.isSign &&
+                    (data.nextStepSignType === 4 ||
+                      data.nextStepSignType === 5 ||
+                      data.nextStepSignType === 7 ||
+                      data.nextStepSignType === 8 ||
+                      data.nextStepSignType === 9) &&
+                    !data.isSignExpireAtDate
+                  "
+                  [nzLoading]="isLoading"
+                  (click)="btnSign.click(data)"
+                >
+                  <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnSign.titlei18n }}
+                </button>
+                <button
+                  style="width: 150px"
+                  nz-button
+                  nzType="default"
+                  (click)="btnItemActionSignAuthentication.click(data)"
+                  class="btn-action"
+                  *ngIf="
+                    !data.isCloseDocument &&
+                    data.isDeleted === false &&
+                    btnItemActionSignAuthentication.visible &&
+                    btnItemActionSignAuthentication.grandAccess &&
+                    data.documentStatus === 1 &&
+                    data.isSign &&
+                    data.nextStepSignType === 1
+                  "
+                >
+                  {{ btnItemActionSignAuthentication.title }}
+                </button>
+                <button
+                  style="width: 150px"
+                  nz-button
+                  nzType="default"
+                  (click)="btnItemActionSignApprove.click(data)"
+                  class="btn-action"
+                  *ngIf="
+                    !data.isCloseDocument &&
+                    data.isDeleted === false &&
+                    btnItemActionSignApprove.visible &&
+                    btnItemActionSignApprove.grandAccess &&
+                    data.documentStatus === 1 &&
+                    data.isSign &&
+                    data.nextStepSignType === 2
+                  "
+                >
+                  {{ btnItemActionSignApprove.title }}
+                </button>
+              </td>
+            </tr>
+            <!-- Phải thay thế bằng cách sau https://angular.io/api/common/NgTemplateOutlet -->
+            <tr [nzExpand]="expandSet.has(data.id)">
+              <a nz-button nzType="link" (click)="workflowClick(data.workflowId)">
+                <p>
+                  {{ 'function.document.grid.workflow-info' | translate }}: {{ data.workflowCode }} -
+                  {{ data.workflowCreatedDate | date: 'dd/MM/yyyy HH:mm:ss' }}
+                </p>
+              </a>
+              <nz-steps nzLabelPlacement="vertical" class="ant-steps" (nzIndexChange)="wfStepIndexChange($event)">
+                <nz-step nzStatus="finish" [nzIcon]="iconPlay"> </nz-step>
+                <nz-step
+                  nzTitle="{{ item.statusSignName }}"
+                  [nzSubtitle]="item.signAtDate | date: 'dd/MM/yyyy HH:mm:ss'"
+                  *ngFor="let item of data.workFlowUser"
+                  nzDescription="{{ item.userFullName + '\n' + item.userName }}"
+                  [nzStatus]="item.signAtDate ? 'finish' : 'waiting'"
+                  [nzIcon]="item.signAtDate ? iconFinish : iconLoading"
+                >
+                </nz-step>
+                <nz-step *ngIf="data.isWFComplete" nzStatus="finish" [nzIcon]="iconCompletedGreen"> </nz-step>
+                <nz-step *ngIf="!data.isWFComplete" nzStatus="finish" [nzIcon]="iconCompletedYellow"> </nz-step>
+              </nz-steps>
+            </tr>
+          </ng-container>
+        </tbody>
+      </nz-table>
+    </nz-row>
+    <app-ag-grid-pagination
+      [grid]="grid"
+      [filter]="filter"
+      [pageSizeOptions]="pageSizeOptions"
+      (pageNumberChange)="onPageNumberChange()"
+      (pageSizeChange)="onPageSizeChange()"
+    ></app-ag-grid-pagination>
+    <nz-row style="display: none">
+      <ag-grid-angular
+        #agGrid
+        style="width: 100%; height: 70vh"
+        id="unit-grid"
+        class="ag-theme-alpine"
+        [modules]="modules"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [suppressRowClickSelection]="true"
+        [rowSelection]="rowSelection"
+        [rowData]="grid.rowData"
+        (selectionChanged)="onSelectionChanged($event)"
+        (cellDoubleClicked)="onCellDoubleClicked($event)"
+        [overlayLoadingTemplate]="overlayLoadingTemplate"
+        [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+        [frameworkComponents]="frameworkComponents"
+        [excelStyles]="excelStyles"
+        (gridReady)="onGridReady($event)"
+      >
+      </ag-grid-angular>
+    </nz-row>
+  </nz-card>
+</page-header-wrapper>
+
+<app-document-item #itemModal (eventEmmit)="onModalEventEmmit($event)"> </app-document-item>
+
+<app-document-send-mail #itemModal (eventEmmit)="onModalEventEmmit($event)"> </app-document-send-mail>
+
+<delete-modal #deleteModal (eventEmmit)="onDeleteEventEmmit($event)"></delete-modal>
+
+<app-document-renew #itemModal (eventEmmit)="onModalEventEmmit($event)"></app-document-renew>
+
+<ng-template #iconPlay>
+  <img src="../../../../../assets/tmp/img/Danh sách CCCN/quy trình/icon_play.svg" alt="Khởi tạo" />
+</ng-template>
+<ng-template #iconFinish>
+  <img src="../../../../../assets/tmp/img/Danh sách CCCN/quy trình/icon_create.svg" alt="Đã xử lý" />
+</ng-template>
+<ng-template #iconLoading>
+  <img src="../../../../../assets/tmp/img/Danh sách CCCN/quy trình/icon đang xử lý.svg" alt="Đang xử lý" />
+</ng-template>
+<ng-template #iconCompletedYellow>
+  <img style="width: 50px; height: 50px" src="../../../../../assets/tmp/img/Danh sách CCCN/quy trình/icon ký.svg" alt="Hoàn thành" />
+</ng-template>
+<ng-template #iconCompletedGreen>
+  <img
+    style="width: 50px; height: 50px"
+    src="../../../../../assets/tmp/img/Danh sách CCCN/quy trình/icon ký xanh lá.svg"
+    alt="Hoàn thành"
+  />
+</ng-template>
+
+<ng-template #contentNoResult>
+  <div class="ant-empty ant-empty-normal ng-star-inserted" ng-reflect-nz-not-found-image="simple">
+    <div class="ant-empty-image">
+      <div class="ng-star-inserted">
+        <svg width="64" height="41" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg" class="ant-empty-img-simple">
+          <g transform="translate(0 1)" fill="none" fill-rule="evenodd">
+            <ellipse cx="32" cy="33" rx="32" ry="7" class="ant-empty-img-simple-ellipse"></ellipse>
+            <g fill-rule="nonzero" class="ant-empty-img-simple-g">
+              <path
+                d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"
+              ></path>
+              <path
+                d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z"
+                class="ant-empty-img-simple-path"
+              ></path>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <p class="ant-empty-description ng-star-inserted">Không có dữ liệu!</p>
+  </div>
+</ng-template>
+
+<nz-modal
+  [(nzVisible)]="isShowFormCancel"
+  nzTitle="{{ 'function.document.modal-last-reason-reject.header' | translate }}"
+  (nzOnCancel)="onClose()"
+  (nzOnOk)="onUpdateStatusTocancel()"
+  [(nzOkDisabled)]="!formDocCancel.lastReasonReject"
+  nzCancelText="{{ 'layout.button.btn-cancel.label' | translate }}"
+  nzOkText="{{ 'layout.button.btn-ok.label' | translate }}"
+>
+  <ng-container *nzModalContent>
+    <form nz-form>
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'function.document.modal-item.notify-configid.label' | translate }}</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24">
+          <nz-select
+            [(ngModel)]="formDocCancel.notifyConfigId"
+            nzPlaceHolder="{{ 'function.document.modal-item.search.notify-configid.placeholder' | translate }}"
+            [nzAllowClear]="true"
+            [ngModelOptions]="{ standalone: true }"
+          >
+            <nz-option *ngFor="let option of listNotifyConfig" [nzValue]="option.id" [nzLabel]="option.code"> </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzHasFeedback [nzErrorTip]="errorMessage">
+          <textarea
+            [(ngModel)]="formDocCancel.lastReasonReject"
+            nz-input
+            placeholder="{{ 'function.document.modal-item.last-reason-reject.placeholder' | translate }}"
+            [nzAutosize]="{ minRows: 3, maxRows: 5 }"
+            [ngModelOptions]="{ standalone: true }"
+            required
+          ></textarea>
+          <ng-template #errorMessage let-control>
+            <ng-container *ngIf="control.hasError('required')">Trường thông tin bắt buộc.</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<nz-modal
+  [(nzVisible)]="isShowFormSendNoti"
+  nzTitle="{{ 'function.document.modal-send-notify.header' | translate }}"
+  (nzOnCancel)="onCloseFormSendNotify()"
+  (nzOnOk)="sendMailToUserSign()"
+  [(nzOkLoading)]="isLoading"
+  [(nzOkDisabled)]="isLoading"
+  nzCancelText="{{ 'layout.button.btn-cancel.label' | translate }}"
+  nzOkText="{{ 'layout.button.btn-ok.label' | translate }}"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="formDocSendNotify">
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24" [nzRequired]="true">{{
+          'function.document.modal-item.notify-configid.label' | translate
+        }}</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24" [nzErrorTip]="notifyConfigMessage">
+          <nz-select
+            formControlName="notifyConfigId"
+            nzPlaceHolder="{{ 'function.document.modal-item.search.notify-configid.placeholder' | translate }}"
+            [nzAllowClear]="true"
+          >
+            <nz-option *ngFor="let option of listNotifyConfig" [nzValue]="option.id" [nzLabel]="option.code"> </nz-option>
+          </nz-select>
+          <ng-template #notifyConfigMessage let-control>
+            <ng-container *ngIf="control.hasError('required')">{{
+              'function.document.modal-item.notify-configid.message' | translate
+            }}</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<app-user-v2-item #itemUserModal [isVisible]="userModal.isShow" [item]="userModal.item" [type]="userModal.type" [option]="userModal.option">
+</app-user-v2-item>
+
+<app-workflow-item #workflowItemModal [isVisible]="isVisibleWorkflowItem" (eventEmmit)="onModalWorkflowItemEventEmmit($event)">
+</app-workflow-item>

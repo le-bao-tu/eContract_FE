@@ -1,0 +1,374 @@
+<nz-modal
+  [nzStyle]="{ top: '20px' }"
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  nzWidth="1500px"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle> {{ tittle }} </ng-template>
+
+  <ng-template #modalContent>
+    <div nz-row>
+      <div nz-col nzXs="6" style="height: 75vh; overflow: auto">
+        <div *ngFor="let element of listDocument" style="cursor: pointer">
+          <div style="font-weight: bold; font-size: 16px; font-style: normal; text-align: center">
+            <div nz-row>
+              <nz-col nzXs="24">
+                <span class="ant-btn-nowarp" (click)="element.show = !element.show">
+                  <nz-row>
+                    <div nz-col nzSpan="23">
+                      {{ element.name }}
+                    </div>
+                    <div nz-col nzSpan="1">
+                      <span *ngIf="!element.show"><i nz-icon nzType="caret-up" nzTheme="outline"></i></span>
+                      <span *ngIf="element.show"><i nz-icon nzType="caret-down" nzTheme="outline"></i></span>
+                    </div>
+                  </nz-row>
+                </span>
+              </nz-col>
+            </div>
+            <div nz-row *ngFor="let file of element.listDocumentFile" class="pdf-file-viewer">
+              <nz-col *ngIf="element.show" nzXs="24">
+                <a
+                  nz-button
+                  target="_blank"
+                  class="ant-btn ant-btn-icon-only"
+                  [href]="getFileUrl(file)"
+                  class="pdf-file-viewer-button"
+                  title="Tải xuống"
+                >
+                  <i nz-icon nzType="download" nzTheme="outline"></i>
+                </a>
+                <pdf-viewer
+                  (click)="changeFileToView(file, element)"
+                  [src]="getFileUrl(file)"
+                  [render-text]="false"
+                  [rotation]="0"
+                  [zoom]="1"
+                  [page]="1"
+                  [show-all]="false"
+                  [show-borders]="true"
+                  [original-size]="false"
+                  [fit-to-page]="true"
+                  [autoresize]="true"
+                >
+                </pdf-viewer>
+              </nz-col>
+            </div>
+          </div>
+          <nz-divider></nz-divider>
+        </div>
+        <!-- <div *ngFor="let element of item.listDocumentFile" (click)="changeFileToView(element)" style="cursor: pointer">
+          <div style="font-weight: bold; font-size: 16px; font-style: normal; text-align: center">
+            <div nz-row>
+              <nz-col nzXs="20">
+                {{ element.fileName }}
+              </nz-col>
+              <nz-col nzXs="4">
+                <a nz-button [href]="getFileUrl(element.fileId)" target="_blank">
+                  <i nz-icon nzType="download" nzTheme="outline"></i>
+                </a>
+              </nz-col>
+            </div>
+          </div>
+          <pdf-viewer
+            [src]="getFileUrl(element.fileId)"
+            [render-text]="false"
+            [rotation]="0"
+            [zoom]="1"
+            [page]="1"
+            [show-all]="false"
+            [show-borders]="true"
+            [original-size]="false"
+            [fit-to-page]="true"
+            [autoresize]="true"
+          >
+          </pdf-viewer>
+          <nz-divider></nz-divider>
+        </div> -->
+      </div>
+      <div nz-col nzXs="14" style="height: 75vh; overflow: auto">
+        <!-- 22-9-2021 -->
+        <div style="position: fixed; right: 43%; z-index: 1">
+          <div nz-row>
+            <div nz-col nzSm="24" class="text-center" style="margin-bottom: 10px">
+              <button style="margin-top: 10px; margin-right: 10px" nz-button nzType="default" (click)="zoom_out()">
+                <i nz-icon nzType="zoom-out" nzTheme="outline"></i>
+              </button>
+              <input
+                #inputElement
+                readonly
+                style="width: 50px; padding-left: 20px"
+                nz-input
+                nz-tooltip
+                nzTooltipTrigger="focus"
+                nzTooltipPlacement="topLeft"
+                nzOverlayClassName="numeric-input"
+                [ngModel]="zoom_to"
+                placeholder="Nhập số trang"
+              />
+              <button style="margin-top: 10px; margin-left: 10px" nz-button nzType="default" (click)="zoom_in()">
+                <i nz-icon nzType="zoom-in" nzTheme="outline"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div nz row style="z-index: 0; margin-top: 0%">
+          <pdf-viewer
+            [src]="fileUrl"
+            [render-text]="false"
+            [rotation]="0"
+            [zoom]="zoom_to"
+            [show-all]="true"
+            [show-borders]="true"
+            [original-size]="false"
+            [fit-to-page]="true"
+            [autoresize]="true"
+          >
+          </pdf-viewer>
+        </div>
+        <!-- 22-9-2021 -->
+
+        <!-- <pdf-viewer
+          [src]="fileUrl"
+          [render-text]="false"
+          [rotation]="0"
+          [zoom]="1"
+          [show-all]="true"
+          [show-borders]="true"
+          [original-size]="false"
+          [fit-to-page]="true"
+          [autoresize]="true"
+        >
+        </pdf-viewer> -->
+      </div>
+      <div nz-col nzXs="4" style="height: 75vh; overflow: auto">
+        <div class="m-md mt-0">
+          <h3 nz-typography class="mb-md">
+            <strong>{{ 'function.document.document-item.right-content.document-type-change.label' | translate }}</strong>
+          </h3>
+          <nz-timeline>
+            <nz-timeline-item *ngFor="let item of dataLog; index as i">
+              <div id="timline{{ i }}" class="d-flex flex-column">
+                <span nz-typography
+                  ><strong>{{ item.description }}</strong></span
+                >
+                <!-- <span *ngIf="item.lastReasonReject" nz-typography>Lý do: {{ item.lastReasonReject }}</span> -->
+                <span nz-typography>{{ 'function.document.document-item.right-content.by.label' | translate }}: {{ item.userName }}</span>
+
+                <span nz-typography nzType="success" style="font-size: 12px"
+                  >{{ 'function.document.document-item.right-content.createddate.label' | translate }}:
+                  {{ item.createdDate | date: 'dd/MM/yyyy HH:mm:ss' }}</span
+                >
+              </div>
+            </nz-timeline-item>
+          </nz-timeline>
+        </div>
+
+        <div class="m-md mt-0" *ngIf="isShowDocWFLHistory">
+          <h3 nz-typography class="mb-md">
+            <strong>{{ 'function.document.document-item.right-content.history-replace.label' | translate }}</strong>
+          </h3>
+          <nz-timeline>
+            <nz-timeline-item *ngFor="let item of listDocumentWFLHistory; index as i">
+              <div id="timline{{ i }}" class="d-flex flex-column">
+                <span nz-typography
+                  ><strong>{{ item.description }}</strong></span
+                >
+                <span nz-typography
+                  >{{ 'function.document.document-item.right-content.reasonreject.label' | translate }}: {{ item.reasonReject }}</span
+                >
+
+                <span nz-typography nzType="success" style="font-size: 12px"
+                  >{{ 'function.document.document-item.right-content.createddate.label' | translate }}:
+                  {{ item.createdDate | date: 'dd/MM/yyyy HH:mm:ss' }}</span
+                >
+              </div>
+            </nz-timeline-item>
+          </nz-timeline>
+        </div>
+      </div>
+    </div>
+    <label
+      nz-checkbox
+      *ngIf="btnSignHSM.visible && btnSignHSM.grandAccess"
+      class="mt-sm mb-sm font-weight-bold"
+      [(ngModel)]="checkboxAccess"
+      [ngModelOptions]="{ standalone: true }"
+      >Tôi đã đọc, hiểu, đồng ý với nội dung của hợp đồng và thống nhất phương thức điện tử để ký hợp đồng.</label
+    >
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && btnReject.visible && btnReject.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnReject.click($event)"
+    >
+      <i nz-icon nzType="rollback" nzTheme="outline"></i>{{ btnReject.titlei18n }}
+    </button>
+    <!-- <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && btnSignApproval.visible && btnSignApproval.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSignApproval.click($event)"
+    >
+      <i nz-icon nzType="edit" nzTheme="outline"></i>{{ btnSignApproval.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && btnSignAuthentication.visible && btnSignAuthentication.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSignAuthentication.click($event)"
+    >
+      <i nz-icon nzType="edit" nzTheme="outline"></i>{{ btnSignAuthentication.title }}
+    </button> -->
+    <button
+      nz-button
+      nzType="primary"
+      style="margin-left: 5px"
+      class="btn-primary"
+      *ngIf="btnSign.visible && btnSign.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSign.click($event)"
+    >
+      <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnSign.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      style="margin-left: 5px"
+      class="btn-primary"
+      *ngIf="btnSignHSM.visible && btnSignHSM.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSignHSM.click($event)"
+    >
+      <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnSignHSM.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      style="margin-left: 5px"
+      class="btn-primary"
+      *ngIf="btnSignADSS.visible && btnSignADSS.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSignADSS.click($event)"
+    >
+      <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnSignADSS.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      style="margin-left: 5px"
+      class="btn-primary"
+      *ngIf="btnSignUSB.visible && btnSignUSB.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSignUSB.click($event)"
+    >
+      <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnSignUSB.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="btnSendToWF.visible && btnSendToWF.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSendToWF.click($event)"
+    >
+      <i nz-icon nzType="send" nzTheme="outline"></i>{{ btnSendToWF.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="btnApprove.visible && btnApprove.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnApprove.click($event)"
+    >
+      <i nz-icon nzType="check" nzTheme="outline"></i>{{ btnApprove.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="btnGenerateImagePreview.visible && btnGenerateImagePreview.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnGenerateImagePreview.click($event)"
+    >
+      <i nz-icon nzType="file-image" nzTheme="outline"></i>{{ btnGenerateImagePreview.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.titlei18n }}
+    </button>
+  </ng-template>
+</nz-modal>
+
+<app-document-sign #itemSignModal [isVisible]="modal.isShow" (eventEmmit)="onModalEventEmmit($event)"> </app-document-sign>
+<sign-response-modal
+  #signResponseModal
+  [isVisible]="isShowSignResponse"
+  (eventEmmit)="onSignResponseModalEventEmmit($event)"
+></sign-response-modal>
+<app-document-info-sign #itemModal (eventEmmit)="onModalEventEmmitSign($event)"> </app-document-info-sign>
+<app-document-otp-sign #itemModal (eventEmmit)="onModalEventEmmitOTP($event)"> </app-document-otp-sign>
+<app-document-list-cert #itemModal (eventEmmit)="onModalEventEmmitCert($event)"></app-document-list-cert>
+
+<nz-modal
+  [(nzVisible)]="isShowFormReject"
+  nzTitle="Xác nhận từ chối hợp đồng"
+  (nzOnCancel)="onCloseFormReject()"
+  (nzOnOk)="onRejectDocument()"
+  [(nzOkDisabled)]="!formReject.lastReasonReject"
+  nzCancelText="Đóng"
+  nzOkText="Đồng ý"
+>
+  <ng-container *nzModalContent>
+    <form nz-form>      
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'function.document.document-item.form-reject.notify-config-id.label' | translate }}</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24">
+          <nz-select
+            [(ngModel)]="formReject.notifyConfigId"
+            nzPlaceHolder="{{ 'function.document.document-item.form-reject.notify-config-id.placeholder' | translate }}"
+            [nzAllowClear]="true"
+            [ngModelOptions]="{ standalone: true }"
+          >
+            <nz-option *ngFor="let option of listNotifyConfig" [nzValue]="option.id" [nzLabel]="option.code"> </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzHasFeedback [nzErrorTip]="errorMessage">
+          <textarea
+            [(ngModel)]="formReject.lastReasonReject"
+            nz-input
+            placeholder="{{ 'function.document.document-item.form-reject.reject-reason.placeholder' | translate }}"
+            [nzAutosize]="{ minRows: 3, maxRows: 5 }"
+            [ngModelOptions]="{ standalone: true }"
+            required
+          ></textarea>
+          <ng-template #errorMessage let-control>
+            <ng-container *ngIf="control.hasError('required')">{{ 'function.document.document-item.form-reject.reject-reason.message' | translate }}</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>

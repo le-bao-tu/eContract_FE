@@ -1,0 +1,44 @@
+image: docker:19.03.12
+services:
+  - docker:19.03.12-dind
+
+stages:
+  - build
+  - deploy
+
+before_script:
+  - echo "--------------eContract Frontend-----------------"
+
+build:
+  stage: build
+  before_script:
+    - docker login docker.io -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASS
+  script:
+    - docker build -f Dockerfile.builded -t savisdockerhub/econtract.fe:dev .
+    # - docker build -f Dockerfile.builded -t savisdockerhub/econtract.fe:product .
+    # - docker build -f Dockerfile.builded -t savisdockerhub/econtract.fe:bpm .
+    # - docker build -t savisdockerhub/econtract.fe:dev .
+    # - docker tag savisdockerhub/econtract.fe:dev savisdockerhub/econtract.fe:dev
+    - docker push docker.io/savisdockerhub/econtract.fe:dev
+    # - docker push docker.io/savisdockerhub/econtract.fe:product
+    # - docker push docker.io/savisdockerhub/econtract.fe:bpm
+  only:
+    - testing
+# deploy:
+#   stage: deploy
+#   script:
+#     - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASS" docker.io
+#     - docker pull docker.io/savisdockerhub/econtract.fe:dev
+#     - if [ "$(docker ps -a | grep econtract.fe)" ]; then docker stop econtract.fe; fi
+#     - if [ "$(docker ps -a | grep econtract.fe)" ]; then docker rm econtract.fe; fi
+#     - docker run -d --restart unless-stopped --name econtract.fe -p 8002:80 savisdockerhub/econtract.fe:dev
+#   only:
+#     - testing
+
+# - npm run build-test
+# - docker build -f Dockerfile.builded -t savisdockerhub/econtract.fe:dev .
+# - docker push docker.io/savisdockerhub/econtract.fe:dev
+    
+# - npm run build-vc-prod
+# docker build -f Dockerfile.builded -t savisdockerhub/econtract.fe:vcprod .
+# docker push docker.io/savisdockerhub/econtract.fe:vcprod

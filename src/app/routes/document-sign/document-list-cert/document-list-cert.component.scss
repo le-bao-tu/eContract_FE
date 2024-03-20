@@ -1,0 +1,9 @@
+.bacham {
+  display: -webkit-box;
+  width: 100%;
+  overflow: hidden; // ẩn các nội dung khi kích thước lớn hơn chiều rộng khối bên ngoài
+  white-space: pre-wrap;
+  text-overflow: ellipsis; //thêm 3 dấu chấm ở cuối
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical; // chiều rộng bằng khối bao nó// số dòng muốn hiển thị
+}

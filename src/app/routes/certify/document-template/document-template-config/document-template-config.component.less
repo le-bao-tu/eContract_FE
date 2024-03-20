@@ -1,0 +1,62 @@
+@import '~@delon/theme/index';
+:host {
+  ::ng-deep {
+    .btn-meta-data {
+      width: 90%;
+      margin: 0 auto;
+      border-radius: 4px;
+    }
+
+    .label-thong-tin-left {
+      font-weight: bold;
+      font-size: 17px;
+      text-align: center;
+    }
+
+    .ant-btn + .ant-btn:not(.ant-btn-link),
+    .ant-btn + nz-popconfirm,
+    nz-popconfirm + .ant-btn,
+    nz-popconfirm + nz-popconfirm,
+    .ant-btn + nz-button-group,
+    nz-button-group + .ant-btn,
+    .ant-btn + nz-dropdown,
+    nz-dropdown + .ant-btn,
+    nz-popconfirm + nz-button-group,
+    nz-button-group + nz-popconfirm {
+      margin-left: 0;
+    }
+    .img-button {
+      height: 27px;
+      margin-top: 5px;
+      cursor: pointer;
+    }
+    .img-button :hover {
+      cursor: pointer;
+    }
+    .class-ky {
+      height: 100%;
+      padding-top: 20px;
+      color: #0079c2;
+      font-weight: bold;
+      border: solid 1px #0079c2;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .class-ky :hover {
+      cursor: pointer;
+    }
+
+    .ng2-pdf-viewer-container {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      overflow: hidden;
+    }
+
+    .page-wrapper {
+      overflow-y: scroll;
+    }
+  }
+}

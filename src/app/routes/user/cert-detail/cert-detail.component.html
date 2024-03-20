@@ -1,0 +1,195 @@
+<nz-modal
+  [nzStyle]="{ top: '20px' }"
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  nzWidth="900px"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle> {{ tittle }} </ng-template>
+
+  <ng-template #modalContent>
+    <nz-tabset>
+      <nz-tab nzTitle="General">
+        <div class="row-item" nz-row>
+          <div nz-col nzSpan="1">
+            <img class="img-folder" src="../../../../assets/folder.svg" alt="" />
+          </div>
+          <div nz-col nzSpan="20">
+            <span class="text-label">Version: </span>
+            <span class="text-value">{{ data?.version }}</span>
+          </div>
+        </div>
+        <div class="row-item" nz-row>
+          <div nz-col nzSpan="1">
+            <img class="img-folder" src="../../../../assets/folder.svg" alt="" />
+          </div>
+          <div nz-col nzSpan="20">
+            <span class="text-label">Serial No: </span>
+            <span class="text-value">{{ data?.serialNumber }}</span>
+          </div>
+        </div>
+        <div class="row-item" nz-row>
+          <div nz-col nzSpan="1">
+            <img class="img-folder" src="../../../../assets/folder.svg" alt="" />
+          </div>
+          <div nz-col nzSpan="20">
+            <span class="text-label">Subject DN: </span>
+            <span class="text-value">{{ data?.subjectName }}</span>
+          </div>
+        </div>
+        <div class="row-item" nz-row>
+          <div nz-col nzSpan="1">
+            <img class="img-folder" src="../../../../assets/folder.svg" alt="" />
+          </div>
+          <div nz-col nzSpan="20">
+            <span class="text-label">Issuer DN: </span>
+            <span class="text-value">{{ data?.issuerName }}</span>
+          </div>
+        </div>
+        <div class="row-item" nz-row>
+          <div nz-col nzSpan="1">
+            <img class="img-folder" src="../../../../assets/folder.svg" alt="" />
+          </div>
+          <div nz-col nzSpan="20">
+            <span class="text-label">Signature Algorithm: </span>
+            <span class="text-value">{{ data?.signatureAlgorithm }}</span>
+          </div>
+        </div>
+        <div class="row-item" nz-row>
+          <div nz-col nzSpan="1">
+            <img class="img-folder" src="../../../../assets/folder.svg" alt="" />
+          </div>
+          <div nz-col nzSpan="20">
+            <span class="text-label">Validity: </span>
+            <br />
+            <span class="text-value">
+              <span style="font-style: italic" class="text-label"><i class="fas fa-clock"></i> From: </span>
+              <span class="text-value">{{ data?.notBefore }}</span>
+              <br />
+              <span style="font-style: italic" class="text-label"><i class="fas fa-clock"></i> To: </span>
+              <span class="text-value">{{ data?.notAfter }}</span>
+            </span>
+          </div>
+        </div>
+        <!-- <div class="row-item" nz-row>
+          <div nz-col nzSpan="1">
+            <img class="img-folder" src="../../../../assets/folder.svg" alt="" />
+          </div>
+          <div nz-col nzSpan="20">
+            <span class="text-label">Public Key: </span>
+            <span class="text-value">{{ data?.publicKey?.key?.signatureAlgorithm + ' (' + data?.publicKey?.key?.keySize + 'bits)' }}</span>
+            <br />
+            <span class="text-value">{{ data?.publicKey?.encodedKeyValue?.rawData }}</span>
+          </div>
+        </div> -->
+        <!-- <div class="row-item" nz-row>
+          <div nz-col nzSpan="1">
+            <img class="img-folder" src="../../../../assets/folder.svg" alt="" />
+          </div>
+          <div nz-col nzSpan="20">
+            <span class="text-label">Basic Constaints: </span>
+            <span class="text-value"
+              >Type={{ data?.extensions[1]?.rawData }}, PathLength={{ data?.extensions[1]?.pathLengthConstraint }}</span
+            >
+          </div>
+        </div>
+        <div class="row-item" nz-row>
+          <div nz-col nzSpan="1">
+            <img class="img-folder" src="../../../../assets/folder.svg" alt="" />
+          </div>
+          <div nz-col nzSpan="20">
+            <span class="text-label">Key Usage: </span>
+            <span class="text-value">{{ data?.extensions[3]?.rawData }}</span>
+          </div>
+        </div>
+        <div class="row-item" nz-row>
+          <div nz-col nzSpan="1">
+            <img class="img-folder" src="../../../../assets/folder.svg" alt="" />
+          </div>
+          <div nz-col nzSpan="20">
+            <span class="text-label">Authority Key Indentifier: </span>
+            <span class="text-value">{{ data?.extensions[1]?.rawData }}</span>
+          </div>
+        </div>
+
+        <div class="row-item" nz-row>
+          <div nz-col nzSpan="1">
+            <img class="img-folder" src="../../../../assets/folder.svg" alt="" />
+          </div>
+          <div nz-col nzSpan="20">
+            <span class="text-label">Subject Key Identifier: </span>
+            <span class="text-value">{{ data?.extensions[2]?.subjectKeyIdentifier }}</span>
+          </div>
+        </div> -->
+
+        <!-- <div class="row-item" nz-row>
+          <div nz-col nzSpan="1">
+            <img class="img-folder" src="../../../../assets/folder.svg" alt="" />
+          </div>
+          <div nz-col nzSpan="20">
+            <span class="text-label">CRL Distribution Points: </span>
+            <span class="text-value"></span>
+          </div>
+        </div> -->
+
+        <!-- <div class="row-item" nz-row>
+          <div nz-col nzSpan="1">
+            <img class="img-folder" src="../../../../assets/folder.svg" alt="" />
+          </div>
+          <div nz-col nzSpan="20">
+            <span class="text-label">Thumbprint Algorithm: </span>
+            <span class="text-value">{{ data?.signatureAlgorithm }}</span>
+          </div>
+        </div> -->
+
+        <!-- <div class="row-item" nz-row>
+          <div nz-col nzSpan="1">
+            <img class="img-folder" src="../../../../assets/folder.svg" alt="" />
+          </div>
+          <div nz-col nzSpan="20">
+            <span class="text-label">Thumbprint: </span>
+            <span class="text-value">{{ data?.thumbprint }}</span>
+          </div>
+        </div> -->
+      </nz-tab>
+      <nz-tab nzTitle="Path">
+        <ul>
+          <li class="row-item">
+            <img class="img-folder" src="../../../../assets/certificate.svg" alt="" />
+            {{ data?.issuer }}
+            <ul>
+              <li>
+                <img class="img-folder" src="../../../../assets/certificate.svg" alt="" />
+                {{ data?.issuerName }}
+              </li>
+            </ul>
+          </li>
+          <li class="row-item">
+            <img class="img-folder" src="../../../../assets/certificate.svg" alt="" />
+            {{ data?.subject }}
+            <ul>
+              <li>
+                <img class="img-folder" src="../../../../assets/certificate.svg" alt="" />
+                {{ data?.subjectName }}
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nz-tab>
+    </nz-tabset>
+  </ng-template>
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.title }}
+    </button>
+  </ng-template>
+</nz-modal>

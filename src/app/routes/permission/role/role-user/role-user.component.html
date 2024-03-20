@@ -1,0 +1,94 @@
+<nz-modal
+  [(nzVisible)]="isVisibleRoleUser"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  nzWidth="1200px"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle> {{ tittle }} </ng-template>
+  <ng-template #modalContent>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24"> {{ 'function.role.modal-user-role.organization.label' | translate }}</nz-form-label>
+      <nz-form-control [nzSm]="8" [nzXs]="24">
+        <nz-tree-select      
+          [nzNodes]="listOrgTree"
+          nzShowSearch
+          nzShowLine
+          nzPlaceHolder="{{ 'function.role.modal-user-role.organization.placeholder' | translate }}"
+          [(ngModel)]="orgSelected"
+          (ngModelChange)="onChangeOrg($event)"
+          >
+        </nz-tree-select>
+      </nz-form-control>
+    </nz-form-item>  
+
+    <nz-transfer
+      [nzDataSource]="listUserTransfer"
+      [nzShowSearch]="true"
+      [nzShowSelectAll]="false"
+      [nzRenderList]="[renderList, renderList]"
+      (nzSelectChange)="selectUser($event)"
+      (nzChange)="changeUser($event)"
+      (nzSearchChange)="searchUser($event)"
+      [nzFilterOption]="filterUserOption"
+    >
+      <ng-template
+        #renderList
+        let-items
+        let-direction="direction"
+        let-stat="stat"
+        let-disabled="disabled"
+        let-onItemSelectAll="onItemSelectAll"
+        let-onItemSelect="onItemSelect"
+      >
+        <nz-table #t [nzData]="$asTransferItems(items)" nzSize="small">
+          <thead>
+            <tr>
+              <th
+                [nzChecked]="stat.checkAll"
+                [nzIndeterminate]="stat.checkHalf"
+                (nzCheckedChange)="onItemSelectAll($event)"
+              ></th>
+              <th>{{ 'function.role.modal-user-role.table.header.name' | translate }}</th>
+              <th>{{ 'function.role.modal-user-role.table.header.code' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of t.data" (click)="onItemSelect(data)">
+              <td
+                [nzChecked]="!!data.checked"
+                (nzCheckedChange)="onItemSelect(data)"
+              ></td>
+              <td>{{ data.name }}</td>             
+              <td>{{ data.code }}</td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </ng-template>
+    </nz-transfer>    
+
+  </ng-template>
+  <ng-template #modalFooter>   
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="btnSave.visible && btnSave.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i> {{ btnSave.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i> {{ btnCancel.titlei18n }}
+    </button>
+  </ng-template>
+</nz-modal>

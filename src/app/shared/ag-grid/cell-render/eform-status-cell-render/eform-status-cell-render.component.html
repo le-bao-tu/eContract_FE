@@ -1,0 +1,57 @@
+<style>
+  .tag-click {
+    cursor: pointer;
+  }
+</style>
+
+<nz-tag
+  class="tag-click"
+  [nzColor]="'#00BB00'"
+  *ngIf="isConfirmRequestCertificate"
+  (click)="btnDaKyCTS($event)"
+  >{{ 'function.customer.eform-confirm-request-certificate.label' | translate }}</nz-tag
+>
+<nz-tag
+  class="tag-click"
+  [nzColor]="'#00BB00'"
+  *ngIf="isConfirmDigitalSignature"
+  (click)="btnDaKyGDDTAT($event)"
+  >{{ 'function.customer.eform-confirm-digital-signature.label' | translate }}</nz-tag
+>
+<nz-tag
+  class="tag-click"
+  [nzColor]="'#F8A400'"
+  *ngIf="isNotConfirmRequestCertificate"
+  (click)="btnChuaKyCTS($event)"
+  >{{ 'function.customer.eform-not-confirm-request-certificate.label' | translate }}</nz-tag
+>
+<nz-tag
+  class="tag-click"
+  [nzColor]="'#F8A400'"
+  *ngIf="isNotConfirmDigitalSignature"
+  (click)="btnChuaKyGDDT($event)"
+  >{{ 'function.customer.eform-not-confirm-digital-signature.label' | translate }}</nz-tag
+>
+
+<!-- <style>
+    .btn-eform-status {
+        height: 35px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .cell-btn-container {
+        display: flex;
+        flex-direction: row;        
+    }
+</style>
+<div class="cell-btn-container">
+    <button
+        style="margin-right: 10px;"
+        nz-button
+        nzType="default"
+        (click)="btnClickedHandler($event)"
+        class="btn-default btn-eform-status">
+        {{ params.value }}
+    </button>   
+</div> -->

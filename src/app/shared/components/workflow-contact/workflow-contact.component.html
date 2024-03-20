@@ -1,0 +1,76 @@
+<nz-row *ngFor="let item of lstUser; let i = index" class="custom-contact">
+  <div nz-col nzSpan="6">
+    <div nz-row>
+      <div nz-col nzSpan="8" class="custom-label">{{ i + 1 }}. Họ và tên:</div>
+      <div nz-col nzSpan="15">
+        <div class="contact-name-input">
+          <input
+            placeholder="Nhập tên..."
+            nz-input
+            [(ngModel)]="item.userName"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onChangeUserName($event, i)"
+            [nzAutocomplete]="auto"
+            [disabled]="item.isDisabled || isInfo"
+          />
+          <nz-autocomplete #auto>
+            <nz-auto-optgroup *ngFor="let group of optionGroups" [nzLabel]="groupTitle">
+              <ng-template #groupTitle>
+                <span
+                  >{{ group.title }}
+                  <a class="more-link" href="{{ group.href }}" target="_blank"><i nz-icon nzType="double-right" nzTheme="outline"></i></a>
+                </span>
+              </ng-template>
+              <nz-auto-option *ngFor="let option of group.children" [nzLabel]="option.name" [nzValue]="option">
+                {{ option.name }}
+              </nz-auto-option>
+              <br />
+            </nz-auto-optgroup>
+          </nz-autocomplete>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzSpan="6">
+    <div nz-row>
+      <div nz-col nzSpan="5" class="custom-label">Email:</div>
+      <div nz-col nzSpan="18">
+        <input nz-input placeholder="Nhập email..." [(ngModel)]="item.userEmail" [disabled]="item.isDisabled || isInfo" />
+      </div>
+    </div>
+  </div>
+  <div nz-col nzSpan="6">
+    <div nz-row>
+      <div nz-col nzSpan="7" class="custom-label">Chức vụ:</div>
+      <div nz-col nzSpan="16">
+        <input nz-input placeholder="Nhập chức vụ..." [(ngModel)]="item.userPosition" [disabled]="item.isDisabled || isInfo" />
+      </div>
+    </div>
+  </div>
+  <div nz-col nzSpan="5">
+    <div nz-row>
+      <div nz-col nzSpan="9" class="custom-label">Loại hình ký:</div>
+      <div nz-col nzSpan="14">
+        <nz-select
+          [(ngModel)]="item.selectedSignType"
+          [compareWith]="compareFn"
+          (ngModelChange)="onChangeSignType($event, i)"
+          nzPlaceHolder="Chọn..."
+          [disabled]="isInfo"
+        >
+          <nz-option *ngFor="let option of listOfSignOption" [nzValue]="option" [nzLabel]="option.label"> </nz-option>
+        </nz-select>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzSpan="1">
+    <div nz-row>
+      <div nz-col nzSpan="12">
+        <i nz-icon nzType="rest" nzTheme="outline" class="pointer" [hidden]="isInfo" (click)="removeUser($event, i)"></i>
+      </div>
+      <div nz-col nzSpan="12">
+        <i nz-icon nzType="plus" nzTheme="outline" class="pointer" [hidden]="isInfo" (click)="addUser($event)"></i>
+      </div>
+    </div>
+  </div>
+</nz-row>

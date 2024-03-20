@@ -1,0 +1,149 @@
+<page-header-wrapper [title]="tittle" onBack="{() => window.history.back()}">
+  <nz-card class="card-header">
+    <div nz-row class="header">
+      <div nz-col nzSpan="12"><h2>Danh sách người dùng</h2></div>
+      <div nz-col nzSpan="12" style="text-align: right"></div>
+    </div>
+  </nz-card>
+
+  <nz-card [nzBordered]="false">
+    <nz-row>
+      <nz-col nzSm="16" nzXS="24" nzMd="16" class="padding-bottom-10">
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnReload.click($event)"
+          class="btn-reload"
+          *ngIf="btnReload.visible && btnReload.grandAccess"
+        >
+          <i nz-icon nzType="reload" nzTheme="outline"></i>{{ btnReload.title }}
+        </button>
+        <button nz-button nzType="primary" (click)="btnAdd.click($event)" class="btn-primary" *ngIf="btnAdd.visible && btnAdd.grandAccess">
+          <i nz-icon nzType="file-add" nzTheme="fill"></i>{{ btnAdd.title }}
+        </button>
+        <button
+          nz-button
+          nzType="primary"
+          class="btn-danger"
+          (click)="btnDelete.click($event)"
+          *ngIf="btnDelete.visible && btnDelete.grandAccess"
+        >
+          <i nz-icon nzType="delete" nzTheme="fill"></i>{{ btnDelete.title }}
+        </button>
+      </nz-col>
+      <nz-col nzSm="8" nzXS="24" nzMd="8" class="pull-right padding-bottom-10">
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+          <input type="text" [(ngModel)]="filter.textSearch" nz-input placeholder="Nhập từ khóa tìm kiếm" (keyup.enter)="initGridData()" />
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button
+            nz-button
+            nzType="default"
+            nzSearch
+            (click)="filter.ShowAdSearch = !filter.ShowAdSearch; onResetSearch(true)"
+            title="{{ 'layout.button.btn-show-ad-search.label' | translate }}"
+          >
+            <i nz-icon nzType="caret-down" nzTheme="outline" *ngIf="!filter.ShowAdSearch"></i>
+            <i nz-icon nzType="caret-up" nzTheme="outline" *ngIf="filter.ShowAdSearch"></i>
+          </button>
+        </ng-template>
+      </nz-col>
+    </nz-row>
+    <nz-row [hidden]="!filter.ShowAdSearch">
+      <nz-col nzSm="8" nzXS="12" nzMd="8" class="padding-bottom-10">
+        <nz-form-item class="margin-0">
+          <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="status">Đơn vị</nz-form-label>
+          <nz-form-control [nzSm]="15" [nzXs]="24">
+            <nz-tree-select
+              [(ngModel)]="filter.organizationId"
+              (ngModelChange)="changeOrganization($event)"
+              [nzNodes]="listOrganization"
+              nzShowSearch
+              nzShowLine
+              [nzDisabled]="!checkSysAdmin"
+              nzPlaceHolder="Chọn đơn vị"
+            >
+            </nz-tree-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzSm="8" nzXS="12" nzMd="8" class="padding-bottom-10">
+        <nz-form-item class="margin-0">
+          <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="status">Trạng thái</nz-form-label>
+          <nz-form-control [nzSm]="15" [nzXs]="24">
+            <nz-select
+              nzShowSearch
+              nzAllowClear
+              nzPlaceHolder="Chọn trạng thái"
+              [(ngModel)]="filter.status"
+              (ngModelChange)="changeStatus($event)"
+            >
+              <nz-option *ngFor="let option of listStatus" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzSm="8" nzXS="12" nzMd="8" class="padding-bottom-10">
+        <button
+          nz-button
+          nzType="primary"
+          (click)="btnSearch.click($event)"
+          class="btn-success"
+          *ngIf="btnSearch.visible && btnSearch.grandAccess"
+        >
+          <i nz-icon nzType="search" nzTheme="outline"></i>{{ btnSearch.title }}
+        </button>
+        <!-- <button
+          nz-button
+          nzType="primary"
+          (click)="btnResetSearch.click($event)"
+          class="btn-warning"
+          *ngIf="btnResetSearch.visible && btnResetSearch.grandAccess"
+        >
+          <i nz-icon nzType="reload" nzTheme="outline"></i>{{ btnResetSearch.title }}
+        </button> -->
+      </nz-col>
+    </nz-row>
+    <nz-row>
+      <ag-grid-angular
+        #agGrid
+        style="width: 100%; height: 70vh"
+        id="unit-grid"
+        class="ag-theme-alpine"
+        [modules]="modules"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [suppressRowClickSelection]="true"
+        [rowSelection]="rowSelection"
+        [rowData]="grid.rowData"
+        (selectionChanged)="onSelectionChanged($event)"
+        [overlayLoadingTemplate]="overlayLoadingTemplate"
+        [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+        [frameworkComponents]="frameworkComponents"
+        [excelStyles]="excelStyles"
+        (gridReady)="onGridReady($event)"
+      >
+      </ag-grid-angular>
+      <hr />
+    </nz-row>
+    <app-ag-grid-pagination
+      [grid]="grid"
+      [filter]="filter"
+      [pageSizeOptions]="pageSizeOptions"
+      (pageNumberChange)="onPageNumberChange()"
+      (pageSizeChange)="onPageSizeChange()"
+    ></app-ag-grid-pagination>
+  </nz-card>
+</page-header-wrapper>
+
+<app-user-item
+  #itemModal
+  [isVisible]="modal.isShow"
+  [item]="modal.item"
+  [type]="modal.type"
+  [option]="modal.option"
+  (eventEmmit)="onModalEventEmmit($event)"
+>
+</app-user-item>
+
+<delete-modal #deleteModal [isVisible]="isShowDelete" (eventEmmit)="onDeleteEventEmmit($event)"></delete-modal>

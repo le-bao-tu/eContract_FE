@@ -1,0 +1,64 @@
+<div
+  id="rectangle"
+  #mydrag
+  ngDraggable
+  ngResizable
+  (click)="onSelectedSignArea(setting, $event)"
+  inBounds="true"
+  [bounds]="bound"
+  [style.opacity]="setting.opacity"
+  [style.border-radius]="setting.borderRadius"
+  [style.border]="setting.border"
+  (endOffset)="onMoveEnd($event)"
+  (movingOffset)="onMoving($event)"
+  (started)="onDragStart($event)"
+  (stopped)="onDragStop($event)"
+  rzHandles="n,w,e,s,se"
+  rzMinWidth="10"
+  rzMinHeight="10"
+  [rzAspectRatio]="setting.type == 'checkbox'"
+  [style.width.px]="setting.width"
+  [style.height.px]="setting.height"
+  rzAspectRatio="true"
+  (rzStop)="onResizeStop($event)"
+  (rzResizing)="onResizing($event)"
+  [position]="{ x: setting.llx, y: setting.lly }"
+>
+  <div *ngIf="!isMoving" id="tool-tip">
+    <div class="tooltip-icon">
+      <i nz-icon style="font-size: 16px" nzType="close-circle" (mousedown)="remove(setting)" nzTheme="outline"></i>
+    </div>
+  </div>
+  <div *ngIf="isVisable"></div>
+  <div id="index">
+    <div class="tooltip-text">
+      {{ setting.position }}
+    </div>
+  </div>
+  <div *ngIf="isMoving" id="top-ruler" class="ruler"></div>
+  <div *ngIf="isMoving" id="right-ruler" class="ruler"></div>
+  <div *ngIf="isMoving" id="bottom-ruler" class="ruler"></div>
+  <div *ngIf="isMoving" id="left-ruler" class="ruler"></div>
+  <input
+    id="text-input"
+    disabled="{{ setting.disabled }}"
+    (click)="onSelected(setting, $event)"
+    style="padding-top: 1px; padding-bottom: 1px"
+    [style.background-image]="setting.backgroudImage"
+    [readOnly]="setting.disabled"
+    [style.border-radius]="setting.borderRadius"
+    [style.background-color]="BackgroundColor"
+    [style.color]="setting.color"
+    [style.font-size.px]="setting.fontSize"
+    [style.font-family]="setting.font"
+    [style.font-weight]="setting.fontWeight"
+    [style.font-style]="setting.fontStyle"
+    [style.background-color]="setting.backgroundColor"
+    [style.text-align]="setting.textAlign"
+    [style.text-decoration]="setting.textDecoration"
+    [type]="setting.type"
+    [(ngModel)]="setting.value"
+    (blur)="onTextBlur()"
+    [ngModelOptions]="{ standalone: true }"
+  />
+</div>

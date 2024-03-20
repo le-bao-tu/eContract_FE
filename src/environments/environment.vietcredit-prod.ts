@@ -1,0 +1,36 @@
+export const environment = {
+  SERVER_URL: `./`,
+  // AUTH_TYPE: 'jwt',
+  // AUTH_TYPE: 'keycloak',
+  AUTH_TYPE: 'wso2',
+  KEYCLOAK_REALM: 'econtract-angular',
+  KEYCLOAK_CLIENT_ID: 'econtract-angular-client',
+  KEYCLOAK_URL: 'http://10.0.20.32:8080',
+  KEYCLOAK_CALLBACK: 'http://localhost:30201/confirm?code=undefined',
+  KEYCLOAK_LOGOUT: 'http://localhost:30201',
+  KEYCLOAK_LOGIN: 'http://10.0.20.32:8080/realms/econtract-angular/protocol/openid-connect/auth',
+  BASE_WSO2_API: 'https://econtract-apigw.vietcredit.com.vn/e-contract/v1/api/v1/wso2/',
+  BASE_WSO2_URL: 'https://econtract-idp.vietcredit.com.vn/',
+  CLIENT_ID: '5nurMl8Egid2oyG69t0fozSIrtIa',
+  BASE_CALLBACK_URL: 'https://econtract.vietcredit.com.vn/confirm',
+  BASE_LOGOUT_URL: 'https://econtract.vietcredit.com.vn/logout',
+
+  // econtract-enpoint
+  API_URL: 'https://econtract-apigw.vietcredit.com.vn/e-contract/v1/',
+  CLIENT_HOST: 'http://localhost:8085/',
+
+  version: '1.1.0',
+  production: true,
+  useHash: false,
+  hmr: false,
+  pro: {
+    theme: 'light',
+    menu: 'side',
+    contentWidth: 'fluid',
+    fixedHeader: true,
+    autoHideHeader: true,
+    fixSiderbar: true,
+    onlyIcon: false,
+    colorWeak: false,
+  },
+};

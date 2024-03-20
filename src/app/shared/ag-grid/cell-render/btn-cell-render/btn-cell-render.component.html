@@ -1,0 +1,254 @@
+<!-- <button
+  nz-button
+  nzType="primary"
+  *ngIf="params.data.infoGrantAccess"
+  nzShape="circle"
+  class="btn-info"
+  (click)="btnInfoClickedHandler($event)"
+  title="Chi tiết"
+>
+  <i nz-icon nzType="info-circle" nzTheme="outline"></i>
+</button> -->
+<style>
+  .img-button {
+    height: 17px;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+
+  .img-button :hover {
+    cursor: pointer;
+  }
+</style>
+
+<img
+  src="../../../../../assets/tmp/img/Dashboard/eCertify_Type/icon_expand.png"
+  (click)="btnMetaDatConfigClickedHandler($event)"
+  *ngIf="params.data.metaDataConfigGrantAccess"
+  class="img-button"
+  alt="Cấu hình vùng ký"
+  title="{{ 'layout.button.btn-meta-data-config-grant-access.label' | translate }}"
+/>
+
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/Dashboard/eCertify_Type/icon_info.svg"
+  *ngIf="params.data.infoGrantAccess"
+  (click)="btnInfoClickedHandler($event)"
+  alt="Chi tiết"
+  title="{{ 'layout.button.btn-info-clicked-handler.label' | translate }}"
+/>
+
+<!-- <button
+  nz-button
+  nzType="success"
+  nzShape="circle"
+  *ngIf="params.data.enterFormulaGrantAccess"
+  class="btn-success"
+  (click)="btnEnterFormulaClickedHandler($event)"
+  title="Nhập công thức"
+>
+  <i nz-icon nzType="setting" nzTheme="outline"></i>
+</button> -->
+
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/Dashboard/eCertify_Type/icon_info.svg"
+  *ngIf="params.data.enterFormulaGrantAccess"
+  (click)="btnEnterFormulaClickedHandler($event)"
+  alt="Nhập công thức"
+  title="{{ 'layout.button.btn-enter-formula-clicked-handler.label' | translate }}"
+/>
+
+<!-- <button
+  nz-button
+  nzType="primary"
+  nzShape="circle"
+  *ngIf="params.data.editGrantAccess"
+  class="btn-secondary"
+  (click)="btnEditClickedHandler($event)"
+  title="Cập nhật"
+>
+  <i nz-icon nzType="edit" nzTheme="outline"></i>
+</button> -->
+
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/Dashboard/eCertify_Type/icon_edit.svg"
+  *ngIf="params.data.editGrantAccess"
+  (click)="btnEditClickedHandler($event)"
+  alt="Chỉnh sửa"
+  title="{{ 'layout.button.btn-edit-clicked-handler.label' | translate }}"
+/>
+<!-- 
+<button
+  nz-button
+  nzType="primary"
+  nzShape="circle"
+  *ngIf="params.data.deleteGrantAccess"
+  class="btn-danger"
+  (click)="btnDeleteClickedHandler($event)"
+  title="Xóa"
+>
+  <i nz-icon nzType="delete" nzTheme="outline"></i>
+</button> -->
+
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/Dashboard/eCertify_Type/icon dấu cộng.svg"
+  *ngIf="params.data.addGrantAccess"
+  (click)="btnAddClickedHandler($event)"
+  alt="Thêm dòng"
+  title="{{ 'layout.button.btn-add-clicked-handler.label' | translate }}"
+/>
+
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/work.svg"
+  *ngIf="params.data.addUserRoleGrantAccess"
+  (click)="btnAddUserRoleClickedHandler($event)"
+  alt="Phân quyền nhóm người dùng"
+  title="{{ 'layout.button.btn-user-add-role-clicked-handler.label' | translate }}"
+/>
+
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/work.svg"
+  *ngIf="params.data.addRoleGrantAccess"
+  (click)="btnAddRoleClickedHandler($event)"
+  alt="Phân quyền theo dữ liệu"
+  title="{{ 'layout.button.btn-add-role-clicked-handler.label' | translate }}"
+/>
+
+<img
+  class="img-button"
+  src="../../../../../assets/users-group-add.svg"
+  *ngIf="params.data.userGroupAddGrantAccess"
+  (click)="btnUpdateUserRole($event)"
+  alt="Danh sách người dùng"
+  title="{{ 'layout.button.btn-update-user-role.label' | translate }}"
+/>
+
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/role_right.svg"
+  *ngIf="params.data.addRightGrantAccess"
+  (click)="btnAddRightClickedHandler($event)"
+  alt="Phân quyền chức năng"
+  title="{{ 'function.role.grid.button.add-right' | translate }}"
+/>
+
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/role_navigation.svg"
+  *ngIf="params.data.addMenuGrantAccess"
+  (click)="btnAddMenuClickedHandler($event)"
+  alt="Phân quyền Menu"
+  title="{{ 'function.role.grid.button.add-menu' | translate }}"
+/>
+
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/sign_config.svg"
+  *ngIf="params.data.signConfigGrantAccess"
+  (click)="btnSignConfigClickedHandler($event)"
+  alt="Cấu hình chữ ký"
+  title="{{ 'layout.button.btn-sign-config-role-clicked-handler.label' | translate }}"
+/>
+<!-- 22-9-2021 -->
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/hsm_account.svg"
+  *ngIf="params.data.hsmAccountGrantAccess"
+  (click)="btnHsmAccountClickedHandler($event)"
+  alt="cấu hình tài khoản HSM"
+  title="{{ 'layout.button.btn-hsm-account-role-clicked-handler.label' |
+  translate }}"
+  />
+
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/Dashboard/eCertify_Type/icon_danh_sach.svg"
+
+  (click)="btnListUserDeviceHandler($event)"
+  alt="Danh sách thiết bị người dùng"title="{{
+  'layout.button.btn-infodevice-clicked-handler.label' | translate }}"
+  />
+
+<!-- 22-9-2021 -->
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/diploma.svg"
+  *ngIf="params.data.addCertGrantAccess"
+  (click)="btnAddCertClickedHandler($event)"
+  alt="Tạo CTS"
+  title="{{ 'layout.button.btn-add-cert-clicked-handler.label' | translate }}"
+/>
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/diploma.svg"
+  *ngIf="params.data.viewCertGrantAccess"
+  (click)="btnAddCertClickedHandler($event)"
+  alt="Xem CTS"
+  title="{{ 'layout.button.btn-view-cert-clicked-handler.label' | translate }}"
+/>
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/diploma.svg"
+  *ngIf="params.data.infoCertGrantAccess"
+  (click)="btnInfoCertClickedHandler($event)"
+  alt="Xem CTS"
+  title="{{ 'layout.button.btn-info-cert-clicked-handler.label' | translate }}"
+/>
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/download.svg"
+  *ngIf="params.data.downloadGrantAccess"
+  (click)="btnDownloadClickedHandler($event)"
+  alt="Tải CTS"
+  title="{{ 'layout.button.btn-download-clicked-handler.label' | translate }}"
+/>
+
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/icon/icon-copy.svg"
+  *ngIf="params.data.duplicateGrantAccess"
+  (click)="btnDuplicateClickedHandler($event)"
+  alt="Nhân bản"
+  title="{{ 'layout.button.btn-duplicate-clicked-handler.label' | translate }}"
+/>
+
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/Dashboard/eCertify_Type/icon_trash.svg"
+  *ngIf="params.data.deleteGrantAccess"
+  (click)="btnDeleteClickedHandler($event)"
+  alt="Xóa"
+  title="{{ 'layout.button.btn-delete-clicked-handler.label' | translate }}"
+/>
+<img
+  class="img-button"
+  src="../../../../../assets/unlock.svg"
+  *ngIf="params.data.lockGrantAccess"
+  (click)="btnLockClickedHandler($event)"
+  title="{{ 'layout.button.btn-lock-grant-access.label' | translate }}"
+/>
+<img
+  class="img-button"
+  src="../../../../../assets/padlock.svg"
+  *ngIf="params.data.unlockGrantAccess"
+  (click)="btnUnLockClickedHandler($event)"
+  title="{{ 'layout.button.btn-unlock-grant-access.label' | translate }}"
+/>
+<!-- 
+<button
+  nz-button
+  nzType="primary"
+  nzShape="circle"
+  *ngIf="params.data.addGrantAccess"
+  class="btn-secondary"
+  (click)="btnAddClickedHandler($event)"
+  title="Thêm dòng"
+>
+  <i nz-icon nzType="plus" nzTheme="outline"></i>
+</button> -->

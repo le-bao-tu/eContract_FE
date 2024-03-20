@@ -1,0 +1,71 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle> {{ tittle }} </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="form" (ngSubmit)="save()">
+      <!-- <nz-form-item>
+        <nz-form-control *ngIf="checkSysAdmin" [nzSm]="8" [nzXs]="24">
+          <label nz-checkbox formControlName="isSystemAdmin">{{
+            'function.add-role.modal-item.issystemadmin' | translate
+          }}</label>
+        </nz-form-control>
+
+        <nz-form-control [nzSm]="8" [nzXs]="24">
+          <label nz-checkbox formControlName="isOrgAdmin">{{
+            'function.add-role.modal-item.isorgadmin' | translate
+          }}</label>
+        </nz-form-control>
+
+        <nz-form-control [nzSm]="8" [nzXs]="24">
+          <label nz-checkbox formControlName="isUser">{{
+            'function.add-role.modal-item.isuser' | translate
+          }}</label>
+        </nz-form-control>
+      </nz-form-item> -->
+      <fieldset>
+        <legend>Nhóm người dùng</legend>
+        <nz-form-item>
+          <nz-form-control>
+            <nz-tree
+              [nzData]="listRole"
+              nzCheckable
+              nzMultiple
+              (nzCheckBoxChange)="nzEventRoleChange($event)"
+              (nzClick)="nzEventRoleChange($event)"
+              [nzExpandAll]="true"
+            ></nz-tree>
+          </nz-form-control>
+        </nz-form-item>
+      </fieldset>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && btnSave.visible && btnSave.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSave.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.titlei18n }}
+    </button>
+  </ng-template>
+</nz-modal>

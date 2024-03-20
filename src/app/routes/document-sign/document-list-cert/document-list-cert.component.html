@@ -1,0 +1,38 @@
+<!-- 
+<div *nzModalFooter>
+  <button nz-button nzType="primary" (click)="destroyModal()" [nzLoading]="isConfirmLoading">Xác nhận ký hợp đồng</button>
+</div> -->
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  nzWidth="600px"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle
+    ><div style="text-align: center">{{ title }}</div>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <nz-radio-group [(ngModel)]="radioValue" [ngModelOptions]="{ standalone: true }" *ngIf="listCert.length > 0">
+      <label class="bacham mt-sm mb-sm" nz-radio [nzValue]="item.serial" *ngFor="let item of listCert">{{ item.subjectDn }}</label>
+      <!-- <label class="bacham mt-sm mb-sm" nz-radio [nzValue]="item" *ngFor="let item of listCert">{{ item.subjectDn }}</label> -->
+    </nz-radio-group>
+    <p *ngIf="listCert.length === 0" class="text-center">Không có chứng thư số!</p>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="btnSave.visible && btnSave.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+    >
+      <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnSave.title }}
+    </button>
+  </ng-template>
+</nz-modal>

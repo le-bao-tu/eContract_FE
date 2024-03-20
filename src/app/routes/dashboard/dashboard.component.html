@@ -1,0 +1,189 @@
+<page-header-wrapper [title]="title" onBack="{() => window.history.back()}">
+  <nz-card class="card-header">
+    <div nz-row class="header">
+      <div nz-col nzSpan="12">
+        <h2>{{ dashboardModel.organizationName }}</h2>
+      </div>
+      <div nz-col nzSpan="12" style="text-align: right"></div>
+    </div>
+  </nz-card>
+  <nz-row>
+    <nz-col nzSm="24" nzXS="24" nzMd="21" class="padding-bottom-10">
+      <nz-card [nzBordered]="false" style="height: 250px" class="d-flex flex-column justify-content-center">
+        <nz-row style="margin-top: 20px">
+          <nz-col nzSm="24" nzXS="24" nzMd="24" class="padding-bottom-10">
+            <nz-row>
+              <nz-col nzMd="5" class="circle-container">
+                <a
+                  [routerLink]="['/certify/document']"
+                  [queryParams]="{ status: 1, assignMe: true }"
+                  class="dashboard-link circle-item-container"
+                >
+                  <p>{{ 'function.dashboard.grid.wait-me-sign' | translate }}</p>
+                  <div class="circle-item">
+                    <b>{{ dashboardModel.waitMeSign }}</b>
+                  </div>
+                </a>
+                <div class="row-divider"></div>
+              </nz-col>
+              <nz-col nzMd="5" class="circle-container">
+                <a
+                  [routerLink]="['/certify/document']"
+                  [queryParams]="{ incommingExpiredFilter: true }"
+                  class="dashboard-link circle-item-container"
+                >
+                  <p>{{ 'function.dashboard.grid.incomming-expired' | translate }}</p>
+                  <div class="circle-item">
+                    <b>{{ dashboardModel.incommingExpired }}</b>
+                  </div>
+                </a>
+                <div class="row-divider"></div>
+              </nz-col>
+              <nz-col nzMd="5" class="circle-container">
+                <a [routerLink]="['/certify/document']" [queryParams]="{ status: 3 }" class="dashboard-link circle-item-container">
+                  <p>{{ 'function.dashboard.grid.completed' | translate }}</p>
+                  <div class="circle-item">
+                    <b>{{ dashboardModel.completed }}</b>
+                  </div>
+                </a>
+                <div class="row-divider"></div>
+              </nz-col>
+              <nz-col nzMd="5" class="circle-container">
+                <a [routerLink]="['/certify/document']" [queryParams]="{ status: 2 }" class="dashboard-link circle-item-container">
+                  <p>{{ 'function.dashboard.grid.draft' | translate }}</p>
+                  <div class="circle-item">
+                    <b>{{ dashboardModel.draft }}</b>
+                  </div>
+                </a>
+                <div class="row-divider"></div>
+              </nz-col>
+              <nz-col nzMd="4" class="circle-container">
+                <a
+                  [routerLink]="['/certify/document']"
+                  [queryParams]="{ expiredFilter: true }"
+                  class="dashboard-link circle-item-container"
+                >
+                  <p>{{ 'function.dashboard.grid.expired' | translate }}</p>
+                  <div class="circle-item">
+                    <b>{{ dashboardModel.expired }}</b>
+                  </div>
+                </a>
+              </nz-col>
+            </nz-row>
+          </nz-col>
+        </nz-row>
+      </nz-card>
+    </nz-col>
+
+    <nz-col nzSm="24" nzXS="24" nzMd="3" class="padding-bottom-10">
+      <nz-card
+        [nzBordered]="false"
+        style="margin-left: 10px; background-color: #8ac7ff; height: 250px"
+        class="d-flex flex-column justify-content-center"
+      >
+        <a [routerLink]="['/certify/document']" class="dashboard-link circle-item-container">
+          <div class="document-info-container">
+            <b>{{ dashboardModel.totalDocument }}</b>
+            <h3>{{ 'function.dashboard.grid.total-document' | translate }}</h3>
+            <i
+              ><span> <i nz-icon nzType="star" nzTheme="fill" style="color: orange"></i></span
+              ><b>{{ 'function.dashboard.grid.postpaid-service' | translate }}</b></i
+            >
+          </div>
+        </a>
+      </nz-card>
+    </nz-col>
+  </nz-row>
+  <nz-row>
+    <nz-col nzSm="24" nzXs="24" nzMd="12">
+      <nz-card [nzBordered]="false" style="margin-right: 5px">
+        <h3 style="text-align: center">{{ 'function.dashboard.grid.list-sign-completed.label' | translate }}</h3>
+        <nz-table [nzData]="dashboardModel.listSignCompleted" nzFrontPagination="false" style="margin-top: 20px">
+          <thead>
+            <tr>
+              <th>{{ 'function.dashboard.grid.stt' | translate }}</th>
+              <th>{{ 'function.dashboard.grid.createddate' | translate }}</th>
+              <th>{{ 'function.dashboard.grid.quantity' | translate }}</th>
+              <th>{{ 'function.dashboard.grid.Rate-same-period' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let signCompleted of dashboardModel.listSignCompleted; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>
+                <a [routerLink]="['/certify/document']" [queryParams]="{ status: 3, days: signCompleted.dateTimeLabel }"
+                  >{{ signCompleted.dateTimeLabel }} ngày</a
+                >
+              </td>
+              <td>{{ signCompleted.documentCount }}</td>
+              <td>
+                <i nz-icon nzType="arrow-up" nzTheme="outline" style="color: #1e9dd4"></i>
+                <span style="color: #1e9dd4">{{ signCompleted.completedRate }} %</span>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-card>
+    </nz-col>
+    <nz-col nzSm="24" nzXs="24" nzMd="12">
+      <nz-card [nzBordered]="false" style="margin-left: 5px">
+        <h3 style="text-align: center">{{ 'function.dashboard.grid.list-sign-incomming-expired.label' | translate }}</h3>
+        <nz-table [nzData]="dashboardModel.listSignIncommingExpired" nzFrontPagination="false" style="margin-top: 20px">
+          <thead>
+            <tr>
+              <th>{{ 'function.dashboard.grid.stt' | translate }}</th>
+              <th>{{ 'function.dashboard.grid.createddate' | translate }}</th>
+              <th>{{ 'function.dashboard.grid.quantity' | translate }}</th>
+              <th>{{ 'function.dashboard.grid.Rate-same-period' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let signIncExpired of dashboardModel.listSignIncommingExpired; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>
+                <a [routerLink]="['/certify/document']" [queryParams]="{ incommingExpiredFilter: true, days: signIncExpired.dateTimeLabel }"
+                  >{{ signIncExpired.dateTimeLabel }} ngày</a
+                >
+              </td>
+              <td>{{ signIncExpired.documentCount }}</td>
+              <td>
+                <i nz-icon nzType="arrow-up" nzTheme="outline" style="color: #1e9dd4"></i>
+                <span style="color: #1e9dd4">{{ signIncExpired.incommingExpiredRate }} %</span>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-card>
+    </nz-col>
+  </nz-row>
+  <!-- <nz-row>
+    <nz-col nzSm="24" nzXs="24" nzMd="24">
+      <nz-card [nzBordered]="false">
+        <h2 style="text-align: center">
+          {{ 'function.dashboard.grid.service-pack.label' | translate }}
+          <nz-range-picker [(ngModel)]="fromAndToDate" (ngModelChange)="onChangeRange($event)" style="float: right"></nz-range-picker>
+        </h2>
+        <nz-row>
+          <nz-col nzSm="24" nzXs="24" nzMd="8" class="flex-center justify-content-center">
+            <div class="package-service-container">
+              <h3 class="p-s-title">{{ 'function.dashboard.grid.signltv' | translate }}</h3>
+              <b>{{ dashboardModel.signLTV }}</b>
+            </div>
+          </nz-col>
+          <nz-col nzSm="24" nzXs="24" nzMd="8" class="flex-center justify-content-center">
+            <div class="package-service-container">
+              <h3 class="p-s-title">{{ 'function.dashboard.grid.signtsa_eseal' | translate }}</h3>
+              <b>{{ dashboardModel.signTSA_ESEAL }}</b>
+            </div>
+          </nz-col>
+          <nz-col nzSm="24" nzXs="24" nzMd="8" class="flex-center justify-content-center">
+            <div class="package-service-container">
+              <h3 class="p-s-title">{{ 'function.dashboard.grid.signdig_normal' | translate }}</h3>
+              <b>{{ dashboardModel.signDIG_NORMAL }}</b>
+            </div>
+          </nz-col>
+        </nz-row>
+      </nz-card>
+    </nz-col>
+  </nz-row> -->
+</page-header-wrapper>

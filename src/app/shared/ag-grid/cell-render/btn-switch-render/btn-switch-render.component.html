@@ -1,0 +1,53 @@
+<!-- <button
+  nz-button
+  nzType="primary"
+  *ngIf="params.data.infoGrantAccess"
+  nzShape="circle"
+  class="btn-info"
+  (click)="btnInfoClickedHandler($event)"
+  title="Chi tiết"
+>
+  <i nz-icon nzType="info-circle" nzTheme="outline"></i>
+</button> -->
+<style>
+  .img-button {
+    height: 17px;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+
+  .img-button :hover {
+    cursor: pointer;
+  }
+</style>
+
+<img
+  *ngIf="params.data.accountType == HSM"
+  class="img-button"
+  src="../../../../../assets/tmp/img/Dashboard/eCertify_Type/icon_info.svg"
+  (click)="btnInfoClickedHandler($event)"
+  alt="Chi tiết"
+/>
+<span
+  *ngIf="params.data.accountType != HSM"
+  class="img-button"
+  style="margin-right: 23px"
+  (click)="btnInfoClickedHandler($event)"
+  alt="Chi tiết"
+></span>
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/Dashboard/eCertify_Type/switch-svgrepo-com.svg"
+  *ngIf="params.data.status"
+  (click)="btnEditClickedHandler($event)"
+  alt="Chỉnh sửa"
+  style="height: 26px"
+/>
+<img
+  class="img-button"
+  src="../../../../../assets/tmp/img/Dashboard/eCertify_Type/status-off.svg"
+  *ngIf="!params.data.status"
+  (click)="btnEditClickedHandler($event)"
+  alt="Chỉnh sửa"
+  style="height: 26px"
+/>

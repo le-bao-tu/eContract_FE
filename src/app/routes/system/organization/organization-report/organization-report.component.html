@@ -1,0 +1,78 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="title"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzWidth="80%"
+  nzMaskClosable="false"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle> {{ tittle }} </ng-template>
+  <ng-template #modalContent>
+    <app-dashboard orgId="{{ filter.organizationID }}"></app-dashboard>
+    <!-- <div style="padding: 15px; background: #ececec">
+      <div nz-row [nzGutter]="8">
+        <div nz-col [nzSpan]="12">
+          <nz-card class="nz-card-custom" nzTitle="Số lượng loại hợp đồng">
+            <p>{{ reportContent.totalDocType }}</p>
+          </nz-card>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <nz-card class="nz-card-custom" nzTitle="Số lượng quy trình">
+            <p>{{ reportContent.totalWFL }}</p>
+          </nz-card>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 15px; padding: 15px; background: #ececec">
+      <div nz-row>
+        <div nz-col nzSpan="8" nzOffset="16" style="margin-bottom: 15px">
+          <nz-date-picker [nzFormat]="dateFormat" [(ngModel)]="filter.fromDate" (ngModelChange)="changeFromDate($event)"></nz-date-picker>
+          <nz-date-picker [nzFormat]="dateFormat" [(ngModel)]="filter.toDate" (ngModelChange)="changeToDate($event)"></nz-date-picker>
+        </div>
+      </div>
+      <div nz-row [nzGutter]="8">
+        <div nz-col [nzSpan]="24" style="margin-bottom: 15px">
+          <nz-card class="nz-card-custom" nzTitle="Số lượng hợp đồng: {{ reportContent.totalDoc }}">
+            <p>Đang soạn thảo: {{ reportContent.totalDocDraft }}</p>
+            <p>Đang xử lý: {{ reportContent.totalDocProcessing }}</p>
+            <p>Đã từ chối: {{ reportContent.totalDocCancel }}</p>
+            <p>Đã hoàn thành: {{ reportContent.totalDocComplete }}</p>
+          </nz-card>
+        </div>
+        <div nz-col class="nz-card-custom" [nzSpan]="12">
+          <nz-card nzTitle="Số lượt ký điện tử">
+            <p>{{ reportContent.totalDigitalSign }}</p>
+          </nz-card>
+        </div>
+        <div nz-col class="nz-card-custom" [nzSpan]="12">
+          <nz-card nzTitle="Số lượt ký HSM">
+            <p>{{ reportContent.totalHSMSign }}</p>
+          </nz-card>
+        </div>
+        <div nz-col class="nz-card-custom" [nzSpan]="12">
+          <nz-card nzTitle="Số lượt ký USB Token">
+            <p>{{ reportContent.totalUSBTokenSign }}</p>
+          </nz-card>
+        </div>
+        <div nz-col class="nz-card-custom" [nzSpan]="12">
+          <nz-card nzTitle="Số lượt ký ADSS">
+            <p>{{ reportContent.totalADSSSign }}</p>
+          </nz-card>
+        </div>
+      </div>
+    </div>
+    <div nz-row></div> -->
+  </ng-template>
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.titlei18n }}
+    </button>
+  </ng-template>
+</nz-modal>

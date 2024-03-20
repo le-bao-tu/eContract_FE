@@ -1,0 +1,226 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  nzWidth="800px"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle> {{ tittle }} </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="form">
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="code">{{
+          'function.document-template.modal-item.code.label' | translate
+        }}</nz-form-label>
+        <nz-form-control [nzErrorTip]="validateCode" [nzSm]="17" [nzXs]="24">
+          <input
+            maxlength="256"
+            nz-input
+            formControlName="code"
+            id="code"
+            placeholder="{{ 'function.document-template.modal-item.code.placeholder' | translate }}"
+            style="text-transform: uppercase"
+          />
+        </nz-form-control>
+      </nz-form-item>
+      <ng-template #validateCode let-control>
+        <ng-container *ngIf="control.hasError('required')">{{
+          'function.info-in-certify.modal-item.code.message.required' | translate
+        }}</ng-container>
+        <ng-container *ngIf="control.hasError('pattern')">{{
+          'function.info-in-certify.modal-item.code.message.pattern' | translate
+        }}</ng-container>
+        <ng-container *ngIf="control.hasError('maxlength')">{{
+          'function.info-in-certify.modal-item.code.message.maxlength' | translate
+        }}</ng-container>
+      </ng-template>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">{{
+          'function.document-template.modal-item.name.label' | translate
+        }}</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24" [nzErrorTip]="validateName">
+          <input
+            maxlength="256"
+            nz-input
+            formControlName="name"
+            id="name"
+            placeholder="{{ 'function.document-template.modal-item.name.placeholder' | translate }}"
+          />
+        </nz-form-control>
+      </nz-form-item>
+      <ng-template #validateName let-control>
+        <ng-container *ngIf="control.hasError('required')">{{
+          'function.info-in-certify.modal-item.name.message.required' | translate
+        }}</ng-container>
+        <ng-container *ngIf="control.hasError('pattern')">{{
+          'function.info-in-certify.modal-item.name.message.pattern' | translate
+        }}</ng-container>
+        <ng-container *ngIf="control.hasError('maxlength')">{{
+          'function.info-in-certify.modal-item.name.message.maxlength' | translate
+        }}</ng-container>
+      </ng-template>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="documentType">{{
+          'function.document-template.modal-item.documenttype.label' | translate
+        }}</nz-form-label>
+        <nz-form-control
+          [nzSm]="17"
+          [nzXs]="24"
+          nzErrorTip="{{ 'function.document-template.modal-item.documenttype.error-message.required' | translate }}"
+        >
+          <nz-select
+            formControlName="documentType"
+            nzShowSearch
+            nzPlaceHolder="{{ 'function.document-template.modal-item.search.documenttype.placeholder' | translate }}"
+          >
+            <nz-option *ngFor="let option of listDocumentType" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- upload -->
+      <nz-form-item class="document-template-upload">
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="upload">{{
+          'function.document-template.modal-item.documenttype-template-upload.label' | translate
+        }}</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24">
+          <div class="clearfix">
+            <nz-upload
+              [nzAction]="uploadUrl"
+              [nzHeaders]="headerUploadFile"
+              [nzDisabled]="isInfo"
+              [(nzFileList)]="fileList"
+              (nzChange)="handleFileChange($event)"
+              nzAccept="application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              [nzLimit]="1"
+              [nzRemove]="false"
+              [nzIconRender]=""
+            >
+              <button nz-button>
+                <i nz-icon nzType="upload"></i>{{ 'function.document-template.modal-item.upload.label' | translate }}
+              </button>
+            </nz-upload>
+          </div>
+          <div *ngIf="fileUploadError" class="field-invalid">{{ fileUploadError }}</div>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- thong tin trong bieu mau -->
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="info">{{
+          'function.document-template.modal-item.info.label' | translate
+        }}</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24">
+          <nz-select
+            formControlName="documentMetaData"
+            [(ngModel)]="listDocumentMetaData"
+            [nzMaxTagCount]="100"
+            nzMode="multiple"
+            nzPlaceHolder="{{ 'function.document-template.modal-item.documentmetadata.placeholder' | translate }}"
+          >
+            <nz-option *ngFor="let item of listMetaData" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24">{{ 'function.document-template.modal-item.valid-date.label' | translate }}</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24">
+          <nz-date-picker
+            formControlName="dateTimeValid"
+            nzInputReadOnly="true"
+            style="width: 100%"
+            nzPlaceHolder="{{ 'function.document-template.modal-item.valid-date.placeholder' | translate }}"
+            (ngModelChange)="changeDateTimeValid($event)"
+          >
+          </nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item nz-row>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="status">{{
+          'function.document-template.modal-item.status.label' | translate
+        }}</nz-form-label>
+        <nz-form-control [nzSpan]="17">
+          <nz-switch
+            [nzDisabled]="isInfo"
+            formControlName="status"
+            nzSize="small"
+            style="margin-right: 5px"
+            (ngModelChange)="chageStatus($event)"
+          ></nz-switch>
+          <label>
+            <nz-tag [nzColor]="'#00BB00'" [hidden]="!form.value.status">{{
+              'function.document-template.modal-item.status.true.label' | translate
+            }}</nz-tag>
+            <nz-tag [nzColor]="'#EF5350'" [hidden]="form.value.status">{{
+              'function.document-template.modal-item.status.false.label' | translate
+            }}</nz-tag>
+          </label>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item style="margin-bottom: 0">
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="description">{{
+          'function.document-template.modal-item.description.placeholder' | translate
+        }}</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24">
+          <textarea
+            rows="3"
+            nz-input
+            id="description"
+            formControlName="description"
+            placeholder="{{ 'function.document-template.modal-item.description.placeholder' | translate }}"
+          ></textarea>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="primary" class="btn-secondary" *ngIf="btnConfigTemplate.visible" (click)="btnConfigTemplate.click($event)">
+      <i nz-icon nzType="border" nzTheme="outline"></i>{{ btnConfigTemplate.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-secondary"
+      *ngIf="isInfo && btnEdit.visible && btnEdit.grandAccess"
+      (click)="btnEdit.click($event)"
+    >
+      <i nz-icon nzType="edit" nzTheme="fill"></i>{{ btnEdit.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && btnSave.visible && btnSave.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSave.titlei18n }}
+    </button>
+    <!-- <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && !isEdit && btnSaveAndCreate.visible && btnSaveAndCreate.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSaveAndCreate.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSaveAndCreate.title }}
+    </button> -->
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.titlei18n }}
+    </button>
+  </ng-template>
+</nz-modal>

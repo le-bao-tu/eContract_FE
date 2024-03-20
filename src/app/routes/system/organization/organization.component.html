@@ -1,0 +1,744 @@
+<page-header-wrapper [title]="tittle" onBack="{() => window.history.back()}">
+  <nz-card class="card-header">
+    <div nz-row class="header">
+      <div nz-col nzSpan="12">
+        <nz-breadcrumb>
+          <nz-breadcrumb-item>
+            <a [routerLink]="['/']">
+              <i nz-icon nzType="home"></i>
+            </a>
+          </nz-breadcrumb-item>
+          <nz-breadcrumb-item>
+            <a>
+              <span>{{ 'menu.system' | translate }}</span>
+            </a>
+          </nz-breadcrumb-item>
+          <nz-breadcrumb-item>
+            <a>
+              {{ 'layout.breadcum.organization' | translate }}
+            </a>
+          </nz-breadcrumb-item>
+        </nz-breadcrumb>
+      </div>
+      <div nz-col nzSpan="12" style="text-align: right"></div>
+    </div>
+  </nz-card>
+  <div nz-row [nzGutter]="32">
+    <div nz-col nzMd="24" nzLg="8">
+      <nz-card nzTitle="Danh sách đơn vị" [nzExtra]="extraTpl">
+        <ng-template #extraTpl>
+          <button
+            nz-button
+            nzType="default"
+            (click)="btnReload.click($event)"
+            class="btn-reload"
+            *ngIf="btnReload.visible && btnReload.grandAccess"
+          >
+            <i nz-icon nzType="reload" nzTheme="outline"></i>{{ btnReload.titlei18n }}
+          </button>
+          <button
+            nz-button
+            nzType="primary"
+            (click)="btnAdd.click($event)"
+            class="btn-primary"
+            *ngIf="btnAdd.visible && btnAdd.grandAccess"
+          >
+            <i nz-icon nzType="file-add" nzTheme="fill"></i>{{ btnAdd.titlei18n }}
+          </button>
+        </ng-template>
+        <div *ngIf="data.length === 0">Chưa có dữ liệu</div>
+        <nz-select
+          [nzAllowClear]="true"
+          nzShowSearch
+          nzAllowClear
+          nzPlaceHolder="{{ 'layout.grid.search.status.placeholder' | translate }}"
+          (ngModelChange)="changeStatus($event)"
+          [(ngModel)]="filterStatus"
+        >
+          <nz-option *ngFor="let option of listStatus" [nzLabel]="option.name" [nzValue]="option.id"> </nz-option>
+        </nz-select>
+        <nz-input-group [nzSuffix]="suffixIcon" style="margin-top: 10px">
+          <input
+            type="text"
+            nz-input
+            placeholder="{{ 'layout.grid.search.text-search.placeholder' | translate }}"
+            [(ngModel)]="searchValue"
+          />
+        </nz-input-group>
+        <ng-template #suffixIcon>
+          <i nz-icon nzType="search"></i>
+        </ng-template>
+        <nz-tree
+          *ngIf="data.length > 0"
+          [nzData]="data"
+          [nzSearchValue]="searchValue"
+          nzShowLine
+          (nzClick)="show($event)"
+          (nzContextMenu)="showContextMenu($event, ccMenu)"
+        >
+        </nz-tree>
+      </nz-card>
+    </div>
+    <div nz-col nzMd="24" nzLg="16">
+      <form nz-form [formGroup]="form" id="organization">
+        <nz-card>
+          <fieldset>
+            <legend>{{ 'function.organization.organization-profile' | translate }}</legend>
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="parentId">{{ 'function.organization.parentid.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <nz-tree-select
+                      formControlName="parentId"
+                      [nzNodes]="dataActive"
+                      nzShowSearch
+                      nzShowLine
+                      nzPlaceHolder="{{ 'function.organization.search.parentid.placeholder' | translate }}"
+                    >
+                    </nz-tree-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzRequired nzFor="code">{{ 'function.organization.code.label' | translate }}</nz-form-label>
+                  <nz-form-control nzErrorTip="{{ 'function.organization.code.error-message.required' | translate }}">
+                    <input
+                      nz-input
+                      formControlName="code"
+                      id="code"
+                      placeholder="{{ 'function.organization.code.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <br />
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzRequired nzFor="name">{{ 'function.organization.name.label' | translate }}</nz-form-label>
+                  <nz-form-control nzErrorTip="{{ 'function.organization.name.error-message.required' | translate }}">
+                    <input
+                      nz-input
+                      formControlName="name"
+                      id="name"
+                      placeholder="{{ 'function.organization.name.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="taxCode">{{ 'function.organization.taxcode.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <input
+                      nz-input
+                      formControlName="taxCode"
+                      id="taxCode"
+                      placeholder="{{ 'function.organization.taxcode.placeholder' | translate }}"
+                      (ngModelChange)="onChangeTaxCode($event)"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <br />
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="address">{{ 'function.organization.address.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <input
+                      nz-input
+                      formControlName="address"
+                      id="address"
+                      placeholder="{{ 'function.organization.address.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="countryId">{{ 'function.organization.countryid.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <nz-select
+                      formControlName="countryId"
+                      nzPlaceHolder="{{ 'function.organization.search.countryid.placeholder' | translate }}"
+                      (ngModelChange)="countryOnChange($event)"
+                    >
+                      <nz-option *ngFor="let option of listOfCountries" [nzLabel]="option.name" [nzValue]="option.id"> </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <br />
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="provinceId">{{ 'function.organization.provinceid.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <nz-select
+                      formControlName="provinceId"
+                      nzPlaceHolder="{{ 'function.organization.search.provinceid.placeholder' | translate }}"
+                      (ngModelChange)="provinceOnChange($event)"
+                    >
+                      <nz-option
+                        *ngFor="let option of listOfProvinces"
+                        [nzLabel]="option.name + ' - ' + option.zipCode"
+                        [nzValue]="option.id"
+                      >
+                      </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="districtId">{{ 'function.organization.districtid.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <nz-select
+                      formControlName="districtId"
+                      nzPlaceHolder="{{ 'function.organization.search.districtid.placeholder' | translate }}"
+                    >
+                      <nz-option *ngFor="let option of listOfDistricts" [nzLabel]="option.name" [nzValue]="option.id"> </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <br />
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="email">{{ 'function.organization.email.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <input
+                      nz-input
+                      formControlName="email"
+                      id="email"
+                      placeholder="{{ 'function.organization.email.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="phoneNumber">{{ 'function.organization.phonenumber.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <input
+                      nz-input
+                      formControlName="phoneNumber"
+                      id="phoneNumber"
+                      placeholder="{{ 'function.organization.phonenumber.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <br />
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="issuerDate">{{ 'function.organization.issuerdate.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <nz-date-picker
+                      [nzFormat]="dateFormat"
+                      formControlName="issuerDate"
+                      id="issuerDate"
+                      nzPlaceHolder="{{ 'function.organization.issuerdate.placeholder' | translate }}"
+                      style="width: 100%"
+                    ></nz-date-picker>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="issuerBy">{{ 'function.organization.issuerby.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <input
+                      nz-input
+                      formControlName="issuerBy"
+                      id="issuerBy"
+                      placeholder="{{ 'function.organization.issuerby.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <br />
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-label>{{ 'function.organization.bussinesslicense.label' | translate }}</nz-form-label>
+                <br />
+                <nz-form-item>
+                  <span></span>
+                  <nz-form-control>
+                    <div class="clearfix">
+                      <nz-upload
+                        [nzAction]="uploadUrlDKKD"
+                        [nzHeaders]="headerUploadFile"
+                        [(nzFileList)]="fileListDKKD"
+                        (nzChange)="handleFileChangeDKKD($event)"
+                        [nzLimit]="1"
+                        [nzRemove]="false"
+                        [nzIconRender]=""
+                        [nzDisabled]="uploadFileDKKDDisabled"
+                      >
+                        <button nz-button><i nz-icon nzType="upload"></i>{{ 'layout.button.btn-upload.label' | translate }}</button>
+                      </nz-upload>
+                    </div>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="identifyNumber">{{ 'function.organization.identifynumber.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <input
+                      nz-input
+                      formControlName="identifyNumber"
+                      id="identifyNumber"
+                      placeholder="{{ 'function.organization.identifynumber.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label>{{ 'function.organization.shortname.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <input
+                      nz-input
+                      formControlName="shortName"
+                      id="shortName"
+                      placeholder="{{ 'function.organization.shortname.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="organizationTypeId">{{
+                    'function.organization.organizationtypeid.label' | translate
+                  }}</nz-form-label>
+                  <nz-form-control>
+                    <nz-select
+                      formControlName="organizationTypeId"
+                      nzPlaceHolder="{{ 'function.organization.search.organizationtypeid.placeholder' | translate }}"
+                    >
+                      <nz-option *ngFor="let option of listOfOrgTypes" [nzLabel]="option.name" [nzValue]="option.id"> </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <br />
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="status">Trạng thái</nz-form-label>
+                  <nz-form-control>
+                    <nz-switch formControlName="status" nzSize="small" style="margin-right: 5px"></nz-switch>
+                    <label>
+                      <nz-tag [nzColor]="'#00BB00'" [hidden]="!form.value.status">Đang áp dụng</nz-tag>
+                      <nz-tag [nzColor]="'#EF5350'" [hidden]="form.value.status">Ngừng áp dụng</nz-tag>
+                    </label>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24"></nz-col>
+            </nz-row>
+            <br />
+          </fieldset>
+          <fieldset>
+            <legend>{{ 'function.organization.user-representation' | translate }}</legend>
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-label>{{ 'function.organization.identityfront.label' | translate }}</nz-form-label>
+                <br />
+                <nz-form-item>
+                  <span></span>
+                  <nz-form-control>
+                    <div class="clearfix">
+                      <nz-upload
+                        [nzAction]="uploadUrlIdentityBefore"
+                        [nzHeaders]="headerUploadFile"
+                        [(nzFileList)]="fileListIdentityBefore"
+                        (nzChange)="handleFileChangeIdentityBefore($event)"
+                        [nzLimit]="1"
+                        [nzRemove]="false"
+                        [nzIconRender]=""
+                        [nzDisabled]="uploadFileIdentityBeforeDisabled"
+                      >
+                        <button nz-button><i nz-icon nzType="upload"></i>{{ 'layout.button.btn-upload.label' | translate }}</button>
+                      </nz-upload>
+                    </div>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-label>{{ 'function.organization.identityback.label' | translate }}</nz-form-label>
+                <br />
+                <nz-form-item>
+                  <span></span>
+                  <nz-form-control>
+                    <div class="clearfix">
+                      <nz-upload
+                        [nzAction]="uploadUrlIdentityAfter"
+                        [nzHeaders]="headerUploadFile"
+                        [(nzFileList)]="fileListIdentityAfter"
+                        (nzChange)="handleFileChangeIdentityAfter($event)"
+                        [nzLimit]="1"
+                        [nzRemove]="false"
+                        [nzIconRender]=""
+                        [nzDisabled]="uploadFileIdentityAfterDisabled"
+                      >
+                        <button nz-button><i nz-icon nzType="upload"></i>{{ 'layout.button.btn-upload.label' | translate }}</button>
+                      </nz-upload>
+                    </div>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="fullName">{{ 'function.organization.fullname.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <input
+                      nz-input
+                      formControlName="fullName"
+                      id="fullName"
+                      placeholder="{{ 'function.organization.fullname.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="userIdentity">{{ 'function.organization.useridentity.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <input
+                      nz-input
+                      formControlName="userIdentity"
+                      id="userIdentity"
+                      placeholder="{{ 'function.organization.useridentity.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <br />
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="representationPositionLine1">{{
+                    'function.organization.representationPositionLine1.label' | translate
+                  }}</nz-form-label>
+                  <nz-form-control>
+                    <input
+                      nz-input
+                      formControlName="representationPositionLine1"
+                      id="representationPositionLine1"
+                      placeholder="{{ 'function.organization.representationPositionLine1.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="representationPositionLine2">{{
+                    'function.organization.representationPositionLine2.label' | translate
+                  }}</nz-form-label>
+                  <nz-form-control>
+                    <input
+                      nz-input
+                      formControlName="representationPositionLine2"
+                      id="representationPositionLine2"
+                      placeholder="{{ 'function.organization.representationPositionLine2.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <br />
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label>{{ 'function.organization.gender.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <nz-radio-group formControlName="gender">
+                      <label nz-radio nzValue="1">{{ 'function.organization.gender.true.label' | translate }}</label>
+                      <label nz-radio nzValue="2">{{ 'function.organization.gender.false.label' | translate }}</label>
+                    </nz-radio-group>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="userIssuerDate">{{ 'function.organization.issuerdate.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <nz-date-picker
+                      [nzFormat]="dateFormat"
+                      formControlName="userIssuerDate"
+                      id="userIssuerDate"
+                      nzPlaceHolder="{{ 'function.organization.issuerdate.placeholder' | translate }}"
+                      style="width: 100%"
+                    ></nz-date-picker>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <br />
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="userBirthdate">{{ 'function.organization.userbirthdate.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <nz-date-picker
+                      [nzFormat]="dateFormat"
+                      formControlName="userBirthdate"
+                      id="userBirthdate"
+                      nzPlaceHolder="{{ 'function.organization.userbirthdate.placeholder' | translate }}"
+                      style="width: 100%"
+                    ></nz-date-picker>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="userIssuerBy">{{ 'function.organization.issuerby.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <input
+                      nz-input
+                      formControlName="userIssuerBy"
+                      id="userIssuerBy"
+                      placeholder="{{ 'function.organization.issuerby.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <br />
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="userAddress">{{ 'function.organization.useraddress.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <input
+                      nz-input
+                      formControlName="userAddress"
+                      id="userAddress"
+                      placeholder="{{ 'function.organization.useraddress.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="userAddressCurrent">{{
+                    'function.organization.useraddresscurrent.label' | translate
+                  }}</nz-form-label>
+                  <nz-form-control>
+                    <input
+                      nz-input
+                      formControlName="userAddressCurrent"
+                      id="userAddressCurrent"
+                      placeholder="{{ 'function.organization.useraddresscurrent.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <br />
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="userCountryId">{{ 'function.organization.countryid.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <nz-select
+                      formControlName="userCountryId"
+                      nzPlaceHolder="{{ 'function.organization.search.countryid.placeholder' | translate }}"
+                    >
+                      <nz-option *ngFor="let option of listOfCountries" [nzLabel]="option.name" [nzValue]="option.id"> </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="userProvinceId">{{ 'function.organization.provinceid.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <nz-select
+                      formControlName="userProvinceId"
+                      nzPlaceHolder="{{ 'function.organization.search.provinceid.placeholder' | translate }}"
+                    >
+                      <nz-option
+                        *ngFor="let option of listOfProvinces"
+                        [nzLabel]="option.name + ' - ' + option.zipCode"
+                        [nzValue]="option.id"
+                      >
+                      </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <br />
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="userEmail">{{ 'function.organization.email.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <input
+                      nz-input
+                      formControlName="userEmail"
+                      id="userEmail"
+                      placeholder="{{ 'function.organization.email.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="userPhoneNumber">{{ 'function.organization.phonenumber.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <input
+                      nz-input
+                      formControlName="userPhoneNumber"
+                      id="userPhoneNumber"
+                      placeholder="{{ 'function.organization.phonenumber.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <br />
+          </fieldset>
+          <div style="float: right; margin: 10px 0">
+            <!-- <button
+            nz-button
+            nzType="warning"
+            class="btn-warning"
+            *ngIf="btnCreateCert.visible && btnCreateCert.grandAccess && !isAdd"
+            [nzLoading]="isLoading"
+            (click)="btnCreateCert.click($event)"
+          >
+            <img
+              src="../../../../../assets/tmp/img/diploma.svg"
+              class="img-button"
+              alt="Tạo CTS"
+              title="Tạo CTS"
+              style="padding-bottom: 4px"
+            />{{ btnCreateCert.title }}
+          </button> -->
+
+            <button
+              nz-button
+              nzType="primary"
+              (click)="btnEdit.click($event)"
+              class="btn-primary"
+              *ngIf="btnEdit.visible && btnEdit.grandAccess && isInfo"
+            >
+              <i nz-icon nzType="edit" nzTheme="outline"></i>{{ btnEdit.titlei18n }}
+            </button>
+            <button
+              nz-button
+              nzType="primary"
+              class="btn-primary"
+              *ngIf="!isInfo && btnSave.visible && btnSave.grandAccess"
+              [nzLoading]="isLoading"
+              (click)="btnSave.click($event)"
+            >
+              <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSave.titlei18n }}
+            </button>
+          </div>
+        </nz-card>
+
+        <div style="float: right; margin-right: 30px">
+          <!-- <button
+            nz-button
+            nzType="warning"
+            class="btn-warning"
+            *ngIf="btnCreateCert.visible && btnCreateCert.grandAccess && !isAdd"
+            [nzLoading]="isLoading"
+            (click)="btnCreateCert.click($event)"
+          >
+            <img
+              src="../../../../../assets/tmp/img/diploma.svg"
+              class="img-button"
+              alt="Tạo CTS"
+              title="Tạo CTS"
+              style="padding-bottom: 4px"
+            />{{ btnCreateCert.title }}
+          </button> -->
+        </div>
+      </form>
+    </div>
+  </div>
+</page-header-wrapper>
+
+<nz-dropdown-menu #ccMenu="nzDropdownMenu">
+  <ul nz-menu>
+    <li nz-menu-item>
+      <div (click)="onAddItemFromParent(item)" *ngIf="btnAdd.grandAccess && btnAdd.visible">
+        <i nz-icon nzType="file-add" nzTheme="outline"></i>
+        <span>&nbsp;&nbsp;{{ 'layout.button.btn-add.label' | translate }}</span>
+      </div>
+      <div (click)="onViewItem(item)">
+        <i nz-icon nzType="info-circle" nzTheme="outline"></i>
+        <span>&nbsp;&nbsp;{{ 'layout.button.btn-info.label' | translate }}</span>
+      </div>
+      <div (click)="onEditItem(item)" *ngIf="btnEdit.grandAccess && btnEdit.visible">
+        <i nz-icon nzType="edit" nzTheme="outline"></i>
+        <span>&nbsp;&nbsp;{{ 'layout.button.btn-edit.label' | translate }}</span>
+      </div>
+      <div
+        *ngIf="!delDisabled && btnDelete.grandAccess && btnDelete.visible"
+        nz-popconfirm
+        [nzPopconfirmTitle]="delMsg"
+        (nzOnConfirm)="del(item)"
+      >
+        <i nz-icon nzType="delete" nzTheme="outline"></i>
+        <span>&nbsp;&nbsp;{{ 'layout.button.btn-delete.label' | translate }}</span>
+      </div>
+      <div (click)="onOpenOrgReport(item)" *ngIf="reportGrantAccess">
+        <i nz-icon nzType="pie-chart" nzTheme="outline"></i>
+        <span>&nbsp;&nbsp;{{ 'layout.button.btn-pie-chart.label' | translate }}</span>
+      </div>
+      <div (click)="onOpenOrgConfig(item)" *ngIf="configConnectGrantAccess">
+        <i nz-icon nzType="setting" nzTheme="outline"></i>
+        <span>&nbsp;&nbsp;{{ 'layout.button.btn-setting.label' | translate }}</span>
+      </div>
+    </li>
+  </ul>
+</nz-dropdown-menu>
+<app-organization-config
+  #addRoleModal
+  [isVisible]="isShowOrgConfig"
+  (eventEmmit)="onOrgConfigModalEventEmmit($event)"
+></app-organization-config>
+<app-organization-report [isVisible]="isShowOrgReport" (eventEmmit)="onOrgReportModalEventEmmit($event)"></app-organization-report>

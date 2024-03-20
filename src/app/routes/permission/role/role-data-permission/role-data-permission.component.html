@@ -1,0 +1,111 @@
+<nz-modal
+  [(nzVisible)]="isVisibleModalPermission"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  nzWidth="1000px"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle> {{ tittle }} </ng-template>
+  <ng-template #modalContent>
+    <nz-row>
+      <nz-col [nzSm]="12" [nzXs]="12" style="padding: 10px">
+        <fieldset style="height: 70vh; overflow-y: scroll">
+          <legend>{{ 'function.role.modal-permission.document' | translate }}</legend>
+          <h3>{{ 'function.role.modal-permission.document.document-type.label' | translate }}</h3>
+          <nz-tree
+            [nzData]="documentTypes"
+            nzCheckable
+            nzMultiple
+            (nzCheckBoxChange)="nzEventDocType($event)"
+            (nzClick)="nzEventDocType($event)"
+            [nzExpandAll]="true"
+          >
+          </nz-tree>
+          <br />
+          <h3>
+            {{ 'function.role.modal-permission.document.organization.label' | translate }}:
+            <span style="color: #1890ff; font-weight: 100; font-size: 13px"
+              ><i
+                >(đã chọn <b>{{ orgDocCheckedLength }}</b
+                >)</i
+              ></span
+            >
+          </h3>
+          <nz-input-group [nzSuffix]="suffixIcon">
+            <input type="text" nz-input placeholder="Tìm kiếm đơn vị" [(ngModel)]="orgDocSearchValue" on />
+          </nz-input-group>
+          <ng-template #suffixIcon>
+            <i nz-icon nzType="search"></i>
+          </ng-template>
+          <nz-tree
+            [nzData]="organizationDataDoc"
+            nzCheckable
+            nzMultiple
+            (nzCheckBoxChange)="nzEventOrgDoc($event)"
+            (nzClick)="nzEventOrgDoc($event)"
+            [nzExpandAll]="expandAllOrgDoc"
+            [nzCheckStrictly]="checkStrictlyOrgDoc"
+            [nzSearchValue]="orgDocSearchValue"
+            (nzSearchValueChange)="nzEventOrgDocSearch($event)"
+          >
+          </nz-tree>
+        </fieldset>
+      </nz-col>
+      <nz-col [nzSm]="12" [nzXs]="12" style="padding: 10px">
+        <fieldset style="height: 70vh; overflow-y: scroll">
+          <legend>{{ 'function.role.modal-permission.user' | translate }}</legend>
+          <h3>
+            {{ 'function.role.modal-permission.user.organization.label' | translate }}:
+            <span style="color: #1890ff; font-weight: 100; font-size: 13px"
+              ><i
+                >(đã chọn <b>{{ orgUserCheckedLength }}</b
+                >)</i
+              ></span
+            >
+          </h3>
+          <nz-input-group [nzSuffix]="suffixIcon">
+            <input type="text" nz-input placeholder="Tìm kiếm đơn vị" [(ngModel)]="orgUserSearchValue" />
+          </nz-input-group>
+          <ng-template #suffixIcon>
+            <i nz-icon nzType="search"></i>
+          </ng-template>
+          <nz-tree
+            [nzData]="organizationDataUser"
+            nzCheckable
+            nzMultiple
+            (nzCheckBoxChange)="nzEventOrgUser($event)"
+            (nzClick)="nzEventOrgUser($event)"
+            [nzExpandAll]="expandAllOrgUser"
+            [nzCheckStrictly]="checkStrictlyOrgUser"
+            [nzSearchValue]="orgUserSearchValue"
+            (nzSearchValueChange)="nzEventOrgUserSearch($event)"
+          >
+          </nz-tree>
+        </fieldset>
+      </nz-col>
+    </nz-row>
+  </ng-template>
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="btnSave.visible && btnSave.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i> {{ btnSave.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i> {{ btnCancel.titlei18n }}
+    </button>
+  </ng-template>
+</nz-modal>

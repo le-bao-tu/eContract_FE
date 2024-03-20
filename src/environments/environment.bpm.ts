@@ -1,0 +1,36 @@
+export const environment = {
+  SERVER_URL: `./`,
+  // AUTH_TYPE: 'jwt',
+  // AUTH_TYPE: 'keycloak',
+  AUTH_TYPE: 'wso2',
+  KEYCLOAK_REALM: 'econtract-angular',
+  KEYCLOAK_CLIENT_ID: 'econtract-angular-client',
+  KEYCLOAK_URL: 'http://10.0.20.32:8080',
+  KEYCLOAK_CALLBACK: 'http://localhost:30201/confirm?code=undefined',
+  KEYCLOAK_LOGOUT: 'http://localhost:30201',
+  KEYCLOAK_LOGIN: 'http://10.0.20.32:8080/realms/econtract-angular/protocol/openid-connect/auth',
+  BASE_WSO2_API: 'https://gateway.digital-id.vn/e-contract/1.0.0/api/v1/wso2/',
+  BASE_WSO2_URL: 'https://idp.digital-id.vn/',
+  CLIENT_ID: 'CNTE0uoAYwZH0RPMOOiHOuAHZVoa',
+  BASE_CALLBACK_URL: 'https://econtract.digital-id.vn/confirm',
+  BASE_LOGOUT_URL: 'https://econtract.digital-id.vn/logout',
+
+  // econtract-enpoint
+  API_URL: 'https://gateway.savis.vn/bpm/v1/',
+  CLIENT_HOST: 'http://localhost:8085/',
+
+  version: '1.1.0',
+  production: true,
+  useHash: false,
+  hmr: false,
+  pro: {
+    theme: 'light',
+    menu: 'side',
+    contentWidth: 'fluid',
+    fixedHeader: true,
+    autoHideHeader: true,
+    fixSiderbar: true,
+    onlyIcon: false,
+    colorWeak: false,
+  },
+};

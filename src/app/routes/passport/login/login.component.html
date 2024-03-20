@@ -1,0 +1,52 @@
+<div class="background">
+  <form nz-form [formGroup]="form" class="form-login vertical-center" (ngSubmit)="submit()" role="form">
+    <div nz-row class="text-center">
+      <img class="logo" src="assets\tmp\img\bussiness\logo_SAVIS_eContract.png" />
+    </div>
+    <div nz-row class="title-login text-center">
+      <b> <span id="title-text-two" style="color: #0079c2">VietCredit eContract</span></b> <br />
+      <span id="title-text-one">Giải pháp Hợp đồng điện tử</span>
+    </div>
+    <nz-alert *ngIf="error" [nzType]="'error'" [nzMessage]="error" [nzShowIcon]="true" class="mb-lg"></nz-alert>
+    <nz-form-item>
+      <nz-form-control [nzSpan]="24" [nzErrorTip]="'passport.login.message.enter.username' | translate">
+        <nz-input-group class="account-input" nzSize="large" nzPrefixIcon="user">
+          <input nz-input formControlName="userName" placeholder="{{ 'passport.login.message.placeholder.username' | translate }}" />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control [nzSpan]="24" [nzErrorTip]="'passport.login.message.enter.password' | translate">
+        <nz-input-group class="account-input" nzSize="large" nzPrefixIcon="lock" [nzSuffix]="suffixIconShowHide">
+          <input
+            nz-input
+            [type]="typePassword"
+            formControlName="password"
+            placeholder="{{ 'passport.login.message.placeholder.password' | translate }}"
+          />
+        </nz-input-group>
+        <ng-template #suffixIconShowHide>
+          <span (click)="switchShowPass()" *ngIf="!showPassword"><i nz-icon nzType="eye" nzTheme="outline"></i></span>
+          <span (click)="switchShowPass()" *ngIf="showPassword"><i nz-icon nzType="eye-invisible" nzTheme="outline"></i></span>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-col [nzSpan]="24" style="margin-top: 40px; border-top: 3px dotted #eee">
+        <label nz-checkbox class="check-box-text" formControlName="remember">{{ 'app.login.remember-me' | translate }}</label>
+      </nz-col>
+    </nz-form-item>
+    <div nz-row class="text-center">
+      <button nz-button type="submit" nzType="primary" nzSize="large" [nzLoading]="isLoading" nzBlock class="bt-login bt-red-contract">
+        {{ 'app.login.login' | translate }}
+      </button>
+    </div>
+    <!-- 
+    <nz-row class="text-left register-account">
+      <span class="text-login" id="text-login-one">Đăng kí tài khoản: </span>
+      <a class="text-login" href="#">Cá nhân </a>
+      |
+      <a href="#" class="text-login"> Tổ chức</a>
+    </nz-row> -->
+  </form>
+</div>

@@ -1,0 +1,22 @@
+export const INPUT_TYPE_TEXT = 'text';
+export const INPUT_TYPE_DATETIME = 'date';
+export const INPUT_TYPE_CHECKBOX = 'checkbox';
+
+export const DEFAULT_SETTING_TYPE = 'text';
+export const DEFAULT_SETTING_FONT_TYPE = 'date';
+export const DEFAULT_SETTING_FONT_COLOR = '#000000';
+export const DEFAULT_SETTING_FONT_SIZE = 16;
+export const DEFAULT_SETTING_FONT_STYLE = 'normal';
+export const DEFAULT_SETTING_COLOR = '#000000';
+export const DEFAULT_SETTING_HINT_CHECKBOX_DATA = true;
+export const DEFAULT_SETTING_HINT_TEXT_DATA = 'hint data';
+export const DEFAULT_SETTING_HINT_DATE_DATA: Date = new Date();
+export const DEFAULT_SETTING_POSITION_X = 0;
+export const DEFAULT_SETTING_POSITION_Y = 0;
+export const DEFAULT_INPUT_TYPE_TEXT_WIDTH = 110;
+export const DEFAULT_INPUT_TYPE_TEXT_HEIGHT = 16;
+export const DEFAULT_INPUT_TYPE_CHECKBOX_WIDTH = 16;
+export const DEFAULT_INPUT_TYPE_CHECKBOX_HEIGHT = 16;
+export const DEFAULT_INPUT_TYPE_DATE_WIDTH = 140;
+export const DEFAULT_INPUT_TYPE_DATE_HEIGHT = 16;
+export const DEFAULT_INPUT_BACKGROUND_COLOR = 'rgba(235, 201, 7, 0.65)';

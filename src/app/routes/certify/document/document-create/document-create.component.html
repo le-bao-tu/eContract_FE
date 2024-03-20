@@ -1,0 +1,349 @@
+<page-header-wrapper [title]="tittle" onBack="{() => window.history.back()}">
+  <nz-card [nzBordered]="false" [hidden]="screen !== 1" style="margin-top: 20px">
+    <nz-row>
+      <nz-col nzSpan="8">
+        <nz-row>
+          <nz-radio-group [(ngModel)]="document_batch.type" class="custom-label">
+            <label nz-radio nzValue="1">{{ 'function.document-create.grid.type1.label' | translate }}</label>
+            <label nz-radio nzValue="2">{{ 'function.document-create.grid.type2.label' | translate }}</label>
+          </nz-radio-group>
+        </nz-row>
+      </nz-col>
+      <nz-col nzSpan="16">
+        <nz-row>
+          <nz-col nzSpan="12"></nz-col>
+          <nz-col nzSpan="12">
+            <nz-row>
+              <nz-col nzSpan="12" class="custom-label"
+                >{{ 'function.document-create.grid.documenttypeid.label' | translate }}<span style="color: red">*</span></nz-col
+              >
+              <nz-col nzSpan="10">
+                <nz-select
+                  [(ngModel)]="document_batch.documentTypeId"
+                  (ngModelChange)="onChangeCertifyType($event)"
+                  nzShowSearch
+                  nzPlaceHolder="{{ 'function.document-create.grid.search.documenttypeid.placeholder' | translate }}"
+                >
+                  <nz-option *ngFor="let option of listOfCertifyType" [nzValue]="option.id" [nzLabel]="option.name"> </nz-option>
+                </nz-select>
+              </nz-col>
+            </nz-row>
+          </nz-col>
+        </nz-row>
+        <div class="custom-divider"></div>
+        <!-- <nz-row>
+          <nz-col nzSpan="12">
+            <nz-row>
+              <nz-col nzSpan="12" class="custom-label">{{ 'function.document-create.grid.code.label' | translate }}</nz-col>
+              <nz-col nzSpan="10">
+                <input [(ngModel)]="document_batch.code" nz-input placeholder="{{ 'function.document-create.grid.code.placeholder' | translate }}" />
+              </nz-col>
+            </nz-row>
+          </nz-col>
+          <nz-col nzSpan="12">
+            <nz-row>
+              <nz-col nzSpan="12" class="custom-label">{{ 'function.document-create.grid.name.label' | translate }}</nz-col>
+              <nz-col nzSpan="10">
+                <input [(ngModel)]="document_batch.name" nz-input placeholder="{{ 'function.document-create.grid.name.placeholder' | translate }}" />
+              </nz-col>
+            </nz-row>
+          </nz-col>
+        </nz-row> -->
+      </nz-col>
+    </nz-row>
+    <div class="custom-divider" *ngIf="document_batch.type === '2'"></div>
+    <nz-row *ngIf="document_batch.type === '2'">
+      <nz-col nzSpan="16"></nz-col>
+      <nz-col nzSpan="8">
+        <nz-row>
+          <nz-col nzSpan="12">
+            <button style="width: 90%" nz-button nzType="primary" (click)="btnExportExcel.click($event)" class="btn-upload-file">
+              <i nz-icon nzType="download" nzTheme="outline"></i> {{ 'layout.button.btn-download-file.label' | translate }}
+            </button>
+          </nz-col>
+          <nz-col nzSpan="12">
+            <nz-upload [nzTransformFile]="transformExcelFileToGrid" style="width: 100%">
+              <button style="width: 100%" nz-button nzType="primary" class="btn-upload-file">
+                <i nz-icon nzType="upload" nzTheme="outline"></i> {{ 'layout.button.btn-upload-file.label' | translate }}
+              </button>
+            </nz-upload>
+            <!-- <button nz-button nzType="primary" (click)="btnImportExcel.click($event)" class="btn-upload-file">TẢI LÊN FILE EXCEL</button> -->
+          </nz-col>
+          <nz-row>
+            <nz-col nzSpan="5"></nz-col>
+            <nz-col nzSpan="19">
+              <p>
+                <i>{{ 'function.document-create.grid.note.label' | translate }}</i>
+              </p>
+            </nz-col>
+          </nz-row>
+        </nz-row>
+      </nz-col>
+    </nz-row>
+    <div class="custom-divider"></div>
+    <nz-row *ngIf="document_batch.type === '1'">
+      <nz-col nzSpan="24">
+        <div class="ng-star-inserted">
+          <nz-upload
+            nzType="drag"
+            [(nzFileList)]="fileList"
+            [nzMultiple]="true"
+            (nzChange)="handleChange($event)"
+            [nzAction]="uploadUrl"
+            [nzHeaders]="headerUploadFile"
+            nzAccept="application/pdf"
+          >
+            <p class="ant-upload-drag-icon">
+              <i nz-icon nzType="file-add"></i>
+            </p>
+            <p class="ant-upload-text">{{ 'function.document-create.grid.ant-upload-text.label' | translate }}</p>
+            <p>
+              <button nz-button nzType="primary" class="btn-upload-file">
+                <i nz-icon nzType="upload" nzTheme="outline"></i>{{ 'function.document-create.grid.upload.label' | translate }}
+              </button>
+            </p>
+            <p class="ant-upload-hint">
+              <span style="color: red">*</span>{{ 'function.document-create.grid.ant-upload-hint.label' | translate }}
+            </p>
+          </nz-upload>
+        </div>
+      </nz-col>
+    </nz-row>
+
+    <nz-row *ngIf="document_batch.type === '2'">
+      <ag-grid-angular
+        #agGrid
+        style="width: 100%; height: 40vh"
+        id="unit-grid"
+        class="ag-theme-alpine"
+        [modules]="modules"
+        [(columnDefs)]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [suppressRowClickSelection]="true"
+        [rowSelection]="rowSelection"
+        [rowData]="grid.rowData"
+        (selectionChanged)="onSelectionChanged($event)"
+        [overlayLoadingTemplate]="overlayLoadingTemplate"
+        [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+        [frameworkComponents]="frameworkComponents"
+        [excelStyles]="excelStyles"
+        (gridReady)="onGridReady($event)"
+      >
+      </ag-grid-angular>
+      <hr />
+    </nz-row>
+
+    <div class="custom-divider"></div>
+
+    <nz-row style="float: right">
+      <button nz-button nzType="primary" class="btn-warning btn-handle" (click)="btnCancel.click($event)">
+        <i nz-icon nzType="close-circle" nzTheme="outline"></i>{{ btnCancel.titlei18n }}
+      </button>
+      <button nz-button nzType="primary" class="btn-primary btn-handle" (click)="btnContinue.click($event)">
+        <i nz-icon nzType="check" nzTheme="outline"></i>{{ btnContinue.titlei18n }}
+      </button>
+    </nz-row>
+  </nz-card>
+  <nz-card [hidden]="screen !== 2" style="margin-top: 20px">
+    <nz-row>
+      <nz-radio-group [(ngModel)]="radioWorkflowTypeValue" (ngModelChange)="onChangeRadioWorkflowType($event)">
+        <label nz-radio nzValue="1" class="custom-worklfow-radio">
+          <nz-select
+            nzShowSearch
+            class="custom-workflow-dropdown"
+            [(ngModel)]="selectedCertifyTypeDefault"
+            [disabled]="radioWorkflowTypeValue !== '1'"
+            (ngModelChange)="onChangeWorkflow($event)"
+            [nzOptions]="listOfWorkflowDefault"
+            nzPlaceHolder="{{ 'function.document-create.grid.search.selected-certify-type-default.placeholder' | translate }}"
+          >
+          </nz-select>
+        </label>
+        <label nz-radio nzValue="2" class="custom-worklfow-radio">
+          <nz-select
+            nzShowSearch
+            class="custom-workflow-dropdown"
+            [(ngModel)]="selectedCertifyTypeCustom"
+            [disabled]="radioWorkflowTypeValue !== '2'"
+            (ngModelChange)="onChangeWorkflow($event)"
+            [nzOptions]="listOfWorkflowCustom"
+            nzPlaceHolder="{{ 'function.document-create.grid.search.selected-certify-type-custom.placeholder' | translate }}"
+          >
+          </nz-select>
+        </label>
+        <label nz-radio nzValue="3" class="custom-worklfow-radio">
+          {{ 'function.document-create.grid.certify-type-new.placeholder' | translate }}
+        </label>
+      </nz-radio-group>
+    </nz-row>
+
+    <div class="custom-divider"></div>
+
+    <nz-row>
+      <nz-col nzSpan="20"> <span style="color: red">* </span> <span [innerHTML]="myText"></span> </nz-col>
+    </nz-row>
+
+    <div class="custom-divider"></div>
+    <div class="custom-divider"></div>
+
+    <div>
+      <nz-row
+        ><b> {{ 'function.document-create.grid.workflow-profile' | translate }}</b></nz-row
+      >
+
+      <div class="custom-divider"></div>
+
+      <nz-row>
+        <nz-col nzSpan="4" class="custom-label">
+          <span style="color: red">*</span>
+          {{ 'function.document-create.grid.new-workflowname.label' | translate }}
+        </nz-col>
+        <nz-col nzSpan="20">
+          <input
+            nz-input
+            placeholder="{{ 'function.document-create.grid.new-workflowname.placeholder' | translate }}"
+            [(ngModel)]="newWorkflow.name"
+            [disabled]="radioWorkflowTypeValue != '3'"
+          />
+        </nz-col>
+      </nz-row>
+      <!-- <nz-row [hidden]="newWorkflow.name !== '' || radioWorkflowTypeValue != '3'">
+        <nz-col nzSpan="4"></nz-col>
+        <nz-col nzSpan="20">
+          <div style="color: #40a9ff"><i>* Tên quy trình không được bỏ trống</i></div>
+        </nz-col>
+      </nz-row> -->
+
+      <div class="custom-divider"></div>
+
+      <nz-row>
+        <nz-col nzSpan="4" class="custom-label"> {{ 'function.document-create.grid.orgid.label' | translate }} </nz-col>
+        <nz-col nzSpan="7">
+          <nz-tree-select
+            [nzNodes]="data"
+            nzShowSearch
+            nzShowLine
+            style="width: 100%"
+            [(ngModel)]="newWorkflow.orgId"
+            [disabled]="true"
+            nzPlaceHolder="{{ 'function.document-create.grid.search.orgid.placeholder' | translate }}"
+          >
+          </nz-tree-select>
+        </nz-col>
+        <!-- <nz-col nzSpan="1"></nz-col>
+        <nz-col nzSpan="4" class="custom-label"> Trạng thái sử dụng: </nz-col>
+        <nz-col nzSpan="8" class="custom-label">
+          <nz-switch [(ngModel)]="newWorkflow.status" [disabled]="radioWorkflowTypeValue != '3'"></nz-switch>
+          &nbsp;&nbsp;
+          <label>
+            <nz-tag [nzColor]="'#00BB00'" [hidden]="!newWorkflow.status">Đang áp dụng</nz-tag>
+            <nz-tag [nzColor]="'#EF5350'" [hidden]="newWorkflow.status">Ngừng áp dụng</nz-tag>
+          </label>
+        </nz-col> -->
+      </nz-row>
+
+      <!-- <nz-row [hidden]="newWorkflow.orgId !== null || radioWorkflowTypeValue != '3'">
+        <nz-col nzSpan="4"></nz-col>
+        <nz-col nzSpan="7">
+          <div style="color: #40a9ff"><i>* Bộ phận không được bỏ trống</i></div>
+        </nz-col>
+      </nz-row> -->
+
+      <div class="custom-divider-2"></div>
+
+      <nz-row
+        ><b> {{ 'function.document-create.grid.participants-profile' | translate }}</b></nz-row
+      >
+
+      <div class="custom-divider"></div>
+
+      <nz-row *ngFor="let item of listUser; let i = index" class="custom-contact">
+        <div nz-col nzSpan="6">
+          <div nz-row>
+            <div nz-col nzSpan="8" class="custom-label">
+              {{ i + 1 }}. <span style="color: red">*</span>
+              {{ 'function.document-create.grid.username.label' | translate }}
+            </div>
+            <div nz-col nzSpan="15">
+              <div class="contact-name-input">
+                <nz-select
+                  class="custom-workflow-dropdown"
+                  [(ngModel)]="item.userId"
+                  nzShowSearch
+                  [ngModelOptions]="{ standalone: true }"
+                  (ngModelChange)="onChangeUserName($event, i)"
+                  [nzOptions]="listUserForWorkflow"
+                  nzPlaceHolder="{{ 'function.document-create.grid.search.username.placeholder' | translate }}"
+                >
+                </nz-select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div nz-col nzSpan="6">
+          <div nz-row>
+            <div nz-col nzSpan="7" class="custom-label">{{ 'function.document-create.grid.state-name.label' | translate }}</div>
+            <div nz-col nzSpan="16">
+              <input nz-input [(ngModel)]="item.stateName" [disabled]="true" />
+            </div>
+          </div>
+        </div>
+        <div nz-col nzSpan="6">
+          <div nz-row>
+            <div nz-col nzSpan="5" class="custom-label">{{ 'function.document-create.grid.user-email.label' | translate }}</div>
+            <div nz-col nzSpan="18">
+              <input nz-input placeholder="" [(ngModel)]="item.userEmail" [disabled]="true" />
+            </div>
+          </div>
+        </div>
+        <div nz-col nzSpan="5">
+          <div nz-row>
+            <div nz-col nzSpan="9" class="custom-label">{{ 'function.document-create.grid.selected-sign-type.label' | translate }}</div>
+            <div nz-col nzSpan="14">
+              <nz-select
+                nzShowSearch
+                [(ngModel)]="item.selectedSignType"
+                (ngModelChange)="onChangeSignType($event, i)"
+                nzPlaceHolder="Chọn..."
+                [disabled]="type === 'info' || radioWorkflowTypeValue != '3'"
+              >
+                <nz-option *ngFor="let option of listOfSignOption" [nzValue]="option" [nzLabel]="option.label"> </nz-option>
+              </nz-select>
+            </div>
+          </div>
+        </div>
+        <div nz-col nzSpan="1" [hidden]="radioWorkflowTypeValue != '3'">
+          <div nz-row>
+            <div nz-col nzSpan="12"><i nz-icon nzType="rest" nzTheme="outline" class="pointer" (click)="removeUser($event, i)"></i></div>
+            <div nz-col nzSpan="12"><i nz-icon nzType="plus" nzTheme="outline" class="pointer" (click)="addUser($event)"></i></div>
+          </div>
+        </div>
+      </nz-row>
+    </div>
+
+    <div class="custom-divider-2"></div>
+
+    <!-- <nz-row>
+      <label nz-checkbox [(ngModel)]="checkedMailNotify"
+        >{{ 'function.document-create.grid.checked-mail-notify.label' | translate }}
+      </label>
+      <input type="text" nz-input [(ngModel)]="document_batch.numberOfEmailPerWeek" style="width: 40px; height: 23px" /> &nbsp;
+      {{ 'function.document-create.grid.number-of-email-per-week.label' | translate }}
+    </nz-row> -->
+
+    <div class="custom-divider"></div>
+    <div class="custom-divider"></div>
+
+    <nz-row style="float: right">
+      <button nz-button nzType="primary" class="btn-warning btn-handle" [nzLoading]="isLoading" (click)="btnCancel.click($event)">
+        <i nz-icon nzType="close-circle" nzTheme="outline"></i>{{ btnCancel.titlei18n }}
+      </button>
+      <button nz-button nzType="primary" class="btn-warning btn-handle" [nzLoading]="isLoading" (click)="btnBack.click($event)">
+        <i nz-icon nzType="step-backward" nzTheme="outline"></i>{{ btnBack.titlei18n }}
+      </button>
+      <button nz-button nzType="primary" class="btn-primary btn-handle" [nzLoading]="isLoading" (click)="btnSave.click($event)">
+        <i nz-icon nzType="save" nzTheme="outline"></i>{{ btnSave.titlei18n }}
+      </button>
+    </nz-row>
+  </nz-card>
+</page-header-wrapper>

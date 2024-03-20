@@ -1,0 +1,14 @@
+<img *ngIf="!checkCollapsed" [src]="logoBase64" alt="{{ name }}" (click)="redirectToDashboard()" />
+<img
+  *ngIf="checkCollapsed"
+  (click)="redirectToDashboard()"
+  src="assets/tmp/img/bussiness/logo_SAVIS_eContract_min.png"
+  alt="{{ name }}"
+  width="30"
+  style="height: 23px !important; margin-top: 5px"
+/>
+<style>
+  img {
+    cursor: pointer;
+  }
+</style>

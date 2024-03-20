@@ -1,0 +1,162 @@
+@import '~@delon/theme/index';
+:host {
+  ::ng-deep {
+    .container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      background: #f0f2f5;
+    }
+    .attPDFShow .ng2-pdf-viewer-container {
+      height: 1142px !important;
+      overflow-y: auto !important;
+    }
+    .attPDFShow .pdfViewer .page {
+      border: 9px solid rgba(0, 0, 0, 0.01) !important;
+    }
+    .from-access {
+      width: 35vw;
+      margin: 0 auto;
+      padding: 30px;
+      background: #fff;
+      box-shadow: @box-shadow-base;
+    }
+    .langs {
+      width: 100%;
+      height: 40px;
+      line-height: 44px;
+      text-align: right;
+      .ant-dropdown-trigger {
+        display: inline-block;
+      }
+      .anticon {
+        margin-top: 24px;
+        margin-right: 24px;
+        font-size: 14px;
+        vertical-align: top;
+        cursor: pointer;
+      }
+    }
+    .wrap {
+      flex: 1;
+      padding: 32px 0;
+    }
+    .ant-form-item {
+      margin-bottom: 24px;
+    }
+
+    @media (min-width: @screen-md-min) {
+      .container {
+        background-image: url('https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg');
+        background-repeat: no-repeat;
+        background-position: center 110px;
+        background-size: 100%;
+      }
+      .wrap {
+        padding: 32px 0 24px;
+      }
+    }
+    .top {
+      text-align: center;
+    }
+    .header {
+      height: 44px;
+      line-height: 44px;
+      a {
+        text-decoration: none;
+      }
+    }
+    .logo {
+      height: 44px;
+      margin-right: 16px;
+    }
+    .title {
+      position: relative;
+      color: @heading-color;
+      font-weight: 600;
+      font-size: 33px;
+      font-family: 'Myriad Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      vertical-align: middle;
+    }
+    .desc {
+      margin-top: 12px;
+      margin-bottom: 40px;
+      color: #333;
+      font-size: @font-size-base;
+    }
+    .ant-tabs-tab-btn {
+      font-size: 18px !important;
+    }
+    ////
+    .btn-meta-data {
+      width: 90%;
+      margin: 0 auto;
+      border-radius: 4px;
+    }
+
+    .label-thong-tin-left {
+      font-weight: bold;
+      font-size: 17px;
+      text-align: center;
+    }
+
+    .ant-btn + .ant-btn:not(.ant-btn-link),
+    .ant-btn + nz-popconfirm,
+    nz-popconfirm + .ant-btn,
+    nz-popconfirm + nz-popconfirm,
+    .ant-btn + nz-button-group,
+    nz-button-group + .ant-btn,
+    .ant-btn + nz-dropdown,
+    nz-dropdown + .ant-btn,
+    nz-popconfirm + nz-button-group,
+    nz-button-group + nz-popconfirm {
+      margin-left: 0;
+    }
+    .img-button {
+      height: 27px;
+      margin-top: 5px;
+      cursor: pointer;
+    }
+    .img-button :hover {
+      cursor: pointer;
+    }
+    .class-ky {
+      height: 100%;
+      padding-top: 20px;
+      color: #0079c2;
+      font-weight: bold;
+      border: solid 1px #0079c2;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .class-ky :hover {
+      cursor: pointer;
+    }
+
+    .ng2-pdf-viewer-container {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      overflow: hidden;
+    }
+
+    .page-wrapper {
+      overflow-y: scroll;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      margin: 0;
+      -webkit-appearance: none;
+    }
+
+    /* Firefox */
+    input[type='number'] {
+      -moz-appearance: textfield;
+    }
+    .thumbnailpage {
+      background: #eee;
+    }
+  }
+}

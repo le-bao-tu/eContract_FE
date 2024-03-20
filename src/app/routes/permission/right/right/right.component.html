@@ -1,0 +1,230 @@
+<page-header-wrapper [title]="tittle" onBack="{() => window.history.back()}">
+  <nz-card class="card-header">
+    <div nz-row class="header">
+      <div nz-col nzSpan="12">
+        <nz-breadcrumb>
+          <nz-breadcrumb-item>
+            <a [routerLink]="['/']">
+              <i nz-icon nzType="home"></i>
+            </a>
+          </nz-breadcrumb-item>
+          <nz-breadcrumb-item>
+            <a>
+              <span>{{ 'menu.permission' | translate }}</span>
+            </a>
+          </nz-breadcrumb-item>
+          <nz-breadcrumb-item>
+            <a>
+              {{ 'layout.breadcum.right' | translate }}
+            </a>
+          </nz-breadcrumb-item>
+        </nz-breadcrumb>
+      </div>
+      <div nz-col nzSpan="12" style="text-align: right"></div>
+    </div>
+  </nz-card>
+  <div nz-row [nzGutter]="32">
+    <div nz-col nzMd="24" nzLg="8">
+      <nz-card nzTitle="{{ 'function.right.list.header' | translate }}" [nzExtra]="extraTpl">
+        <ng-template #extraTpl>
+          <button
+            nz-button
+            nzType="default"
+            (click)="btnReload.click($event)"
+            class="btn-reload"
+            *ngIf="btnReload.visible && btnReload.grandAccess"
+          >
+            <i nz-icon nzType="reload" nzTheme="outline"></i>{{ btnReload.titlei18n }}
+          </button>
+          <button
+            nz-button
+            nzType="primary"
+            (click)="btnAdd.click($event)"
+            class="btn-primary"
+            *ngIf="btnAdd.visible && btnAdd.grandAccess"
+          >
+            <i nz-icon nzType="file-add" nzTheme="fill"></i>{{ btnAdd.titlei18n }}
+          </button>
+        </ng-template>
+        <nz-input-group [nzSuffix]="suffixIcon">
+          <input
+            type="text"
+            nz-input
+            placeholder="{{ 'layout.grid.search.text-search.placeholder' | translate }}"
+            [(ngModel)]="searchRightValue"
+          />
+        </nz-input-group>
+        <ng-template #suffixIcon>
+          <i nz-icon nzType="search"></i>
+        </ng-template>
+        <nz-tree
+          style="margin-top: 10px; height: 68vh; overflow-y: auto"
+          [nzData]="treeRightData"
+          [nzSearchValue]="searchRightValue"
+          nzShowLine
+          (nzClick)="show($event)"
+          [nzExpandAll]="expandAll"
+        >
+        </nz-tree>
+      </nz-card>
+    </div>
+    <div nz-col nzMd="24" nzLg="16">
+      <form nz-form [formGroup]="form" id="formRight">
+        <nz-card>
+          <fieldset>
+            <legend>{{ 'function.right.right-info.header' | translate }}</legend>
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzRequired nzFor="groupName">{{ 'function.right.group-name.label' | translate }}</nz-form-label>
+                  <nz-form-control [nzErrorTip]="validateGroupName">
+                    <input
+                      nz-input
+                      formControlName="groupName"
+                      id="groupName"
+                      placeholder="{{ 'function.right.group-name.placeholder' | translate }}"
+                      autocomplete="on"
+                    />
+                    <ng-template #validateGroupName let-control>
+                      <ng-container *ngIf="control.hasError('required')">
+                        {{ 'function.right.group-name.message.required' | translate }}</ng-container
+                      >
+                      <ng-container *ngIf="control.hasError('pattern')">
+                        {{ 'function.right.group-name.message.pattern' | translate }}</ng-container
+                      >
+                    </ng-template>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzRequired nzFor="code">{{ 'function.right.code.label' | translate }}</nz-form-label>
+                  <nz-form-control [nzErrorTip]="validateCode">
+                    <input
+                      nz-input
+                      formControlName="code"
+                      id="code"
+                      placeholder="{{ 'function.right.code.placeholder' | translate }}"
+                      style="text-transform: uppercase"
+                    />
+                    <ng-template #validateCode let-control>
+                      <ng-container *ngIf="control.hasError('required')">
+                        {{ 'function.right.code.message.required' | translate }}</ng-container
+                      >
+                      <ng-container *ngIf="control.hasError('pattern')">
+                        {{ 'function.right.code.message.pattern' | translate }}</ng-container
+                      >
+                    </ng-template>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <br />
+            <nz-row>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzRequired nzFor="name">{{ 'function.right.name.label' | translate }}</nz-form-label>
+                  <nz-form-control [nzErrorTip]="validateName">
+                    <input nz-input formControlName="name" id="name" placeholder="{{ 'function.right.name.placeholder' | translate }}" />
+                    <ng-template #validateName let-control>
+                      <ng-container *ngIf="control.hasError('required')">
+                        {{ 'function.right.name.message.required' | translate }}</ng-container
+                      >
+                      <ng-container *ngIf="control.hasError('pattern')">
+                        {{ 'function.right.name.message.pattern' | translate }}</ng-container
+                      >
+                    </ng-template>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col>
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="order">{{ 'function.right.order.label' | translate }}</nz-form-label>
+                  <nz-form-control nzErrorTip="{{ 'function.right.order.error.message' | translate }}">
+                    <input
+                      nz-input
+                      type="number"
+                      formControlName="order"
+                      id="order"
+                      placeholder="{{ 'function.right.order.placeholder' | translate }}"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <br />
+            <nz-row>
+              <!-- <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item>
+                  <nz-form-label>{{ 'function.right.role.label' | translate }}</nz-form-label>        
+                  <nz-form-control>
+                    <nz-tree                                    
+                      [nzData]="treeRoleData"                   
+                      nzCheckable
+                      nzMultiple                
+                      (nzCheckBoxChange)="nzEventRoleChange($event)"
+                      (nzClick)="nzEventRoleChange($event)"
+                      [nzExpandAll]="true"
+                    ></nz-tree>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSm="24" nzLg="2" nzXs="24"></nz-col> -->
+              <nz-col nzSm="24" nzLg="11" nzXs="24">
+                <nz-form-item class="flex-column">
+                  <nz-form-label nzFor="status">{{ 'function.right.status.label' | translate }}</nz-form-label>
+                  <nz-form-control>
+                    <nz-switch formControlName="status" nzSize="small" style="margin-right: 5px"></nz-switch>
+                    <label>
+                      <nz-tag [nzColor]="'#00BB00'" [hidden]="!form.value.status">{{
+                        'function.right.status-true.label' | translate
+                      }}</nz-tag>
+                      <nz-tag [nzColor]="'#EF5350'" [hidden]="form.value.status">{{
+                        'function.right.status-false.label' | translate
+                      }}</nz-tag>
+                    </label>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <br />
+          </fieldset>
+
+          <div style="float: right; margin: 10px 0">
+            <button
+              nz-button
+              nzType="primary"
+              (click)="btnEdit.click($event)"
+              class="btn-primary"
+              *ngIf="btnEdit.visible && btnEdit.grandAccess && isInfo"
+            >
+              <i nz-icon nzType="edit" nzTheme="outline"></i>{{ btnEdit.titlei18n }}
+            </button>
+            <button
+              nz-button
+              nzType="primary"
+              class="btn-primary"
+              *ngIf="!isInfo && btnSave.visible && btnSave.grandAccess"
+              [nzLoading]="isLoading"
+              (click)="btnSave.click($event)"
+              [disabled]="!form.valid"
+            >
+              <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSave.titlei18n }}
+            </button>
+            <button
+              nz-button
+              nzType="danger"
+              (click)="btnDelete.click($event)"
+              class="btn-danger"
+              *ngIf="btnDelete.visible && btnDelete.grandAccess && (isInfo || isEdit)"
+            >
+              <i nz-icon nzType="delete" nzTheme="outline"></i>{{ btnDelete.titlei18n }}
+            </button>
+          </div>
+        </nz-card>
+      </form>
+    </div>
+  </div>
+</page-header-wrapper>

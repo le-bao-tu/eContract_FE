@@ -1,0 +1,202 @@
+<div class="container" *ngIf="showPage === false">
+  <pro-langs class="langs" btnClass></pro-langs>
+  <div class="wrap">
+    <div class="top">
+      <!-- <div class="head">
+        <img class="logo" src="./assets/tmp/img/bussiness/logo_min.png" />
+        <span class="title">Econtract</span>
+      </div> -->
+      <div class="desc" nz-typography>Sử dụng email hoặc số điện thoại đã nhận được thông tin hợp đồng để xác nhận truy cập dưới đây.</div>
+    </div>
+    <form nz-form [formGroup]="form" (ngSubmit)="submit()" role="form" class="from-access">
+      <nz-tabset [nzAnimated]="false" class="tabs">
+        <nz-tab [nzTitle]="'Xác thực truy cập'">
+          <nz-alert *ngIf="error" class="pb-sm" nzType="error" [nzMessage]="error" nzCloseText="Đóng"></nz-alert>
+          <!-- <h4 nz-typography>Email hoặc SĐT</h4> -->
+          <nz-form-item>
+            <nz-form-control [nzErrorTip]="'Vui lòng nhập email hoặc số điện thoại!'" style="margin-top: 14px">
+              <nz-input-group nzSize="large" nzPrefixIcon="mail">
+                <input nz-input formControlName="account" id="emailorsdt" [placeholder]="'Nhập email hoặc số điện thoại'" />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+          <!-- <h4 nz-typography>Mã truy cập</h4> -->
+          <nz-form-item>
+            <nz-form-control
+              [nzExtra]="msgOTP === true ? '' : 'Vui lòng truy cập email để lấy lại mã!'"
+              [nzErrorTip]="'Vui lòng nhập mã truy cập!'"
+            >
+              <div class="d-flex flex-row">
+                <nz-input-group nzSize="large" [nzSuffix]="inputClearTpl" nzPrefixIcon="lock">
+                  <input nz-input type="password" id="otp" formControlName="otp" [placeholder]="'Nhập mã truy cập '" autocomplete="off" />
+                </nz-input-group>
+                <ng-template #inputClearTpl>
+                  <i
+                    nz-icon
+                    class="ant-input-clear-icon"
+                    nzTheme="fill"
+                    nzType="close-circle"
+                    *ngIf="this.otp.value"
+                    (click)="this.form.controls['otp'].setValue(null)"
+                  ></i>
+                </ng-template>
+                <button nz-button nzSize="large" type="button" class="ml-sm align-self-center" (click)="getOTP()">Gửi lại mã</button>
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+        </nz-tab>
+      </nz-tabset>
+      <nz-form-item style="margin-bottom: 14px">
+        <button nz-button id="submit" type="submit" nzType="primary" nzSize="large" [nzLoading]="http.loading" nzBlock>Truy cập</button>
+      </nz-form-item>
+    </form>
+    <global-footer [links]="links">
+      Copyright
+      <i nz-icon nzType="copyright"></i>
+      {{ app.year }}
+      <a href="//savis.vn" target="_blank">Savis</a>
+    </global-footer>
+  </div>
+</div>
+<page-header-wrapper [title]="tittle" *ngIf="showPage === true" class="page-wrapper" style="margin: 0 !important; overflow: unset">
+  <nz-card class="card-header">
+    <div nz-row class="header" style="line-height: initial">
+      <div nz-col>
+        <h2 class="title-card mb-0">{{ tittle }}</h2>
+      </div>
+    </div>
+  </nz-card>
+
+  <nz-card [nzBordered]="true">
+    <div nz-row class="justify-content-around ware__imgs-item">
+      <div nz-col nzSpan="2">
+        <div nz-row>
+          <div nz-col nzSm="24">
+            <i
+              nz-icon
+              nzType="layout"
+              style="margin-left: 14px; color: #08c; font-size: 20px"
+              nz-tooltip="Trang thu nhỏ"
+              nzTheme="outline"
+            ></i>
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSm="24">
+            <div id="preview" style="height: 1142px !important; overflow-y: auto !important">
+              <div
+                class="d-flex flex-column justify-content-center"
+                [ngClass]="{ thumbnailpage: item.page === this.currentPage }"
+                *ngFor="let item of thumbnail"
+                id="page{{ item.page }}"
+              >
+                <img
+                  src="{{ item.url }}"
+                  style="width: 85%; margin: 10px auto; border: 1px solid #eee"
+                  (click)="onPageChange($event, 0, item.page)"
+                />
+                <span class="pagenumber text-center">{{ item.page }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div nz-col nzSpan="20">
+        <div nz-row *ngIf="this.totalPage > 0" style="margin: 5px auto">
+          <div nz-col nzSm="24" class="text-center">
+            <button style="margin-right: 10px; border: none" nz-button nzType="default" (click)="onPageChange($event, -1, 0)">
+              <i class="fas fa-angle-left"></i>
+            </button>
+            <input
+              #inputElement
+              type="number"
+              style="width: 50px; padding-left: 20px"
+              nz-input
+              nz-tooltip
+              nzTooltipTrigger="focus"
+              nzTooltipPlacement="topLeft"
+              min="1"
+              max="{{ this.totalPage }}"
+              nzOverlayClassName="numeric-input"
+              (ngModelChange)="onPageChange($event, 2, 0)"
+              [ngModel]="currentPage"
+              [ngModelOptions]="{ standalone: true }"
+            />
+            / <span>{{ this.totalPage }}</span>
+            <button style="margin-left: 10px; border: none" nz-button nzType="default" (click)="onPageChange($event, 1, 0)">
+              <i class="fas fa-angle-right"></i>
+            </button>
+          </div>
+          <span nz-typography nzCopyable nzCopyText="Hello, Ant Design!">Tài liệu ký: {{ data_get_document.fileName }}</span>
+        </div>
+        <!-- <pre>{{ this.showAll }}</pre> -->
+        <div nz-row>
+          <div nz-col nzSm="24" class="text-center">
+            <div #pdfContainer id="pdfContainer" style="min-height: 70vh; overflow: hidden; border: 1px solid #ccc">
+              <pdf-viewer
+                [class.attPDFShow]="showAll"
+                [src]="fileUrl"
+                [render-text]="true"
+                [rotation]="0"
+                [zoom]="1"
+                [(page)]="currentPage"
+                [show-all]="true"
+                [show-borders]="false"
+                [original-size]="true"
+                (click)="onClick($event)"
+                [fit-to-page]="true"
+                [autoresize]="true"
+                (page-rendered)="pageRendered($event)"
+                (after-load-complete)="afterPdfLoadComplete($event)"
+                (pages-initialized)="pageInitialized($event)"
+                (text-layer-rendered)="textLayerRendered($event)"
+                (error)="onPdfError($event)"
+              >
+              </pdf-viewer>
+            </div>
+          </div>
+        </div>
+        <label nz-checkbox class="mt-sm mb-sm font-weight-bold" [(ngModel)]="checkboxAccess" [ngModelOptions]="{ standalone: true }"
+          >Tôi đã đọc, hiểu, đồng ý với nội dung của hợp đồng và thống nhất phương thức điện tử để ký hợp đồng.</label
+        >
+      </div>
+    </div>
+    <div style="float: right; margin-top: 10px" *ngIf="!showBtn">
+      <button
+        nz-button
+        nzType="primary"
+        class="btn-warning"
+        [nzLoading]="isLoading"
+        *ngIf="btnCancel.visible && btnCancel.grandAccess"
+        (click)="btnCancel.click($event)"
+      >
+        <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.title }}
+      </button>
+      <button
+        nz-button
+        nzType="primary"
+        style="margin-left: 5px"
+        class="btn-primary"
+        *ngIf="btnSign.visible && btnSign.grandAccess"
+        [nzLoading]="isLoading"
+        (click)="btnSign.click($event)"
+      >
+        <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnSign.title }}
+      </button>
+      <button
+        nz-button
+        nzType="primary"
+        style="margin-left: 5px"
+        class="btn-primary"
+        *ngIf="btnSignUSB.visible && btnSignUSB.grandAccess"
+        [nzLoading]="isLoading"
+        (click)="btnSignUSB.click($event)"
+      >
+        <i nz-icon nzType="form" nzTheme="outline"></i>{{ btnSignUSB.title }}
+      </button>
+    </div>
+  </nz-card>
+</page-header-wrapper>
+<app-document-info-sign #itemModal (eventEmmit)="onModalEventEmmitSign($event)"> </app-document-info-sign>
+<app-document-otp-sign #itemModal (eventEmmit)="onModalEventEmmitOTP($event)"> </app-document-otp-sign>
+<app-document-list-cert #itemModal (eventEmmit)="onModalEventEmmitCert($event)"></app-document-list-cert>

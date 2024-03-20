@@ -1,0 +1,10 @@
+{
+    "SERVER_URL": "./",
+    "BASE_WSO2_API": "https://gateway.digital-id.vn/e-contract/1.0.0/api/v1/wso2/",
+    "BASE_WSO2_URL": "https://idp.digital-id.vn/",
+    "CLIENT_ID": "CNTE0uoAYwZH0RPMOOiHOuAHZVoa",
+    "BASE_CALLBACK_URL": "https://econtract.digital-id.vn/confirm",
+    "BASE_LOGOUT_URL": "https://econtract.digital-id.vn/logout",
+    "API_URL": "https://uat-gateway.trustca.vn/e-contract-test/v1/",
+    "CLIENT_HOST": "http://localhost:8085/"
+}

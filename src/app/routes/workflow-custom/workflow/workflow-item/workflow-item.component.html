@@ -1,0 +1,437 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  (nzOnCancel)="handleCancel()"
+  [nzWidth]="1200"
+>
+  <ng-template #modalTitle>
+    {{ tittle }}
+    <a nz-dropdown [nzDropdownMenu]="menu">
+      <i nz-icon nzType="question-circle"></i>
+    </a>
+    <nz-dropdown-menu #menu="nzDropdownMenu">
+      <ul nz-menu>
+        <li nz-menu-item>
+          <p>{{ 'function.workflow.modal-item.line1' | translate }}</p>
+          <p>{{ 'function.workflow.modal-item.line2' | translate }}</p>
+          <p>{{ 'function.workflow.modal-item.line3' | translate }}</p>
+          <p>{{ 'function.workflow.modal-item.line4' | translate }}</p>
+          <p>{{ 'function.workflow.modal-item.line5' | translate }}</p>
+        </li>
+      </ul>
+    </nz-dropdown-menu>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <nz-row
+      ><b>{{ 'function.workflow.modal-item.workflow-profile' | translate }}</b></nz-row
+    >
+    <div class="custom-divider"></div>
+    <form nz-form [formGroup]="form" (ngSubmit)="save()">
+      <nz-form-item>
+        <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="name">{{
+          'function.workflow.modal-item.code.label' | translate
+        }}</nz-form-label>
+        <nz-form-control [nzSm]="8" [nzXs]="24" [nzErrorTip]="validateCode">
+          <input
+            nz-input
+            formControlName="code"
+            id="code"
+            placeholder="{{ 'function.workflow.modal-item.code.placeholder' | translate }}"
+            style="text-transform: uppercase"
+          />
+          <ng-template #validateCode let-control>
+            <ng-container *ngIf="control.hasError('required')">{{
+              'function.workflow.modal-item.code.message.required' | translate
+            }}</ng-container>
+            <ng-container *ngIf="control.hasError('pattern')">{{
+              'function.workflow.modal-item.code.message.pattern' | translate
+            }}</ng-container>
+          </ng-template>
+        </nz-form-control>
+
+        <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="name" style="padding-left: 30px">{{
+          'function.workflow.modal-item.name.label' | translate
+        }}</nz-form-label>
+        <nz-form-control [nzSm]="8" [nzXs]="24" [nzErrorTip]="validateName">
+          <input
+            nz-input
+            formControlName="name"
+            id="name"
+            placeholder="{{ 'function.workflow.modal-item.name.placeholder' | translate }}"
+          />
+          <ng-template #validateName let-control>
+            <ng-container *ngIf="control.hasError('required')">{{
+              'function.workflow.modal-item.name.message.required' | translate
+            }}</ng-container>
+            <ng-container *ngIf="control.hasError('pattern')">{{
+              'function.workflow.modal-item.name.message.pattern' | translate
+            }}</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="orgId">{{
+          'function.workflow.modal-item.orgid.label' | translate
+        }}</nz-form-label>
+        <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="{{ 'function.workflow.modal-item.org-id.error-message.required' | translate }}">
+          <nz-tree-select
+            formControlName="orgId"
+            [nzDisabled]="isInfo"
+            [nzNodes]="data"
+            nzShowSearch
+            nzShowLine
+            nzAllowClear="false"
+            nzPlaceHolder="{{ 'function.workflow.modal-item.search.orgid.placeholder' | translate }}"
+          >
+          </nz-tree-select>
+        </nz-form-control>
+        <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="status" id="custom-label" style="padding-left: 30px">
+          {{ 'function.workflow.modal-item.status.label' | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="Trạng thái không được để trống!">
+          <nz-switch formControlName="status" [nzDisabled]="isInfo" nzSize="small" style="margin-right: 5px"></nz-switch>
+          <label>
+            <nz-tag [nzColor]="'#00BB00'" [hidden]="!form.value.status">
+              {{ 'function.workflow.modal-item.status.true.label' | translate }}</nz-tag
+            >
+            <nz-tag [nzColor]="'#EF5350'" [hidden]="form.value.status">
+              {{ 'function.workflow.modal-item.status.false.label' | translate }}</nz-tag
+            >
+          </label>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="orgId">{{
+          'function.workflow.modal-item.notify-complete.label' | translate
+        }}</nz-form-label>
+        <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="{{ 'function.workflow.modal-item.org-id.error-message.required' | translate }}">
+          <nz-select
+            formControlName="notifyConfigDocumentCompleteId"
+            nzAllowClear
+            nzPlaceHolder="{{ 'function.workflow.modal-item.search.isdisableexpirenotify.placeholder' | translate }}"
+          >
+            <nz-option *ngFor="let option of listNotifyConfigDocumentCompleted" [nzValue]="option.id" [nzLabel]="option.code"> </nz-option>
+          </nz-select>
+        </nz-form-control>
+        <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="IsSignOrgConfirm" id="custom-label" style="padding-left: 30px">
+          {{ 'function.workflow.modal-item.sign-org-confirm.label' | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="8" [nzXs]="24">
+          <nz-switch formControlName="isSignOrgConfirm" [nzDisabled]="isInfo" nzSize="small" style="margin-right: 5px"></nz-switch>
+          <label>
+            <nz-tag [nzColor]="'#00BB00'" [hidden]="!form.value.isSignOrgConfirm">
+              {{ 'function.workflow.modal-item.certify-status.true.label' | translate }}</nz-tag
+            >
+            <nz-tag [nzColor]="'#EF5350'" [hidden]="form.value.isSignOrgConfirm">
+              {{ 'function.workflow.modal-item.certify-status.false.label' | translate }}</nz-tag
+            >
+          </label>
+        </nz-form-control>
+        <nz-form-label
+          [hidden]="!orgConfig.isApproveCertify"
+          [nzSm]="4"
+          [nzXs]="24"
+          nzFor="IsSignOrgConfirm"
+          id="custom-label"
+          style="padding-left: 30px"
+        >
+          {{ 'function.workflow.modal-item.sign-certify.label' | translate }}
+        </nz-form-label>
+        <nz-form-control [hidden]="!orgConfig.isApproveCertify" [nzSm]="8" [nzXs]="24">
+          <nz-switch formControlName="isSignCertify" [nzDisabled]="isInfo" nzSize="small" style="margin-right: 5px"></nz-switch>
+          <label>
+            <nz-tag [nzColor]="'#00BB00'" [hidden]="!form.value.isSignCertify">
+              {{ 'function.workflow.modal-item.certify-status.true.label' | translate }}</nz-tag
+            >
+            <nz-tag [nzColor]="'#EF5350'" [hidden]="form.value.isSignCertify">
+              {{ 'function.workflow.modal-item.certify-status.false.label' | translate }}</nz-tag
+            >
+          </label>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [hidden]="!orgConfig.isUseEverify" [nzSm]="4" [nzXs]="24" id="custom-label">
+          {{ 'function.workflow.modal-item.use-everify' | translate }}
+        </nz-form-label>
+        <nz-form-control [hidden]="!orgConfig.isUseEverify" [nzSm]="8" [nzXs]="24">
+          <nz-switch formControlName="isUseEverify" [nzDisabled]="isInfo" nzSize="small" style="margin-right: 5px"></nz-switch>
+          <label>
+            <nz-tag [nzColor]="'#00BB00'" [hidden]="!form.value.isUseEverify">
+              {{ 'function.workflow.modal-item.certify-status.true.label' | translate }}</nz-tag
+            >
+            <nz-tag [nzColor]="'#EF5350'" [hidden]="form.value.isUseEverify">
+              {{ 'function.workflow.modal-item.certify-status.false.label' | translate }}</nz-tag
+            >
+          </label>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+
+    <div class="custom-divider-2"></div>
+
+    <nz-row
+      ><b>{{ 'function.workflow.modal-item.participants-profile' | translate }}</b></nz-row
+    >
+
+    <div class="custom-divider"></div>
+
+    <nz-row *ngFor="let item of lstUser; let i = index" class="custom-contact">
+      <div nz-col nzSpan="24">
+        <div nz-row>
+          <div nz-col nzSpan="23">
+            <nz-divider nzText="{{ 'function.workflow.modal-item.step.label' | translate }} {{ i + 1 }}"></nz-divider>
+          </div>
+          <div nz-col nzSpan="1">
+            <div nz-row>
+              <div nz-col nzSpan="12">
+                <i nz-icon nzType="rest" nzTheme="outline" class="pointer" [hidden]="isInfo" (click)="removeUser($event, i)"></i>
+              </div>
+              <div nz-col nzSpan="12">
+                <i nz-icon nzType="plus" nzTheme="outline" class="pointer" [hidden]="isInfo" (click)="addUser($event)"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div nz-col nzSpan="5">
+        <div nz-row>
+          <div class="custom-label">{{ i + 1 }}. {{ 'function.workflow.modal-item.selecteduser.label' | translate }}:</div>
+          <div nz-col nzSpan="23">
+            <nz-select
+              [nzAllowClear]="true"
+              nzShowSearch
+              nzPlaceHolder="{{ 'function.workflow.modal-item.search.selecteduser.placeholder' | translate }}"
+              [(ngModel)]="item.selectedUser"
+              [ngModelOptions]="{ standalone: true }"
+              [disabled]="item.isDisabled || isInfo"
+              (ngModelChange)="onChangeUserName($event, i)"
+            >
+              <nz-option *ngFor="let option of userNameOptions" [nzValue]="option" [nzLabel]="option.displayName"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+      </div>
+      <div nz-col nzSpan="5">
+        <div nz-row>
+          <div class="custom-label">{{ 'function.workflow.modal-item.selectedwflstate.label' | translate }}:</div>
+          <div nz-col nzSpan="23">
+            <nz-select
+              [(ngModel)]="item.selectedWFLState"
+              nzPlaceHolder="{{ 'function.workflow.modal-item.search.selectedwflstate.placeholder' | translate }}"
+              [disabled]="isInfo"
+              (ngModelChange)="onChangeWorkflowState($event, i)"
+            >
+              <nz-option *ngFor="let option of listWorkflowState" [nzValue]="option" [nzLabel]="option.displayName"> </nz-option>
+            </nz-select>
+          </div>
+        </div>
+      </div>
+      <div nz-col nzSpan="5">
+        <div nz-row>
+          <div class="custom-label">{{ 'function.workflow.modal-item.selectedsigntype.label' | translate }}:</div>
+          <div nz-col nzSpan="23">
+            <nz-select
+              [(ngModel)]="item.selectedSignType"
+              [compareWith]="compareFn"
+              (ngModelChange)="onChangeSignType($event, i)"
+              nzPlaceHolder="Chọn..."
+              [disabled]="isInfo"
+            >
+              <nz-option *ngFor="let option of listOfSignOption" [nzValue]="option" [nzLabel]="option.label"> </nz-option>
+            </nz-select>
+          </div>
+        </div>
+      </div>
+      <div nz-col nzSpan="4">
+        <div nz-row>
+          <div class="custom-label">{{ 'function.workflow.modal-item.signexpireafterday.label' | translate }}:</div>
+          <div nz-col nzSpan="23">
+            <nz-input-number
+              [nzPrecision]="0"
+              [nzDisabled]="isInfo"
+              placeholder=""
+              [(ngModel)]="item.signExpireAfterDay"
+              [nzMin]="0"
+              (ngModelChange)="onChangeSignExpireAfterDay($event)"
+              style="width: 100%"
+            ></nz-input-number>
+          </div>
+        </div>
+      </div>
+      <div nz-col nzSpan="4">
+        <div nz-row>
+          <div class="custom-label">{{ 'function.workflow.modal-item.sign-close-after-day.label' | translate }}:</div>
+          <div nz-col nzSpan="23">
+            <nz-input-number
+              [nzPrecision]="0"
+              [nzDisabled]="isInfo"
+              placeholder=""
+              [(ngModel)]="item.signCloseAfterDay"
+              [nzMin]="0"
+              (ngModelChange)="onChangeSignCloseAfterDay($event)"
+              style="width: 100%"
+            ></nz-input-number>
+          </div>
+        </div>
+      </div>
+      <nz-collapse [nzBordered]="false" style="width: 100%">
+        <nz-collapse-panel nzHeader="{{ 'function.workflow.modal-item.advanced-configuration.label' | translate }}">
+          <div nz-row style="margin-bottom: 15px">
+            <div nz-col nzSpan="6">
+              <div class="custom-label">{{ 'function.workflow.modal-item.adssprofilename.label' | translate }}</div>
+              <div nz-col nzSpan="23">
+                <input [disabled]="isInfo" nz-input placeholder="" [(ngModel)]="item.adssProfileName" />
+              </div>
+            </div>
+            <div nz-col nzSpan="6">
+              <label [nzDisabled]="isInfo" nz-checkbox [(ngModel)]="item.isAllowRenew">
+                {{ 'function.workflow.modal-item.allow-renew.label' | translate }}
+              </label>
+            </div>
+            <div nz-row nzSpan="20" *ngIf="item.isAllowRenew">
+              <nz-col nzSpan="14">
+                <span>{{ 'function.workflow.modal-item.max-renew-times.label' | translate }}</span>
+              </nz-col>
+              <nz-col nzSpan="10">
+                <input [disabled]="isInfo" nz-input placeholder="" [(ngModel)]="item.maxRenewTimes" type="number" />
+              </nz-col>
+            </div>
+          </div>
+          <div nz-row style="margin-bottom: 15px">
+            <div nz-col nzSpan="6">
+              <label>
+                {{ 'function.workflow.modal-item.workflow-user-sign-complete.label' | translate }}
+              </label>
+              <div nz-col nzSpan="23" style="margin-top: 5px">
+                <nz-select
+                  [(ngModel)]="item.notifyConfigUserSignCompleteId"
+                  nzPlaceHolder="{{ 'function.workflow.modal-item.search.isdisableexpirenotify.placeholder' | translate }}"
+                  [nzDisabled]="!!isInfo"
+                  nzAllowClear
+                >
+                  <nz-option *ngFor="let option of listNotifyConfigUserSignDone" [nzValue]="option.id" [nzLabel]="option.code"> </nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <div nz-col nzSpan="6">
+              <label
+                [nzDisabled]="isInfo || !item.signExpireAfterDay || item.signExpireAfterDay <= 0"
+                [(ngModel)]="item.isDisableRemindNotify"
+                (ngModelChange)="onChangeRemindNotify(item)"
+                nz-checkbox
+              >
+                {{ 'function.workflow.modal-item.isdisableremindnotify.label' | translate }}
+              </label>
+              <div nz-col nzSpan="23" style="margin-top: 5px">
+                <nz-select
+                  [(ngModel)]="item.notifyConfigRemindId"
+                  nzPlaceHolder="{{ 'function.workflow.modal-item.search.isdisableremindnotify.placeholder' | translate }}"
+                  [nzDisabled]="!(!isInfo && item.isDisableRemindNotify)"
+                >
+                  <nz-option *ngFor="let option of listNotifyConfigRemind" [nzValue]="option.id" [nzLabel]="option.code"> </nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <div nz-col nzSpan="6">
+              <label
+                [nzDisabled]="isInfo || !item.signExpireAfterDay || item.signExpireAfterDay <= 0"
+                [(ngModel)]="item.isDisableExpireNotify"
+                (ngModelChange)="onChangeExpireNotify(item)"
+                nz-checkbox
+              >
+                {{ 'function.workflow.modal-item.isdisableexpirenotify.label' | translate }}
+              </label>
+              <div nz-col nzSpan="23" style="margin-top: 5px">
+                <nz-select
+                  [(ngModel)]="item.notifyConfigExpireId"
+                  nzPlaceHolder="{{ 'function.workflow.modal-item.search.isdisableexpirenotify.placeholder' | translate }}"
+                  [nzDisabled]="!(!isInfo && item.isDisableExpireNotify)"
+                >
+                  <nz-option *ngFor="let option of listNotifyConfigExpired" [nzValue]="option.id" [nzLabel]="option.code"> </nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <div nz-col nzSpan="6">
+              <label>
+                {{ 'function.workflow.modal-item.step-receive-noti-expire.label' | translate }}
+              </label>
+              <div nz-col nzSpan="23" style="margin-top: 5px">
+                <nz-select
+                  [(ngModel)]="item.userReceiveNotiExpire"
+                  nzMode="multiple"
+                  nzPlaceHolder="{{ 'function.workflow.modal-item.step-receive-noti-expire.placeholder' | translate }}"
+                  [nzDisabled]="!(!isInfo && item.isDisableExpireNotify)"
+                >
+                  <nz-option *ngFor="let u of lstUser; let j = index" [nzValue]="j" [nzLabel]="'Bước ' + (j + 1)"> </nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </div>
+          <div nz-row>
+            <div nz-col nzSpan="24">
+              <div class="d-flex justify-content-between">
+                <!-- <label [nzDisabled]="isInfo" *ngIf="orgConfig.isApproveLTV" nz-checkbox [(ngModel)]="item.isSignLTV"> Ký LTV </label>
+                <label [nzDisabled]="isInfo" *ngIf="orgConfig.isApproveTSA" nz-checkbox [(ngModel)]="item.isSignTSA"> Ký TSA </label> -->
+                <!-- <label [nzDisabled]="isInfo" *ngIf="orgConfig.isApproveCertify" nz-checkbox [(ngModel)]="item.isSignCertify">
+                  Ký Certify
+                </label> -->
+                <label [nzDisabled]="isInfo" nz-checkbox [(ngModel)]="item.isSendMailNotiSign">
+                  {{ 'function.workflow.modal-item.issendmailnotisign.label' | translate }}
+                </label>
+                <!-- <label [nzDisabled]="isInfo" nz-checkbox [(ngModel)]="item.isSendOTPNotiSign">
+                  Gửi kèm OTP khi thông báo có tài liệu cần ký qua email
+                </label> -->
+                <label [nzDisabled]="isInfo" nz-checkbox [(ngModel)]="item.isSendMailNotiResult">
+                  {{ 'function.workflow.modal-item.issendmailnotiresult.label' | translate }}
+                </label>
+                <label [nzDisabled]="isInfo" nz-checkbox [(ngModel)]="item.isAutoSign">
+                  {{ 'function.workflow.modal-item.isautosign.label' | translate }}
+                </label>
+                <label [nzDisabled]="isInfo" nz-checkbox [(ngModel)]="item.isSendNotiSignedFor3rdApp">
+                  {{ 'function.workflow.modal-item.issendnotisignedfor3rdapp.label' | translate }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </nz-collapse-panel>
+      </nz-collapse>
+    </nz-row>
+    <nz-row>
+      <hr />
+    </nz-row>
+  </ng-template>
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-secondary"
+      *ngIf="isInfo && btnEdit.visible && btnEdit.grandAccess && !option.isHistory && !option.isFromDocument"
+      (click)="btnEdit.click($event)"
+    >
+      <i nz-icon nzType="edit" nzTheme="fill"></i>{{ btnEdit.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && btnSave.visible && btnSave.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSave.titlei18n }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.titlei18n }}
+    </button>
+  </ng-template>
+</nz-modal>
